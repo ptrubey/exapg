@@ -1,0 +1,81 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{natbib,bibentry}
+\usepackage{bm}
+\usepackage[margin=3cm]{geometry}
+
+%\title{Large scale inference in multivariate peaks-over-threshold scenarios by Peter Trubey}
+%\author{}
+%\date{}
+
+\bibliographystyle{plainnat}
+
+\begin{document}
+{\Large \bf Summer research project 2023: Large scale inference in multivariate peaks-over-threshold 
+and applications to anomaly detection by Peter Trubey}\\
+\vskip 0.15cm
+Supervisor: Bruno Sans\'{o}
+\vskip 1cm
+\nobibliography*
+%\maketitle
+The use of methods based on extreme value theory to perform anomaly detection
+    has the advantage of focusing on the tail of the distribution, which is where
+    anomalous observations are most likely to be found.  EVT implies
+    the existence of a limiting distribution on the maxima of a sample, as well
+    as a related limiting distribution on excesses over a large threshold.  This
+    second \emph{peaks-over-threshold} regime is what we will be considering here.
+    In the univariate case, the limiting form of the distribution has a 
+    parametric form.  This does not hold for the multivariate case.  Multivariate
+    EVT implies that after marginal standardization, an observation can be decomposed
+    into angular and radial component, and that these components are independent.
+    The distribution of the angular component comprises the dependence structure, or
+    \emph{spectral density}.  The spectral density lacks a parametric form, which
+    presents some challenge for inference. \cite{trubey:pg} establishes a Bayesian
+    non-parametric estimator of spectral density, by creating a Dirichlet process mixture
+    of gamma densities projected onto the unit sphere under the $\mathcal{L}_p$ norm.
+
+The complete field of anomaly detection is vast.  However, most methods can be 
+    roughly grouped into three core ideas: statistical model approaches, 
+    non-statistical model approaches, and clustering methods. Core to the 
+    development of a method lies the basic the question of what is an anomaly.  
+    The answer to this question depends on what we hope to
+    learn in a specific application.  For instance, in a regression setting, 
+    observations that produce large outliers, or exert outsized influence on parameter 
+    estimates, might be considered anomalous.  Common to most 
+    methods of anomaly detection is the belief that anomalous data is in some 
+    manner different than the rest of the data. This belief implies that data 
+    belonging to regions of relative data sparsity are more likely to be 
+    anomalous, and thus, the goal is to identify the regions of relative 
+    data sparsity. It is common in most approaches not to assume the existence of 
+    labels in the training dataset, meaning anomaly detection is an unsupervised learning
+    problem.  Instead we seek anomaly \emph{scores}, which rank observations in terms of
+    probability of being anomalous.  The decision threshold---the score value above which
+    observations would be declared anomalous---is then set heuristically.
+    
+
+
+The intersection of extreme value theory and anomaly detection is an area of active
+    research.  Some methods, such as \cite{clifton2011} and \cite{gu2021} employ univariate
+    EVT on density values estimated through other means to establish a decision threshold, 
+    avoiding the need to calculate such a threshold heuristically. In contrast, less 
+    common are methods which specifically invoke multivariate EVT and the 
+    spectral density.  \cite{goix2017} employs a theoretical argument from EVT to establish 
+    a multivariate threshold such that it partitions the space $[1,\infty)^d$ into 
+    $\alpha$-cones, where $\alpha$ indicates which dimensions are in excess of the threshold.  
+    This effectively discretizes the spectral density.  We instead make use of the
+    spectral density estimator from \cite{trubey:pg}.  This very quickly presents 
+    computational issues, as the computational burden for MCMC inference scales 
+    superlinearly with dimensionality and sample size. We propose an alternate approach, 
+    developing a variational Bayes approach for model inference.  During the summer I will
+    work under the supervision of Prof. Sans\'o to  apply this model to a  dataset of simulations 
+    of storm surge. The simulation comprises  about five thousand observations at more than 
+    three million locations.  We will use our approach to identify \emph{anomalous} storm surge 
+    arrangements that may offer additional insight  to hydrological engineers in mitigating 
+    storm concerns, or insurance companies in  loss-provisioning for estimated damages.  
+    More generally, we will develop a package for anomaly detection methods at large scale 
+    to tackle a wide range of applications.
+
+\nobibliography{./refs}
+
+\end{document}

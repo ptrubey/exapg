@@ -1,0 +1,109 @@
+$\bm{Z} = R\bm{V}$, where $\bm{V} \in \mathbb{S}_{\infty}^{d-1}$; 
+$R \in \mathbb{R}_+$; $R$ and $\bm{V}$ are independent.  
+$\bm{Y} = T_p(\bm{V})$ is the normalization of $\bm{V}$ onto 
+$\mathbb{S}_p^{d-1}$.
+
+
+\subsection{Target Distribution (gamma prior)}
+\begin{equation}
+    \begin{aligned}
+        \bm{y}_i \mid \bm{\alpha}_i &\sim
+        \mathcal{PG}_p\left(\bm{Y}\mid\bm{\alpha}_i,\bm{1}\right)\\
+        \bm{\alpha}_i &\sim G\\
+        G &\sim \mathcal{PY}\left(\eta, d, G_0\right)        
+    \end{aligned}
+    ~\hspace{1cm}
+    \begin{aligned}
+        G_0 &= {\textstyle\prod}_{\ell = 1}^{d}\mathcal{G}(\alpha_{\ell}\mid \xi_{\ell},\tau_{\ell})\\
+        \xi_{\ell} &\sim \mathcal{G}(\xi\mid a, b)\\
+        \tau_{\ell} &\sim \mathcal{G}(\tau\mid c, d)
+    \end{aligned}
+\end{equation}
+If we expand the Pitman--Yor process using stick-breaking notation, we can write the above as
+\begin{equation}
+    \begin{aligned}
+        v_j\mid\eta &\sim \mathcal{B}(1 - d, \eta + kd)\\
+        \bm{w} &= \text{Stickbreak}(\bm{v})\\
+        \alpha_{j\ell} &\sim \mathcal{G}(\alpha\mid\xi_{\ell},\tau_{\ell})
+    \end{aligned}
+    ~\hspace{1cm}
+    \begin{aligned}
+        \xi_{\ell} &\sim \mathcal{G}(\xi \mid a, b)\\
+        \tau_{\ell} &\sim \mathcal{G}(\tau\mid c, d)\\
+        \bm{y}_i \mid \ldots &\sim {\textstyle\sum}_{j = 1}^Jw_i\mathcal{PG}(\bm{y}\mid\bm{\alpha}_j, \bm{1})
+    \end{aligned}   
+\end{equation}
+where Stickbreak is a function of $\bm{v}$ such that
+\begin{equation*}
+    \bm{w} = \text{Stickbreak}(\bm{v}) = \begin{cases}
+        v_j &\text{ for }j = 1\\
+        v_j{\textstyle\prod}_{k < j}(1 - v_k) &\text{ for }j \in 2,\ldots,J-1\\
+        {\textstyle\prod}_{k < j}(1 - v_k) &\text{ for }j = J
+    \end{cases}
+\end{equation*}
+
+\subsubsection{Gaussian Mean Field Variational Family surrogate posterior for Pitman-Yor mixture of projected gammas, gamma prior}
+\begin{equation}
+    \begin{aligned}
+    \bm{v} &\sim {\textstyle\prod}_{j = 1}^J\text{Logit}\mathcal{N}(v_j\mid\mu_{v_j},\sigma^2_{v_j})\\
+    \bm{\alpha} &\sim {\textstyle\prod}_{j = 1}^J{\textstyle\prod}_{\ell = 1}^D\mathcal{LN}(\alpha_{j\ell}\mid\mu_{\alpha_{j\ell}},\sigma^2_{\alpha_{j\ell}})
+    \end{aligned}
+    ~\hspace{1cm}
+    \begin{aligned}
+    \bm{\xi} &\sim{\textstyle\prod}_{\ell = 1}^D\mathcal{LN}(\xi_{\ell}\mid\mu_{\xi_{\ell}},\sigma^2_{\xi_{\ell}})\\
+    \bm{\tau} &\sim{\textstyle\prod}_{\ell = 1}^D\mathcal{LN}(\tau_{\ell}\mid\mu_{\tau_{\ell}}, \sigma^2_{\tau_{\ell}})
+    \end{aligned}
+\end{equation}
+
+\subsection{Target Distribution (log-normal prior)}
+\begin{equation}
+    \begin{aligned}
+        \bm{y}_i \mid \bm{\alpha}_i &\sim 
+            \mathcal{PG}_p\left(\bm{Y}\mid\bm{\alpha}_{i},\bm{1}\right)\\
+        \bm{\alpha}_i &\sim G\\
+        G &\sim \mathcal{PY}\left(\eta, d, G_0\right)
+    \end{aligned}
+    ~\hspace{1cm}
+    \begin{aligned}
+        G_0 &= \log\mathcal{N}(\log\bm{\alpha}\mid \bm{\mu}, \bm{\Sigma})\\
+        \bm{\mu} &\sim \mathcal{N}\left(\bm{\mu}\mid \bm{\mu}_0, \bm{\Sigma}_0\right)\\
+        \bm{\Sigma} &\sim \mathcal{IW}\left(\bm{\Sigma}\mid\nu,\bm{\Psi}\right)
+    \end{aligned}
+\end{equation}
+which, if we expand the Pitman--Yor process using stick-breaking representation, we can write as
+\begin{equation}
+    \begin{aligned}
+        v_j \mid \eta &\sim \mathcal{B}(1 - d, \eta + kd)\\
+        \bm{w} &= \text{Stickbreak}(\bm{v})\\
+        \alpha_j\mid\mu,\Sigma &\sim \mathcal{LN}(\alpha\mid\mu,\Sigma)
+    \end{aligned}
+    ~\hspace{1cm}
+    \begin{aligned}
+        \mu &\sim\mathcal{N}(\mu\mid\mu_{\mu},\Sigma_{\mu})\\
+        \Sigma &\sim \mathcal{IW}(\Sigma\mid\nu, \psi)\\
+        \bm{y}_i\mid\ldots &\sim {\textstyle\sum}_{j = 1}^Jw_j\mathcal{PG}(\bm{y}\mid\bm{\alpha}_j,\bm{1})
+    \end{aligned}
+\end{equation}
+
+\subsubsection{Mean Field Variational Family surrogate posterior for Pitman-Yor mixture of projected gammas, log-normal prior}
+
+\begin{equation}
+    \begin{aligned}
+        \bm{v} &\sim {\textstyle\prod}_{j = 1}^J \text{Logit}\mathcal{N}(v_j\mid\mu_{v_k},\sigma_{v_k})\\
+        \bm{\alpha} &\sim  {\textstyle\prod}_{j = 1}^J{\textstyle\prod}_{\ell = 1}^D\mathcal{LN}(\alpha_{j\ell}\mid\mu_{\alpha_{j\ell}},\sigma_{\alpha_{j\ell}})\\        
+    \end{aligned}
+    ~\hspace{1cm}
+    \begin{aligned}
+        \mu &\sim \mathcal{N}_D(\mu\mid\mu_{\mu}^v,\Sigma_{\mu}^v)\\
+        \Sigma &\sim \mathcal{IW}
+    \end{aligned}
+\end{equation}
+
+
+
+
+
+
+
+
+% EOF

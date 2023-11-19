@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage[margin=1in]{geometry}
+
+\begin{document}
+
+
+\begin{equation}
+    \begin{aligned}
+        \bm{y}_i \mid \bm{\alpha}_i &\sim \mathcal{PG}_p\left(\bm{Y}\mid\bm{\alpha}_{iy},\bm{1}\right)\\
+        % \bm{w}_i \mid \bm{\alpha}_i &\sim \mathcal{CDM}\left(\bm{W}\mid \bm{\alpha}_{iw}\right)\\
+        \log\bm{\alpha}_i &\sim G\\
+        G &\sim \mathcal{PY}\left(\eta, d, G_0\right)
+    \end{aligned}
+    ~\hspace{1cm}
+    \begin{aligned}
+        G_0 &= \mathcal{N}(\log\bm{\alpha}\mid \bm{\mu}, \bm{\Sigma})\\
+        \bm{\mu} &\sim \mathcal{N}\left(\bm{\mu}\mid \bm{\mu}_0, \bm{\Sigma}_0\right)\\
+        \bm{\Sigma} &\sim \mathcal{IW}\left(\bm{\Sigma}\mid\nu,\bm{\Psi}\right)        
+    \end{aligned}
+\end{equation}
+
+Expanding the distribution of $G$ using the stick-breaking representation detailed in Ishwaran and James
+
+\begin{equation*}
+    \log\bm{\alpha}_{qj} \mathcal{N}\left(\mu_{qj}\mid\mu\right)\\
+
+
+
+    \bm{\mu}_q &\sim \mathcal{N}\left(\mu_{q0} \right)\\
+    
+\end{equation*}
+
+
+
+
+
+
+
+\end{document}
+% EOF
