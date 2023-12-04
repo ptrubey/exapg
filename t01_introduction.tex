@@ -1,2 +1,58 @@
+m%% ABSTRACT %%
+% In order to account for the model flexibility required by the multivariate
+%     peaks-over-threshold scenario, a Dirichlet process mixture model using
+%     the projection of independent gamma random variables onto the unit 
+%     hypersphere under the $\mathcal{L}_p$ norm was developed.  This very
+%     quickly presents computational issues, as the computational burden for
+%     MCMC inference scales superlinearly with sample size, and will scale
+%     either linearly or exponentially depending on choice of centering 
+%     distribution. We propose an alternate approach, developing a 
+%     variational Bayes approach for model inference.  We apply this model
+%     to a dataset of simulations of storm surge; comprised of 5 thousand
+%     observations at more than 3 million locations.
+
+\subsection{Variational methods: a brief overview}
+Let $\bm{y}$ be the observed data, and $\bm{\theta}$ be an unobserved set of 
+    parameters governing the distribution of the observed data.  We term 
+    $f(\bm{y}\mid\bm{\theta})$ the likelihood.  The goal of inference in 
+    general is to obtain information about $\theta$, using information 
+    obtained from $\bm{y}$. Bayesian inference in particular places a prior
+    distribution on $\theta$, $f(\bm{\theta})$, and from this we can obtain a
+    posterior distribution on $\bm{\theta}$ that incorporates both information
+    from the likelihood as well as the prior.  That is,
+    \[
+        f(\bm{\theta}\mid\bm{y}) = 
+            \frac{f(\bm{y}\mid\bm{\theta})f(\bm{\theta})}{f(\bm{y})},
+    \]
+    where the demoninator $f(\bm{y})$ is obtained by integrating out 
+    $\bm{\theta}$ from $f(\bm{y}\mid\bm{\theta})f(\bm{\theta})$.
+
+When a given model is sufficiently complex that the above integration is no
+    longer feasible analytically, or if the posterior cannot be described in
+    closed form, we frequently turn to sampling--based classes of methods such as 
+    \emph{Markov chain Monte Carlo} (MCMC)\needcite. There are myriad approaches 
+    to MCMC, \makenote{expand?}, but central to all sample
+    based approaches is the stochastic nature of model fitting, and the 
+    necessity of samples for posterior inference.  Samples take time to draw,
+    and memory to store; but for sufficiently large problems, both can be in short 
+    supply.
+
+One class of methods for model fitting that side-steps this dependence on 
+    samples of parameters is \emph{expectation maximization} (EM)\needcite.
+    In Bayesian inference, the goal of EM is to find the set of parameters
+    that maximizes posterior density.  That is, 
+    $\hat{\bm{\theta}}_{\text{MAP}} = \argmax f(\bm{\theta}\mid \bm{y})$.
+    The \emph{problem} with this approach is it provides no information about
+    the variability of $\bm{\theta}$.
+
+Another class of methods for model fitting that side-steps the dependence on
+    samples is variational methods.\makenote{awkward sentence}.
+
+
+
+
+
+
+
 
 % EOF 
