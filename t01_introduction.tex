@@ -1,4 +1,4 @@
-m%% ABSTRACT %%
+%% ABSTRACT %%
 % In order to account for the model flexibility required by the multivariate
 %     peaks-over-threshold scenario, a Dirichlet process mixture model using
 %     the projection of independent gamma random variables onto the unit 
@@ -29,24 +29,56 @@ Let $\bm{y}$ be the observed data, and $\bm{\theta}$ be an unobserved set of
 
 When a given model is sufficiently complex that the above integration is no
     longer feasible analytically, or if the posterior cannot be described in
-    closed form, we frequently turn to sampling--based classes of methods such as 
+    closed form\makenote{when the posterior is not tractible...}, we frequently 
+    turn to sampling--based classes of methods such as 
     \emph{Markov chain Monte Carlo} (MCMC)\needcite. There are myriad approaches 
     to MCMC, \makenote{expand?}, but central to all sample
     based approaches is the stochastic nature of model fitting, and the 
-    necessity of samples for posterior inference.  Samples take time to draw,
-    and memory to store; but for sufficiently large problems, both can be in short 
-    supply.
+    necessity of samples for posterior inference.  Sampling methods can be 
+    tempermental, requiring many numbers of samples to reach convergence.
+    Samples take time to draw, and memory to store; but for sufficiently large 
+    problems, both can be in short supply.
 
-One class of methods for model fitting that side-steps this dependence on 
-    samples of parameters is \emph{expectation maximization} (EM)\needcite.
-    In Bayesian inference, the goal of EM is to find the set of parameters
-    that maximizes posterior density.  That is, 
-    $\hat{\bm{\theta}}_{\text{MAP}} = \argmax f(\bm{\theta}\mid \bm{y})$.
-    The \emph{problem} with this approach is it provides no information about
-    the variability of $\bm{\theta}$.
+% One class of methods for model fitting that side-steps this dependence on 
+%     samples of parameters is \emph{expectation maximization} (EM)\needcite.
+%     In Bayesian inference, the goal of EM is to find the set of parameters
+%     that maximizes posterior density.  That is, 
+%     \[
+%         \hat{\bm{\theta}}_{\text{MAP}} 
+%             = \argmax\limits_{\bm{\theta}} f(\bm{\theta}\mid \bm{y}).
+%     \]
+%     The output of this approach is a point estimate.  It provides no information
+%     about the variability of $\bm{\theta}$, and if $f(\bm{\theta}\mid\bm{y})$ is
+%     multimodal, then the resulting point estimate is highly dependent on
+%     starting position.
 
-Another class of methods for model fitting that side-steps the dependence on
-    samples is variational methods.\makenote{awkward sentence}.
+% Another class of methods that side--steps the need for samples, and attempts to
+%     include information regarding the variability of $\bm{\theta}$ necessitates
+%     specification of a family of \emph{surrogate posteriors}.  Model fitting
+%     involves finding the surrogate posterior $q(\bm{\theta})$ that is 
+%     \emph{closest} to the true posterior.\makenote{this paragraph is terrible}
+%     T
+
+One class of methods that shows promise in avoiding the computational and storage
+    burdens of sampling methods is variational inference.  Based on variational
+    calculus, this approach attempts to approximate the posterior distribution
+    $f(\bm{\theta}\mid\bm{y})$ with a tractible \emph{surrogate posterior} 
+    $q(\bm{\theta})$.  Inference under this class involves specification of the
+    family of surrogate densities $\mathcal{Q}$, then selecting that density 
+    $q^*$ which minimizes the \emph{Kullbeck-Liebler} (KL) divergence between 
+    the surrogate and true posterior.  That is,
+    \[
+        q^*(\bm{\theta}) = \argmin\limits_{q\in\mathcal{Q}}\left\lbrace
+        \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) := 
+        \int_{\bm{\theta}}q(\bm{\theta})
+            \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
+            d\bm{\theta}
+        \right\rbrace
+    \]
+    
+
+
+
 
 
 
