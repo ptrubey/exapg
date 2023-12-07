@@ -68,12 +68,13 @@ One class of methods that shows promise in avoiding the computational and storag
     $q^*$ which minimizes the \emph{Kullbeck-Liebler} (KL) divergence between 
     the surrogate and true posterior.  That is,
     \[
-        q^*(\bm{\theta}) = \argmin\limits_{q\in\mathcal{Q}}\left\lbrace
-        \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) := 
+        q^*(\bm{\theta}) = \argmin_{q\in\mathcal{Q}}\left\lbrace
+        \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) 
+        \coloneqq
         \int_{\bm{\theta}}q(\bm{\theta})
             \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
             d\bm{\theta}
-        \right\rbrace
+        \right\rbrace.
     \]
     
 
