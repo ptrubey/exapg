@@ -24,8 +24,10 @@ Let $\bm{y}$ be the observed data, and $\bm{\theta}$ be an unobserved set of
         f(\bm{\theta}\mid\bm{y}) = 
             \frac{f(\bm{y}\mid\bm{\theta})f(\bm{\theta})}{f(\bm{y})},
     \]
-    where the demoninator $f(\bm{y})$ is obtained by integrating out 
-    $\bm{\theta}$ from $f(\bm{y}\mid\bm{\theta})f(\bm{\theta})$.
+    where the demoninator $f(\bm{y})$ is obtained as
+    \[
+    f(\bm{y}) = \int_{\bm{\theta}}f(\bm{y}\mid\bm{\theta})f(\bm{\theta})d\bm{\theta}.
+    \]
 
 When a given model is sufficiently complex that the above integration is no
     longer feasible analytically, or if the posterior cannot be described in
@@ -35,7 +37,7 @@ When a given model is sufficiently complex that the above integration is no
     to MCMC, \makenote{expand?}, but central to all sample
     based approaches is the stochastic nature of model fitting, and the 
     necessity of samples for posterior inference.  Sampling methods can be 
-    tempermental, requiring many numbers of samples to reach convergence.
+    tempermental, requiring many numbers of iterations to reach convergence.
     Samples take time to draw, and memory to store; but for sufficiently large 
     problems, both can be in short supply.
 
@@ -68,14 +70,29 @@ One class of methods that shows promise in avoiding the computational and storag
     $q^*$ which minimizes the \emph{Kullbeck-Liebler} (KL) divergence between 
     the surrogate and true posterior.  That is,
     \[
+        % q^*(\bm{\theta}) = \argmin_{q\in\mathcal{Q}}\left\lbrace
+        % \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) 
+        % \coloneqq
+        % \int_{\bm{\theta}}q(\bm{\theta})
+        %     \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
+        %     d\bm{\theta}
+        % \right\rbrace.
         q^*(\bm{\theta}) = \argmin_{q\in\mathcal{Q}}\left\lbrace
         \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) 
         \coloneqq
-        \int_{\bm{\theta}}q(\bm{\theta})
-            \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
-            d\bm{\theta}
+        \text{E}_{\bm{\theta}}\left[\log\left(
+        \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
+        \right)\right]
         \right\rbrace.
     \]
+    The density we are integrating over is $q$.
+    Using KL divergence as an analogue to distance, we are attempting to find
+    the \emph{closest} tractible surrogate posterior $q$ to the true posterior.
+    As has been explained however, we do not necessarily have $f(\bm{\theta}\mid\bm{y})$ 
+    directly.
+
+    
+    
     
 
 
