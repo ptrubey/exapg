@@ -62,10 +62,10 @@ When a given model is sufficiently complex that the above integration is no
 %     T
 
 One class of methods that shows promise in avoiding the computational and storage
-    burdens of sampling methods is variational inference.  Based on variational
+    burdens of sampling methods is variational inference.\needcite  Based on variational
     calculus, this approach attempts to approximate the posterior distribution
     $f(\bm{\theta}\mid\bm{y})$ with a tractible \emph{surrogate posterior} 
-    $q(\bm{\theta})$.  Inference under this class involves specification of the
+    $q(\bm{\theta})$.  Model fitting under this class involves specification of the
     family of surrogate densities $\mathcal{Q}$, then selecting that density 
     $q^*$ which minimizes the \emph{Kullbeck-Liebler} (KL) divergence between 
     the surrogate and true posterior.  That is,
@@ -80,16 +80,54 @@ One class of methods that shows promise in avoiding the computational and storag
         q^*(\bm{\theta}) = \argmin_{q\in\mathcal{Q}}\left\lbrace
         \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) 
         \coloneqq
-        \text{E}_{\bm{\theta}}\left[\log\left(
+        \text{E}_{q}\left[\log\left(
         \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
         \right)\right]
         \right\rbrace.
     \]
-    The density we are integrating over is $q$.
     Using KL divergence as an analogue to distance, we are attempting to find
     the \emph{closest} tractible surrogate posterior $q$ to the true posterior.
     As has been explained however, we do not necessarily have $f(\bm{\theta}\mid\bm{y})$ 
-    directly.
+    directly.  Let $f(\bm{y},\bm{\theta}) = f(\bm{y}\mid\bm{\theta})f(\bm{\theta})$.
+    Then we reformulate the KL divergence into
+    \[
+        \begin{aligned}
+        \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) 
+            &=\text{E}_{q}\left[\log\left(
+                \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
+                \right)\right]\\
+            &= \text{E}_{q}\left[\log\left(
+                \frac{q(\bm{\theta})f(\bm{y})}{f(\bm{y},\bm{\theta})}
+                \right)\right]\\
+            &= \text{E}_{q}\left[\log\left(
+                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta}) 
+                + \log f(\bm{y})
+                \right)\right]\\
+            &= \text{E}_{q}\left[\log\left(
+                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})\right)\right] + 
+                    \text[E]_{\bm{\theta}}\left[\log f(\bm{y})\right].
+            &= \text{E}_{q}\left[\log\left(
+                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})\right)\right] + 
+                   \log f(\bm{y}).
+        \end{aligned}
+    \]
+    Note that the second term, the \emph{evidence}, is constant with respect to 
+    $\bm{\theta}$.  With a bit of rearrangement,
+    \[
+        \begin{\aligned}
+        \log f(\bm{y}) 
+            &= \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) -
+            \text{E}_{q}\left[\log\left(
+                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})\right)\right]\\
+            &= \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) 
+                + \mathcal{L}(\bm{\theta}).
+        \end{aligned}
+    \]
+    Thus maximizing $\mathcal{L}(\bm{\theta})$ is equvivalent to minimizing the 
+    KL divergence.  Given a reasonable choice for $\mathcal{Q}$, 
+    $\mathcal{L}(\bm{\theta})$ is tractible.
+
+
 
     
     
