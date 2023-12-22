@@ -63,8 +63,8 @@ When a given model is sufficiently complex that the above integration is no
 
 One class of methods that shows promise in avoiding the computational and storage
     burdens of sampling methods is variational inference.\needcite  Based on variational
-    calculus, this approach attempts to approximate the posterior distribution
-    $f(\bm{\theta}\mid\bm{y})$ with a tractible \emph{surrogate posterior} 
+    calculus, this approach attempts to approximate the true posterior distribution
+    $f(\bm{\theta}\mid\bm{y})$ using a tractible \emph{surrogate posterior} 
     $q(\bm{\theta})$.  Model fitting under this class involves specification of the
     family of surrogate densities $\mathcal{Q}$, then selecting that density 
     $q^*$ which minimizes the \emph{Kullbeck-Liebler} (KL) divergence between 
@@ -92,7 +92,7 @@ One class of methods that shows promise in avoiding the computational and storag
     Then we reformulate the KL divergence into
     \[
         \begin{aligned}
-        \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) 
+        \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
             &=\text{E}_{q}\left[\log\left(
                 \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
                 \right)\right]\\
@@ -105,7 +105,7 @@ One class of methods that shows promise in avoiding the computational and storag
                 \right)\right]\\
             &= \text{E}_{q}\left[\log\left(
                 \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})\right)\right] + 
-                    \text[E]_{\bm{\theta}}\left[\log f(\bm{y})\right].
+                    \text[E]_{\bm{\theta}}\left[\log f(\bm{y})\right].\\
             &= \text{E}_{q}\left[\log\left(
                 \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})\right)\right] + 
                    \log f(\bm{y}).
@@ -114,18 +114,23 @@ One class of methods that shows promise in avoiding the computational and storag
     Note that the second term, the \emph{evidence}, is constant with respect to 
     $\bm{\theta}$.  With a bit of rearrangement,
     \[
-        \begin{\aligned}
+        \begin{aligned}
         \log f(\bm{y}) 
-            &= \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) -
-            \text{E}_{q}\left[\log\left(
-                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})\right)\right]\\
-            &= \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) 
-                + \mathcal{L}(\bm{\theta}).
+            &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
+                - \text{E}_q\left[\log\left(
+                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})
+                \right)\right]\\
+            &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
+                + \mathcal{L}(\bm{\theta})
         \end{aligned}
     \]
     Thus maximizing $\mathcal{L}(\bm{\theta})$ is equvivalent to minimizing the 
-    KL divergence.  Given a reasonable choice for $\mathcal{Q}$, 
-    $\mathcal{L}(\bm{\theta})$ is tractible.
+    KL divergence. In this form, as KL divergence is a positive quantity, it is
+    readily apparent that $\mathcal{L}(\bm{\theta})$ establishes a lower bound
+    on the evidence.  As such, the variational literature has christened it the
+    \emph{evidence lower bound}, frequently abbreviated to \emph{ELBO}.
+    
+\subsection{Optimizing the ELBO: Automatic Differentiation}
 
 
 
