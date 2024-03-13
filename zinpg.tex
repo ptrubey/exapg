@@ -1,0 +1,85 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{natbib}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{soul}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{bm}
+\usepackage[inline]{enumitem}
+\usepackage{mathtools}
+\usepackage[group-separator={,},output-decimal-marker={.}]{siunitx}
+
+
+\begin{document}
+\section*{Current drawbacks}
+The current model is as follows:
+\[
+\begin{aligned}
+\bm{Y}_i\mid\bm{\alpha}_i &\sim \mathcal{PG}(\bm{y}\mid\bm{\alpha}_i, \bm{1})\\
+\alpha_i &\sim G\\
+\end{aligned}
+\;\hspace{1cm}\;
+\begin{aligned}
+G &\sim \mathcal{PY}(\eta, d, G_0)\\
+G_0 &= \pi(\bm{\alpha})
+\end{aligned}
+\]
+The current model experiences a few problems in inference.  First, letting $G_0$ be a product of gammas, with gamma priors on shape and rate, the \emph{learned} values for all those parameters approach 0.  A $G(\varepsilon,\varepsilon)$ where $\varepsilon$ is near 0 is unstable.  I believe this results from many clusters having "inactive" elements.  I am considering an element inactive when it is near 0, and thus results in a learned shape parameter $\alpha_{\ell}$ for the $\ell$th element approaching 0.  As we try to learn the distribution of priors for $\bm{\alpha}$, we have a bunch of clusters with inactive elements, so $\alpha$'s near 0, and a bunch of clusters with those elements active, so $\alpha > 1$; some much greater.
+
+Since this results in a wide spread of values of $\alpha$, the gamma prior tries to cover it, and can only do so with the extremely unstable $G(\varepsilon,\varepsilon)$.  Maybe there's another way that would result in more retention of information within the prior?
+
+I should note, a similar issue is what renders gamma an unacceptable prior in the Dirichlet-categorical model used in the anomaly detection paper.  A more nuanced handling of it might lead to the ability to actually use fitted density as an anomaly detection criterion?
+
+
+\section*{Zero-inflated Dirichlet}
+Hand-wavy reasoning:
+
+Let $s$ be an indicator that governs the activation of a dimension.  So, if $s = 1$, then the dimension is active, if $s = 0$, the dimension is structurally 0.  And $\alpha$ is the shape parameter of a gamma distribution.
+\[
+    x_{\ell} \mid s_{\ell}, \alpha_{\ell} \sim \delta_{(0)}^{1-s_{\ell}}\mathcal{G}(x\mid\alpha_{\ell},1)^{s_{\ell}}\;\;\;\implies\;\;\;
+    \bm{y} \mid \bm{s}, \bm{\alpha} \sim \mathcal{ZID}(y \mid \bm{s}, \bm{\alpha}, \bm{1})
+\]
+Where the zero-inflated Dirichlet is active in the dimensions of $s_{\ell} = 1$. This implies that $r_i\mid \bm{s},\bm{\alpha} \sim \mathcal{G}(\bm{s}^t\bm{\alpha}, 1)$ which would make inference on $\alpha_{\ell}$ possible.  Letting the Zero-inflated Dirichlet be the kernel of an infinite mixture model (say, Dirichlet Process), we have two options.
+
+\paragraph{Model 1} lets both the shape parameters and activation regimes vary under the same clustering model.  
+\[
+    \begin{aligned}
+    \bm{y}_i\mid\bm{\alpha}_i,\bm{s}_i &\sim \mathcal{ZID}(y\mid \bm{s}_i,\bm{\alpha}_i, \bm{1})\\
+    \bm{\alpha}_i, \bm{s}_i &\sim G\\
+    \end{aligned}
+    \;\hspace{1cm}\;
+    \begin{aligned}
+    G &\sim \mathcal{DP}\left((\bm{\alpha}, \bm{s}) \mid \eta, G_0\right)\\
+    G_0 &= \pi(\bm{\alpha})\times\pi(\bm{s})
+    \end{aligned}
+\]
+This seems as though it would promote too much granularity, forming many tiny clusters.
+
+\paragraph{Model 2} separates the shape parameters and activation regime clusters into two distinct processes.
+\[
+    \begin{aligned}
+    \bm{y}_i\mid\bm{\alpha}_i,\bm{s}_i &\sim \mathcal{ZID}(y\mid \bm{s}_i,\bm{\alpha}_i, \bm{1})\\
+    \bm{\alpha}_i &\sim G_1\\
+    \bm{s}_i &\sim G_2\\
+    \end{aligned}
+    \;\hspace{1cm}\;
+    \begin{aligned}
+    G_1 &\sim \mathcal{DP}(\bm{\alpha}\mid\eta_1,G_{0,1})\\
+    G_2 &\sim \mathcal{DP}(\bm{s}\mid\eta_2,G_{0,2})\\
+    G_{0,1} &= \pi(\bm{\alpha})\\
+    G_{0,2} &= \pi(\bm{s})
+    \end{aligned}
+\]
+The first seems as though it would promote too much granularity; the second as though it would have very little predictive ability.  Is there any way to \emph{loosely} tie the clustering mechanisms together?  Something we could do that would make the activation regime tied to $\bm{\alpha}$ itself?
+
+\end{document}
+
+
+

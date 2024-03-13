@@ -14,6 +14,7 @@
 \usepackage{bm}
 \usepackage[inline]{enumitem}
 \usepackage{mathtools}
+\usepackage[group-separator={,},output-decimal-marker={.}]{siunitx}
 
 \title{Large scale inference in multivariate peaks-over-threshold scenarios}
 \author{Peter Trubey \& Bruno Sanso}
@@ -43,11 +44,20 @@
 \section{Methodology}
 \input{t03_methodology}
 
+\section{Data}
+\input{t04_data}
+
 \section{Results}
-\input{t04_results}
+\input{t05_results}
 
 \section{Conclusion}
-\input{t05_conclusion}
+\input{t06_conclusion}
+
+\appendix
+\input{t07_appendix}
+
+\bibliographystyle{chicago}
+\bibliography{./refs}
 
 \end{document}
 

@@ -1,0 +1,48 @@
+
+\subsection{Target Distribution (log-normal prior)}
+\begin{equation}
+    \begin{aligned}
+        \bm{y}_i \mid \bm{\alpha}_i &\sim 
+            \mathcal{PG}_p\left(\bm{Y}\mid\bm{\alpha}_{i},\bm{1}\right)\\
+        \bm{\alpha}_i &\sim G\\
+        G &\sim \mathcal{PY}\left(\eta, d, G_0\right)
+    \end{aligned}
+    ~\hspace{1cm}
+    \begin{aligned}
+        G_0 &= \log\mathcal{N}(\log\bm{\alpha}\mid \bm{\mu}, \bm{\Sigma})\\
+        \bm{\mu} &\sim \mathcal{N}\left(\bm{\mu}\mid \bm{\mu}_0, \bm{\Sigma}_0\right)\\
+        \bm{\Sigma} &\sim \mathcal{IW}\left(\bm{\Sigma}\mid\nu,\bm{\Psi}\right)
+    \end{aligned}
+\end{equation}
+which, if we expand the Pitman--Yor process using stick-breaking representation, we can write as
+\begin{equation}
+    \begin{aligned}
+        v_j \mid \eta &\sim \mathcal{B}(1 - d, \eta + kd)\\
+        \bm{w} &= \text{Stickbreak}(\bm{v})\\
+        \alpha_j\mid\mu,\Sigma &\sim \mathcal{LN}(\alpha\mid\mu,\Sigma)
+    \end{aligned}
+    ~\hspace{1cm}
+    \begin{aligned}
+        \mu &\sim\mathcal{N}(\mu\mid\mu_{\mu},\Sigma_{\mu})\\
+        \Sigma &\sim \mathcal{IW}(\Sigma\mid\nu, \psi)\\
+        \bm{y}_i\mid\ldots &\sim {\textstyle\sum}_{j = 1}^Jw_j\mathcal{PG}(\bm{y}\mid\bm{\alpha}_j,\bm{1})
+    \end{aligned}
+\end{equation}
+
+
+
+\subsubsection{Mean Field Variational Family surrogate posterior for Pitman-Yor mixture of projected gammas, log-normal prior}
+
+\begin{equation}
+    \begin{aligned}
+        \bm{v} &\sim {\textstyle\prod}_{j = 1}^J \text{Logit}\mathcal{N}(v_j\mid\mu_{v_k},\sigma_{v_k})\\
+        \bm{\alpha} &\sim  {\textstyle\prod}_{j = 1}^J{\textstyle\prod}_{\ell = 1}^D\mathcal{LN}(\alpha_{j\ell}\mid\mu_{\alpha_{j\ell}},\sigma_{\alpha_{j\ell}})\\        
+    \end{aligned}
+    ~\hspace{1cm}
+    \begin{aligned}
+        \mu &\sim \mathcal{N}_D(\mu\mid\mu_{\mu}^v,\Sigma_{\mu}^v)\\
+        \Sigma &\sim \mathcal{IW}
+    \end{aligned}
+\end{equation}
+
+% EOF

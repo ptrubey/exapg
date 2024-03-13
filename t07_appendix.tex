@@ -1,0 +1,38 @@
+
+\section{Accompanying math in support of the mixed variational method}
+
+\begin{equation}
+    \begin{aligned}
+        f(\bm{y},\theta\mid\phi) &\propto \mathcal \prod_{j = 1}^J\left[\prod_{i:\gamma_i = j}\left[\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_j,\bm{1})\right]\times\prod_{\ell = 1}^d\mathcal{G}(\alpha_{j\ell}\mid\xi_{\ell},\tau_{\ell})\right] \\
+        &\hspace{1cm}\times \left[\prod_{\ell = 1}^d\mathcal{G}(\xi_{\ell}\mid a, b)\mathcal{G}(\tau_{\ell}\mid c,d)\right]        
+    \end{aligned}
+\end{equation}
+After expansion, $\log f(\bm{y},\theta\mid\phi)$ becomes
+\begin{equation}
+    \begin{aligned}
+    \log f(\bm{y},\theta\mid\phi) &= \sum_{j = 1}^J\Biggl[
+    \sum_{i:\gamma_i = j}\left[\log\Gamma(\bm{1}^T\bm{\alpha}_j) - (\bm{1}^T\bm{\alpha}_j)\log(\bm{1}^T\bm{y}_i)\right]\\
+    &\hspace{2cm}+ \sum_{\ell = 1}^d\left[(\alpha_{j\ell} - 1){\small\sum}_{i:\gamma_i = j}\log(y_{i\ell}) + n_j\log\Gamma(\alpha_{j\ell})\right]\\
+    &\hspace{2cm}+ \sum_{\ell = 1}^d\left[\xi_{\ell}\log(\tau_{\ell}) - \log\Gamma(\xi_{\ell}) + (\xi_{\ell} - 1)\log(\alpha_{j\ell}) - \tau_{\ell}\alpha_{j\ell})\right]
+    \Biggr]\\
+    &\hspace{1cm}+ \sum_{\ell = 1}^d\left[a\log(b) - \log\Gamma(a) + (a - 1)\log(\xi_{\ell}) - b\xi_{\ell}\right]\\
+    &\hspace{1cm}+ \sum_{\ell = 1}^d\left[c\log(d) - \log\Gamma(c) + (c - 1)\log(\tau_{\ell}) - d\tau_{\ell}\right]   
+    \end{aligned}
+\end{equation}
+Then the gradient may be evaluated as follows:
+\begin{equation}
+    \begin{aligned}
+        \frac{\partial}{\partial \alpha_{j\ell}} \log f(\bm{y},\theta\mid\phi) &= \sum_{i:\gamma_i = j}\left[\psi(\bm{1}^T\bm{\alpha}_j) - \log(\bm{1}^T\bm{y}_i)\right]\\
+        &\hspace{1cm}+ \sum_{i:\gamma_i = j}\log(y_{i\ell}) + (n_j + \xi_{\ell} - 1)\psi(\alpha_{j\ell})\\
+        \frac{\partial}{\partial \xi_{\ell}}\log f(\bm{y},\theta\mid\phi) &= J\left(\log(\tau_{\ell}) - \psi(\xi_{\ell})\right) + \sum_{j = 1}^J\log(\alpha_{j\ell}) + \frac{a - 1}{\xi_{\ell}} - b\\
+        \frac{\partial}{\partial \tau_{\ell}}\log f(\bm{y},\theta\mid\phi) &= \frac{J\xi_{\ell} + c - 1}{\tau_{\ell}} - \sum_{j = 1}^J \alpha_{j\ell} - d        
+    \end{aligned}   
+\end{equation}
+where $\psi(\cdot)$ is the the digamma function.
+
+Letting $q(\log \alpha_{j\ell}) = \mathcal{N}(\mu_{\alpha_{j\ell}},\sigma_{\alpha_{j\ell}})$, 
+    or rather $\alpha_{j\ell} = \exp(\mu_{\alpha_{j\ell}} + \sigma_{\alpha_{j\ell}}\varepsilon$ 
+    where $\varepsilon \sim \mathcal{N}(0,1)$, we can create a mean-field approach for the
+    cluster shape parameters, and prior shape and rate parameters, while maintaining exact
+    sampling of the cluster membership parameters.
+% EOF 
