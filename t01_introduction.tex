@@ -11,6 +11,81 @@
 %     to a dataset of simulations of storm surge; comprised of 5 thousand
 %     observations at more than 3 million locations.
 
+\subsection{SLOSH}
+Sea, Lake, and Overland Surges from Hurricanes \citep{jelesnianski1992} is a 
+    computer model developed by the National Weather Service to simulate storm 
+    surge, and its associated inundation caused by hurricanes.   Given storm 
+    characteristics, the model takes into account local topology, bathymetry, 
+    and surge management devices such as levees, to generate a spatial field of 
+    inundation---the maximum observed height of water above ground level 
+    (or above normal water level for a data point in a body of water) for the 
+    duration of the storm at a location.   These storm characteristics include 
+    data pertaining to the eye of the storm when it made landfall---bearing, 
+    velocity, and latitude, minimum atmospheric pressure of the storm when it 
+    made landfall, and projections of sea level rise over time.  A 
+    \emph{simulation} from the model is a grid containing \num{23119800} 
+    elements wih a spatial resolution of \num{0.001} degrees \makenote{(verify)}, 
+    covering an area extending from Virginia Beach, Virginia, to Long Island, 
+    New York.  We have \num{4000} such simulations, produced by SLOSH from a 
+    sample of storm characteristics.
+
+\makenote{Insert graphic of coverage of model}
+
+Inundation can be catastrophic.  Setting aside the potential for loss of life, 
+    flooding can impose costly damage to property: inundation of homes and 
+    businesses destroys posessions, and damages buildings through saturating 
+    walls and eroding foundations., and thus the risk of damage from flooding 
+    provides incentive for flood insurance. \makenote{expand}\needcite  
+    Flooding can damage vehicles, and a single storm can force insurance 
+    companies to declare large quantities of vehicles as total losses. 
+    \makenote{expand}\needcite.  Flooding damages agriculture: beyond 
+    destruction of currently growing or stored crops, or the drowning of 
+    livestock, inundation by storm surge results in the ground absorbing salt, 
+    destroying production capacity of the field until abatement. Flooding can
+    damage infrastucture: flooded roads can be washed out or have their 
+    foundation damaged, flooded sewers and sewage treatment plants can release 
+    their contents above ground imposing additional environmental costs.  
+    Flooded power infrastructure, such as transformers can short out causing 
+    additional damage. \citep{hutchings2021}.  Inundation can impose additional 
+    burdens in the moment:  inundation negatively affects the quality of 
+    emergency services, such as a hospital being rendered unable to intake 
+    patients.  Sufficient flooding may even render a provider entirely out of 
+    commission. 
+
+It makes sense to consider
+
+\subsection{Extremes}
+
+
+
+\subsection{Projected Gamma}
+
+
+
+
+
+
+The projected gamma based model is not an inherently spatial model.  As such, 
+    rather than holding the entire grid in memory, it makes sense to consider 
+    data pertaining only to landmarks of interest.    If one is performing 
+    contingency planning in preparation for the storm season, it would be 
+    helpful to know the probability of such services being rendered inoperable 
+    simultaneously, precisely when they are needed most.  If one is seeking 
+    sites for a new service provider, it would be helpful understand the 
+    likelihood of a proposed location being rendered inoperable in the same 
+    manner.  For these reasons, and considering the computational complexity of 
+    a 23 million dimensional model, rather than consider the entire grid of data 
+    pertaining to any particular storm, we subset the data to grid cells in the 
+    vicinity of such locations of interest.  These locations are gathered from 
+    the 2023 US Census Bureau's \emph{TIGER} database \needcite and specifically 
+    the point and landmark file, and only grid cells that experienced \emph{some} 
+    inundation in greater than 2 \makenote{(subject to change)} percent of storm 
+    simulations.   This last requirement arises as consequence of fitting the 
+    generalized Pareto: the threshold for excesses $b$ needs to be set above the 
+    minimum observed value $(0)$ of the dataset.  
+    \makenote{(idea: zero-inflated projected gamma?)}  We identify grid cells in 
+    the vicinity of such locations by establishing a buffer 
+
 \subsection{Variational methods: a brief overview}
 Let $\bm{y}$ be the observed data, and $\bm{\theta}$ be an unobserved set of 
     parameters governing the distribution of the observed data.  We term 
