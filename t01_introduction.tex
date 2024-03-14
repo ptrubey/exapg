@@ -33,15 +33,14 @@ Sea, Lake, and Overland Surges from Hurricanes \citep{jelesnianski1992} is a
 
 Inundation can be catastrophic.  Setting aside the potential for loss of life, 
     flooding can impose costly damage to property: inundation of homes and 
-    businesses destroys posessions, and damages buildings through saturating 
-    walls and eroding foundations., and thus the risk of damage from flooding 
-    provides incentive for flood insurance. \makenote{expand}\needcite  
-    Flooding can damage vehicles, and a single storm can force insurance 
+    businesses destroys posessions, damages buildings through saturating 
+    walls and eroding foundations. \makenote{expand}\needcite  
+    Flooding can damage vehicles, such taht a single storm can force insurance 
     companies to declare large quantities of vehicles as total losses. 
     \makenote{expand}\needcite.  Flooding damages agriculture: beyond 
     destruction of currently growing or stored crops, or the drowning of 
     livestock, inundation by storm surge results in the ground absorbing salt, 
-    destroying production capacity of the field until abatement. Flooding can
+    affecting the production capacity of the field until abatement. Flooding can
     damage infrastucture: flooded roads can be washed out or have their 
     foundation damaged, flooded sewers and sewage treatment plants can release 
     their contents above ground imposing additional environmental costs.  
@@ -50,12 +49,13 @@ Inundation can be catastrophic.  Setting aside the potential for loss of life,
     burdens in the moment:  inundation negatively affects the quality of 
     emergency services, such as a hospital being rendered unable to intake 
     patients.  Sufficient flooding may even render a provider entirely out of 
-    commission. 
+    commission.
 
-It makes sense to consider
+Unfortunately, with respect to flooding in general, SLOSH provides an incomplete
+    picture.  It does not account for rainfall or 
+
 
 \subsection{Extremes}
-
 
 
 \subsection{Projected Gamma}
@@ -86,126 +86,6 @@ The projected gamma based model is not an inherently spatial model.  As such,
     \makenote{(idea: zero-inflated projected gamma?)}  We identify grid cells in 
     the vicinity of such locations by establishing a buffer 
 
-\subsection{Variational methods: a brief overview}
-Let $\bm{y}$ be the observed data, and $\bm{\theta}$ be an unobserved set of 
-    parameters governing the distribution of the observed data.  We term 
-    $f(\bm{y}\mid\bm{\theta})$ the likelihood.  The goal of inference in 
-    general is to obtain information about $\theta$, using information 
-    obtained from $\bm{y}$. Bayesian inference in particular places a prior
-    distribution on $\theta$, $f(\bm{\theta})$, and from this we can obtain a
-    posterior distribution on $\bm{\theta}$ that incorporates both information
-    from the likelihood as well as the prior.  That is,
-    \[
-        f(\bm{\theta}\mid\bm{y}) = 
-            \frac{f(\bm{y}\mid\bm{\theta})f(\bm{\theta})}{f(\bm{y})},
-    \]
-    where the demoninator $f(\bm{y})$ is obtained as
-    \[
-    f(\bm{y}) = \int_{\bm{\theta}}f(\bm{y}\mid\bm{\theta})f(\bm{\theta})d\bm{\theta}.
-    \]
 
-When a given model is sufficiently complex that the above integration is no
-    longer feasible analytically, or if the posterior cannot be described in
-    closed form\makenote{when the posterior is not tractible...}, we frequently 
-    turn to sampling--based classes of methods such as 
-    \emph{Markov chain Monte Carlo} (MCMC)\needcite. There are myriad approaches 
-    to MCMC, \makenote{expand?}, but central to all sample
-    based approaches is the stochastic nature of model fitting, and the 
-    necessity of samples for posterior inference.  Sampling methods can be 
-    tempermental, requiring many numbers of iterations to reach convergence.
-    Samples take time to draw, and memory to store; but for sufficiently large 
-    problems, both can be in short supply.
-
-% One class of methods for model fitting that side-steps this dependence on 
-%     samples of parameters is \emph{expectation maximization} (EM)\needcite.
-%     In Bayesian inference, the goal of EM is to find the set of parameters
-%     that maximizes posterior density.  That is, 
-%     \[
-%         \hat{\bm{\theta}}_{\text{MAP}} 
-%             = \argmax\limits_{\bm{\theta}} f(\bm{\theta}\mid \bm{y}).
-%     \]
-%     The output of this approach is a point estimate.  It provides no information
-%     about the variability of $\bm{\theta}$, and if $f(\bm{\theta}\mid\bm{y})$ is
-%     multimodal, then the resulting point estimate is highly dependent on
-%     starting position.
-
-% Another class of methods that side--steps the need for samples, and attempts to
-%     include information regarding the variability of $\bm{\theta}$ necessitates
-%     specification of a family of \emph{surrogate posteriors}.  Model fitting
-%     involves finding the surrogate posterior $q(\bm{\theta})$ that is 
-%     \emph{closest} to the true posterior.\makenote{this paragraph is terrible}
-%     T
-
-One class of methods that shows promise in avoiding the computational and storage
-    burdens of sampling methods is variational inference.\needcite  Based on variational
-    calculus, this approach attempts to approximate the true posterior distribution
-    $f(\bm{\theta}\mid\bm{y})$ using a tractible \emph{surrogate posterior} 
-    $q(\bm{\theta})$.  Model fitting under this class involves specification of the
-    family of surrogate densities $\mathcal{Q}$, then selecting that density 
-    $q^*$ which minimizes the \emph{Kullbeck-Liebler} (KL) divergence between 
-    the surrogate and true posterior.  That is,
-    \[
-        % q^*(\bm{\theta}) = \argmin_{q\in\mathcal{Q}}\left\lbrace
-        % \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) 
-        % \coloneqq
-        % \int_{\bm{\theta}}q(\bm{\theta})
-        %     \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
-        %     d\bm{\theta}
-        % \right\rbrace.
-        q^*(\bm{\theta}) = \argmin_{q\in\mathcal{Q}}\left\lbrace
-        \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) 
-        \coloneqq
-        \text{E}_{q}\left[\log\left(
-        \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
-        \right)\right]
-        \right\rbrace.
-    \]
-    Using KL divergence as an analogue to distance, we are attempting to find
-    the \emph{closest} tractible surrogate posterior $q$ within the family $\mathcal{Q}$ 
-    to the true posterior.
-    As has been explained however, we do not necessarily have $f(\bm{\theta}\mid\bm{y})$
-    directly.  Let $f(\bm{y},\bm{\theta}) = f(\bm{y}\mid\bm{\theta})f(\bm{\theta})$.
-    Then we reformulate the KL divergence into
-    \[
-        \begin{aligned}
-        \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
-            &=\text{E}_{q}\left[\log\left(
-                \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
-                \right)\right]\\
-            &= \text{E}_{q}\left[
-                \frac{q(\bm{\theta})f(\bm{y})}{f(\bm{y},\bm{\theta})}
-                \right]\\
-            &= \text{E}_{q}\left[
-                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta}) 
-                + \log f(\bm{y})
-                \right]\\
-            &= \text{E}_{q}\left[
-                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})\right] + 
-                    \text{E}_{q}\left[\log f(\bm{y})\right].\\
-            &= \text{E}_{q}\left[
-                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})\right] + 
-                   \log f(\bm{y}).
-        \end{aligned}
-    \]
-    Note that the second term, the \emph{evidence}, is constant with respect to 
-    $\bm{\theta}$.  With a bit of rearrangement,
-    \[
-        \begin{aligned}
-        \log f(\bm{y}) 
-            &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
-                - \text{E}_q\left[
-                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})
-                \right]\\
-            &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
-                + \mathcal{L}(\bm{\theta})
-        \end{aligned}
-    \]
-    Thus maximizing $\mathcal{L}(\bm{\theta})$ is equvivalent to minimizing the 
-    KL divergence. In this form, as KL divergence is a positive quantity, it is
-    readily apparent that $\mathcal{L}(\bm{\theta})$ establishes a lower bound
-    on the evidence.  As such, the variational literature has christened it the
-    \emph{evidence lower bound}, frequently abbreviated to \emph{ELBO}.
-    
-\subsection{Optimizing the ELBO: Automatic Differentiation}
 
 % EOF 
