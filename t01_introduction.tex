@@ -33,15 +33,16 @@ Sea, Lake, and Overland Surges from Hurricanes \citep{jelesnianski1992} is a
 
 Inundation can be catastrophic.  Setting aside the potential for loss of life, 
     flooding can impose costly damage to property: inundation of homes and 
-    businesses destroys posessions, damages buildings through saturating 
-    walls and eroding foundations. \makenote{expand}\needcite  
-    Flooding can damage vehicles, such taht a single storm can force insurance 
+    businesses destroys possessions, damages buildings through saturating 
+    walls and eroding foundations.  Corrosion resulting from high--salinity
+    flooding can create more long--term damage.\makenote{expand}\needcite  
+    Flooding can damage vehicles, such that a single storm can force insurance 
     companies to declare large quantities of vehicles as total losses. 
     \makenote{expand}\needcite.  Flooding damages agriculture: beyond 
     destruction of currently growing or stored crops, or the drowning of 
     livestock, inundation by storm surge results in the ground absorbing salt, 
     affecting the production capacity of the field until abatement. Flooding can
-    damage infrastucture: flooded roads can be washed out or have their 
+    damage infrastructure: flooded roads can be washed out or have their 
     foundation damaged, flooded sewers and sewage treatment plants can release 
     their contents above ground imposing additional environmental costs.  
     Flooded power infrastructure, such as transformers can short out causing 
@@ -55,13 +56,17 @@ Unfortunately, with respect to flooding in general, SLOSH provides only an
     incomplete picture.  It does not account for rainfall or rivers bursting
     their banks.
 
-\subsection{Extremes}
+\makenote{I need to expound upon the necessity/applicability of extreme analysis
+    to inundation.}
+
+\subsection{Extreme Value Theory}
+
 
 
 Let $\bm{W} = (W_1,\ldots,W_d)$ be a $d$--dimensional random vector with 
     cumulative distribution $F$.  Assuming there exists a sequence of vectors
     $\bm{a}_n$, $\bm{b}_n$, and a $d$--variate distribution $G$ such that 
-    $\lim\limits_{n\to\infty}F^n(\bm{a}_n\bm{w} + \bm{b}_n) = G(\bm{w})$.  Then
+    $\lim\limits_{n\to\infty}F^n(\bm{a}_n\bm{w} + \bm{b}_n) = G(\bm{w})$, then
     $G$ is a $d$--variate generalized extreme value distribution.  Then,
     \[
         \lim\limits_{n\to\infty}\text{Pr}
@@ -70,11 +75,63 @@ Let $\bm{W} = (W_1,\ldots,W_d)$ be a $d$--dimensional random vector with
         = \frac{\log G(\bm{w}\wedge \bm{0}) - \log G(\bm{w})}{\log G(\bm{0})}
         = H(\bm{w})
     \]
-    where $H$ is the multivariate Pareto distribution.
+    where $H$ is the multivariate Pareto distribution.  \cite{rootzen2018}
+    provides a number of stochastic representations of $H$, and in particular,
+    Remark~1 justifies the representation given in \cite{ferreira2014} where,
+    in the limit, we factorize $\bm{W} = R\bm{V}$ with $R$ and $\bm{V}$ independent.
+    $R = \lVert \bm{W}\rVert_{\infty}$ is distributed as a standard Pareto random
+    variable, and $\bm{V} = \bm{W} / \lVert \bm{W}\rVert_{\infty}$ is a random
+    vector existing within $\mathbb{S}_{\infty}^{d-1}$, the positive orthant of
+    the unit sphere under the $\mathcal{L}_{\infty}$ norm.  $R$ and $\bm{V}$
+    respectively comprise the \emph{radial} and \emph{angular} components of $H$.
+    As $R$ and $\bm{V}$ are independent,  the distribution of $\bm{V}$ is 
+    effectively the dependence structure of $\bm{W}$.
 
+Let the threshold $b_{q\ell} = \hat{F}_{\ell}^{-1}(1 - 1/q)$, where $\hat{F}$ is
+    the empirical cumulative distribution function for the $\ell$th component.
+    Marginally, values exceeding the threshold $b_{q\ell}$ are assumed to follow
+    a univariate generalized Pareto distribution, and are used to estimate the
+    corresponding marginal scale and shape parameters $a_{\ell}$ and $\xi_{\ell}$
+    respectively.  Setting $\bm{b}$ and having inferred $\bm{a}$, and $\bm{\xi}$, 
+    we transform $\bm{w}\mid \bm{w}\not\leq \bm{b}$ to a standard multivariate 
+    Pareto form via the transformation
+    \begin{equation}
+        z_{i\ell} = \left(1 + \xi_{\ell}\frac{w_{i\ell} 
+            - b_{\ell}}{a_{\ell}}\right)_{+}^{1 / \xi_{\ell}}
+    \end{equation}
+    where $(\cdot)_+$ indicates the positive parts function.  Let 
+    $r_i = \lVert \bm{z}_i$, and $\bm{v}_i = \bm{z}_i / r_i$.  Due to 
+    thresholding, $i$ ranges from 1 to $m\leq n$, and $r_i > 1$.  Recall that
+    $R\in\mathbb{R}_+$ will by design follow a standard Pareto distribution,
+    the inferential task left to us is describing the distribution of the
+    angular component $\bm{V}\in\mathbb{S}_{\infty}^{d-1}$.  
 
-
-
+\subsection{Projected Gamma}
+A suitable distribution for $\bm{V}$ can be approximated by projecting a 
+    distribution in $\mathbb{R}_+^d$ onto $\mathbb{S}_{p}^{d-1}$.  
+    Recall that the $\mathcal{L}_p$ norm 
+    $\lVert \bm{s}\rVert_p = \left(\sum_{\ell = 1}^d\right)^{1/p}$.  Then
+    for $\bm{x}\in\mathbb{R}_+^d$, we define the transformation
+    \begin{equation}
+    \label{eqn:projection}
+        T_p(\bm{x}) = \left(\lVert \bm{x}\rVert_p, 
+            \frac{x_1}{\lVert \bm{x}\rVert_p},\ldots, 
+                \frac{x_{d-1}}{\lVert \bm{x}\rVert_p}\right)
+                =: (r,\bm{y})
+    \end{equation}
+    where $y = (y_1,\ldots,y_{d-1}) \in \mathbb{S}_{p}^{d-1}$, $r > 0$, and 
+    $y_d = \left(1 - \sum_{\ell = 1}^{d-1}y_{\ell}^p\right)^{\frac{1}{p}}$.
+    By transforming $\bm{x}$ to $(r,\bm{y})$ and integrating out $r$, we
+    succeed in establishing a distribution for $\bm{y}$ on 
+    $\mathbb{S}_{\infty}^{d-1}$
+    The Jacobian of the transformation in Equation~\eqref{eqn:projection} is
+    $r^{d-1}\left[Y_d + \sum_{\ell = 1}^{d-1}_{\ell}^py_d^{1-p}\right]$.
+    This Jacobian is well suited to a product of gammas density, where 
+    $f(\bm{x}\mid\bm{\alpha},\bm{\beta}) = 
+        \prod_{\ell = 1}^d\mathcal{G}(x_{\ell}\mid\alpha_{\ell},\beta_{\ell})$.
+    Transforming $\bm{x}$ as described, $r$ can be integrated out in closed
+    form, and we are left with the \emph{projected gamma} density for arbitrary 
+    $p > 0$.
     \[
         f(\bm{y}\mid\bm{\alpha},\bm{\beta}) = \prod_{\ell = 1}^d\left[
             \frac{\beta_{\ell}^{\alpha_{\ell}}}{\Gamma(\alpha_{\ell})}
@@ -85,30 +142,10 @@ Let $\bm{W} = (W_1,\ldots,W_d)$ be a $d$--dimensional random vector with
                 \right)^{\sum_{\ell = 1}^d \alpha_{\ell}}
             }
     \]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Projected Gamma}
-
+    Unfortunately as $p\to\infty$, the stability of the Jacobian of the
+    transformation becomes dependent on the value of $y_d$.  If $y_d\to 0$,
+    then the Jacobian diverges, and the distribution becomes numerically
+    unstable.
 
 
 
