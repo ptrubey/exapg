@@ -125,7 +125,7 @@ A suitable distribution for $\bm{V}$ can be approximated by projecting a
     succeed in establishing a distribution for $\bm{y}$ on 
     $\mathbb{S}_{\infty}^{d-1}$
     The Jacobian of the transformation in Equation~\eqref{eqn:projection} is
-    $r^{d-1}\left[Y_d + \sum_{\ell = 1}^{d-1}_{\ell}^py_d^{1-p}\right]$.
+    $r^{d-1}\left[Y_d + \sum_{\ell = 1}^{d-1}y_{\ell}^py_d^{1-p}\right]$.
     This Jacobian is well suited to a product of gammas density, where 
     $f(\bm{x}\mid\bm{\alpha},\bm{\beta}) = 
         \prod_{\ell = 1}^d\mathcal{G}(x_{\ell}\mid\alpha_{\ell},\beta_{\ell})$.
@@ -142,10 +142,14 @@ A suitable distribution for $\bm{V}$ can be approximated by projecting a
                 \right)^{\sum_{\ell = 1}^d \alpha_{\ell}}
             }
     \]
-    Unfortunately as $p\to\infty$, the stability of the Jacobian of the
-    transformation becomes dependent on the value of $y_d$.  If $y_d\to 0$,
-    then the Jacobian diverges, and the distribution becomes numerically
-    unstable.
+    Of course, for $p=\infty$, the transformation is not differentiable, so we
+    desire a high but finite $p$.
+    Here we balance two issues: as $p\to\infty$, the space $\mathbb{S}_{p}^{d-1}$ 
+    will approach asymptotically towards $\mathbb{S}_{\infty}^{d-1}$
+    Unfortunately also as $p\to\infty$, the stability of the Jacobian of the
+    transformation becomes increasingly dependent on the value of $y_d$.  If 
+    $y_d\to 0$, then the Jacobian diverges, and the distribution becomes 
+    numerically unstable. We select $p=10$ to balance these concerns.
 
 
 
