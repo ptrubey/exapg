@@ -1,29 +1,174 @@
-\subsection{Variational methods: a brief overview}
-Let $\bm{y}$ be the observed data, and $\bm{\theta}$ be an unobserved set of 
+Our analysis of the SLOSH data's extremal dependence requires some background.
+    \makenote{introduce the review section.  avoid naked sections.}
+
+\subsection{Extreme Value Theory\label{ref:evt}}
+\makenote{first paragraph basically copy-pasted from ndpg.  should probably
+    rephrase more.}
+Extreme value theory uses the limited information available in a sample to
+    characterize the tails of a distribution.  In the univariate case, asymptotic
+    results provide a unique parametric limiting family for the maximum observation
+    in a sample.  For data with such a limiting distribution, a common approach
+    is to consider observations in excess of a high threshold, and model the
+    excesses over that threshold under a generalized Pareto framework.  This
+    approach is known as \emph{peaks over threshold} (PoT).  In the multivariate 
+    case, the theory for PoT is well established (see, for example, 
+    \cite{dehaan2006}), and it indicates the existence of a limiting distribution
+    with no parametric representation.  This can pose a challenge for inference,
+    but we are not without options.
+
+The multivariate PoT model considered in this paper has been developed 
+    in~\cite{trubey2022}, based on a definition of the limiting distribution proposed
+    proposed in~\cite{rootzen2018}.  
+    Let $\bm{W} = (W_1,\ldots,W_d)$ be a $d$--dimensional random vector with 
+    cumulative distribution $F$.  Assuming there exists a sequence of vectors
+    $\bm{a}_n$, $\bm{b}_n$, and a $d$--variate distribution $G$ such that 
+    $\lim\limits_{n\to\infty}F^n(\bm{a}_n\bm{w} + \bm{b}_n) = G(\bm{w})$, then
+    $G$ is a $d$--variate generalized extreme value distribution.  Then,
+    \[
+        \lim\limits_{n\to\infty}\text{Pr}
+            \left[\bm{a}_n^{-1}(\bm{W} - \bm{b}_n) 
+                \leq \bm{w}\mid \bm{W}\not\leq \bm{b}_n\right]
+        = \frac{\log G(\bm{w}\wedge \bm{0}) - \log G(\bm{w})}{\log G(\bm{0})}
+        = H(\bm{w})
+    \]
+    where $H$ is the multivariate Pareto distribution.  \cite{rootzen2018}
+    provides a number of stochastic representations of $H$, and in particular,
+    Remark~1 justifies the representation given in \cite{ferreira2014} where,
+    in the limit, we factorize $\bm{W} = R\bm{V}$ with $R$ and $\bm{V}$ independent.
+    \makenote{I'm not very fond of this transition.  We standardize $\bm{W}$ to 
+    $\bm{Z}$, then factorize $\bm{Z} = R\bm{V}$.  Separability holds true in both
+    cases (i think), but is still dependent on marginal distributional parameters.
+    standardization allows those to be ignored.  We should mention standardization
+    before factorization.}
+    $R = \lVert \bm{W}\rVert_{\infty}$ is distributed as a standard Pareto random
+    variable, and $\bm{V} = \bm{W} / \lVert \bm{W}\rVert_{\infty}$ is a random
+    vector existing within $\mathbb{S}_{\infty}^{d-1}$, the positive orthant of
+    the unit sphere under the $\mathcal{L}_{\infty}$ norm.  $R$ and $\bm{V}$
+    respectively comprise the \emph{radial} and \emph{angular} components of $H$.
+    As $R$ and $\bm{V}$ are independent,  the distribution of $\bm{V}$ is 
+    effectively the dependence structure of $\bm{W}$.
+
+Let the threshold $b_{q\ell} = \hat{F}_{\ell}^{-1}(1 - 1/q)$, where $\hat{F}$ is
+    the empirical cumulative distribution function for the $\ell$th component.
+    Marginally, values exceeding the threshold $b_{q\ell}$ are assumed to follow
+    a univariate generalized Pareto distribution, and are used to estimate the
+    corresponding marginal scale and shape parameters $a_{\ell}$ and $\xi_{\ell}$
+    respectively.  Setting $\bm{b}$ and having inferred $\bm{a}$, and $\bm{\xi}$, 
+    we transform $\bm{w}\mid \bm{w}\not\leq \bm{b}$ to a standard multivariate 
+    Pareto form via the transformation
+    \begin{equation}
+        z_{i\ell} = \left(1 + \xi_{\ell}\frac{w_{i\ell} 
+            - b_{\ell}}{a_{\ell}}\right)_{+}^{1 / \xi_{\ell}}
+    \end{equation}
+    where $(\cdot)_+$ indicates the positive parts function.  Let 
+    $r_i = \lVert \bm{z}_i$, and $\bm{v}_i = \bm{z}_i / r_i$.  Due to 
+    thresholding, $i$ ranges from 1 to $m\leq n$, and $r_i > 1$.  Recall that
+    $R\in\mathbb{R}_+$ will by design follow a standard Pareto distribution,
+    the inferential task left to us is describing the distribution of the
+    angular component $\bm{V}\in\mathbb{S}_{\infty}^{d-1}$.  
+
+\subsection{Projected Gamma\label{ref:pg}}
+A suitable distribution for $\bm{V}$ can be approximated by projecting a 
+    distribution in $\mathbb{R}_+^d$ onto $\mathbb{S}_{p}^{d-1}$.  
+    Recall that the $\mathcal{L}_p$ norm 
+    $\lVert \bm{s}\rVert_p = \left(\sum_{\ell = 1}^d\right)^{1/p}$.  Then
+    for $\bm{x}\in\mathbb{R}_+^d$, we define the transformation
+    \begin{equation}
+        \label{eqn:projection}
+        T_p(\bm{x}) = \left(\lVert \bm{x}\rVert_p, 
+            \frac{x_1}{\lVert \bm{x}\rVert_p},\ldots, 
+                \frac{x_{d-1}}{\lVert \bm{x}\rVert_p}\right)
+                =: (r,\bm{y})
+    \end{equation}
+    where $y = (y_1,\ldots,y_{d-1}) \in \mathbb{S}_{p}^{d-1}$, $r > 0$, and 
+    $y_d = \left(1 - \sum_{\ell = 1}^{d-1}y_{\ell}^p\right)^{\frac{1}{p}}$.
+    By transforming $\bm{x}$ to $(r,\bm{y})$ and integrating out $r$, we
+    succeed in establishing a distribution for $\bm{y}$ on 
+    $\mathbb{S}_{\infty}^{d-1}$
+    The Jacobian of the transformation in Equation~\eqref{eqn:projection} is
+    $r^{d-1}\left[Y_d + \sum_{\ell = 1}^{d-1}y_{\ell}^py_d^{1-p}\right]$.
+    This Jacobian is well suited to a product of gammas density, where 
+    $f(\bm{x}\mid\bm{\alpha},\bm{\beta}) = 
+        \prod_{\ell = 1}^d\mathcal{G}(x_{\ell}\mid\alpha_{\ell},\beta_{\ell})$.
+    Transforming $\bm{x}$ as described, $r$ can be integrated out in closed
+    form, and we are left with the \emph{projected gamma} density for arbitrary 
+    $p > 0$.
+    \[
+        f(\bm{y}\mid\bm{\alpha},\bm{\beta}) = \prod_{\ell = 1}^d\left[
+            \frac{\beta_{\ell}^{\alpha_{\ell}}}{\Gamma(\alpha_{\ell})}
+            y_{\ell}^{\alpha_{\ell} - 1}\right]
+            \left[y_d + \sum_{\ell = 1}^{d-1}y_{\ell}^py_d^{1-p}\right]
+            \frac{\Gamma(\sum_{\ell = 1}^d \alpha_{\ell})}{\left(
+                \sum_{\ell = 1}^d\beta_{\ell}y_{\ell}
+                \right)^{\sum_{\ell = 1}^d \alpha_{\ell}}
+            }
+    \]
+    Of course, at $p=\infty$, the transformation is not differentiable, so a 
+    direct projection onto $\mathbb{S}_{\infty}^{d-1}$ is not possible. We
+    instead desire a high but finite $p$.
+    Here we balance two issues: as $p\to\infty$, the space $\mathbb{S}_{p}^{d-1}$ 
+    will approach asymptotically towards $\mathbb{S}_{\infty}^{d-1}$.
+    Unfortunately, also as $p\to\infty$, the stability of the Jacobian of the
+    transformation becomes increasingly dependent on the value, or choice, of 
+    $y_d$.  If $y_d\to 0$, then the Jacobian diverges, and the distribution 
+    becomes numerically unstable. We select $p = 10$ to balance these concerns.
+
+To better capture the variability in the data, we use the projected gamma density 
+    as a kernel density for a Pitman--Yor mixture model.
+
+The projected gamma based model is not an inherently spatial model.  As such, 
+    rather than holding the entire grid in memory, it makes sense to consider 
+    data pertaining only to landmarks of interest.    If one is performing 
+    contingency planning in preparation for the storm season, it would be 
+    helpful to know the probability of such services being rendered inoperable 
+    simultaneously, precisely when they are needed most.  If one is seeking 
+    sites for a new service provider, it would be helpful understand the 
+    likelihood of a proposed location being rendered inoperable in the same 
+    manner.  For these reasons, and considering the computational complexity of 
+    a 23 million dimensional model, rather than consider the entire grid of data 
+    pertaining to any particular storm, we subset the data to grid cells in the 
+    vicinity of such locations of interest.  These locations are gathered from 
+    the 2023 US Census Bureau's \emph{TIGER} database \needcite and specifically 
+    the point and landmark file, and only grid cells that experienced \emph{some} 
+    inundation in greater than 2 \makenote{(subject to change)} percent of storm 
+    simulations.   This last requirement arises as consequence of fitting the 
+    generalized Pareto: the threshold for excesses $b$ needs to be set above the 
+    minimum observed value $(0)$ of the dataset.  
+    \makenote{(idea: zero-inflated projected gamma?)}  \makenote{Probably not
+    necessary...} \st{We identify grid cells in}
+    \st{the vicinity of such locations by establishing a small buffer around said}
+    \st{locations, and spatially intersecting the buffer with the grid.}
+
+\subsection{Variational methods: a brief overview\label{ref:varbayes}}
+\makenote{these 2 paragraphs are intended to introduce the reasoning for varbayes.
+    I like the wordsmithing at the end of the second paragraph, but i'm unsure of
+    if they're necessary, or the most appropriate}
+Let $\bm{x}$ be the observed data, and $\bm{\theta}$ be an unobserved set of 
     parameters governing the distribution of the observed data.  We term 
-    $f(\bm{y}\mid\bm{\theta})$ the likelihood.  The goal of inference in 
+    $f(\bm{x}\mid\bm{\theta})$ the likelihood.  The goal of inference in 
     general is to obtain information about $\theta$, using information 
-    obtained from $\bm{y}$. Bayesian inference in particular places a prior
+    obtained from $\bm{x}$. Bayesian inference in particular places a prior
     distribution on $\theta$, $f(\bm{\theta})$, and from this we can obtain a
     posterior distribution on $\bm{\theta}$ that incorporates both information
     from the likelihood as well as the prior.  That is,
     \[
-        f(\bm{\theta}\mid\bm{y}) = 
-            \frac{f(\bm{y}\mid\bm{\theta})f(\bm{\theta})}{f(\bm{y})},
+        f(\bm{\theta}\mid\bm{x}) = 
+            \frac{f(\bm{x}\mid\bm{\theta})f(\bm{\theta})}{f(\bm{x})},
     \]
-    where the demoninator $f(\bm{y})$ is obtained as
+    where the demoninator $f(\bm{x})$ is obtained as
     \[
-        f(\bm{y}) = 
-            \int_{\bm{\theta}}f(\bm{y}\mid\bm{\theta})f(\bm{\theta})d\bm{\theta}.
+        f(\bm{x}) = 
+            \int_{\Omega_\bm{\theta}}f(\bm{x}\mid\bm{\theta})f(\bm{\theta})d\bm{\theta}.
     \]
+    where $\Omega_{\bm{\theta}}$ denotes the support of $\bm{\theta}$.
 
 When a given model is sufficiently complex that the above integration is no
     longer feasible analytically, or if the posterior cannot be described in
     closed form\makenote{when the posterior is not tractible...}, we frequently 
-    turn to sampling--based classes of methods such as 
-    \emph{Markov chain Monte Carlo} (MCMC)\needcite. There are myriad approaches 
-    to MCMC, \makenote{expand?}, but central to all sample
-    based approaches is the stochastic nature of model fitting, and the 
+    turn to sampling--based classes of methods, such as 
+    \emph{Markov chain Monte Carlo} (MCMC)\needcite. There are myriad approaches, 
+    \makenote{expand?}, but central to all sampling--based 
+    methods is the stochastic nature of model fitting, and the 
     necessity of samples for posterior inference.  Sampling methods can be 
     tempermental, requiring many numbers of iterations to reach convergence.
     Samples take time to draw, and memory to store; but for sufficiently large 
@@ -33,17 +178,17 @@ One class of methods that shows promise in avoiding the computational and
     storage burdens of sampling methods is variational inference.\needcite 
     Based on variational calculus, this approach attempts to approximate the 
     true posterior distribution
-    $f(\bm{\theta}\mid\bm{y})$ using a tractible \emph{surrogate posterior} 
+    $f(\bm{\theta}\mid\bm{x})$ using a tractible \emph{surrogate posterior} 
     $q(\bm{\theta})$.  Model fitting under this class involves specification of 
     the family of surrogate densities $\mathcal{Q}$, then selecting that density 
     $q^*$ which minimizes the \emph{Kullbeck-Liebler} (KL) divergence between 
     the surrogate and true posterior.  That is,
     \[
         q^*(\bm{\theta}) = \argmin_{q\in\mathcal{Q}}\left\lbrace
-        \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{y})\right) 
+        \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{x})\right) 
         \coloneqq
         \text{E}_{q}\left[\log\left(
-        \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
+        \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
         \right)\right]
         \right\rbrace.
     \]
@@ -56,23 +201,23 @@ One class of methods that shows promise in avoiding the computational and
     Then we reformulate the KL divergence into
     \[
         \begin{aligned}
-        \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
+        \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
             &=\text{E}_{q}\left[\log\left(
-                \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
+                \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
                 \right)\right]\\
             &= \text{E}_{q}\left[
-                \frac{q(\bm{\theta})f(\bm{y})}{f(\bm{y},\bm{\theta})}
+                \frac{q(\bm{\theta})f(\bm{x})}{f(\bm{y},\bm{\theta})}
                 \right]\\
             &= \text{E}_{q}\left[
-                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta}) 
-                + \log f(\bm{y})
+                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta}) 
+                + \log f(\bm{x})
                 \right]\\
             &= \text{E}_{q}\left[
-                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})\right] + 
-                    \text{E}_{q}\left[\log f(\bm{y})\right].\\
+                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})\right] + 
+                    \text{E}_{q}\left[\log f(\bm{x})\right].\\
             &= \text{E}_{q}\left[
-                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})\right] + 
-                   \log f(\bm{y}).
+                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})\right] + 
+                   \log f(\bm{x}).
         \end{aligned}
     \]
     Note that the second term, the \emph{evidence}, is constant with respect to 

@@ -23,8 +23,10 @@ Sea, Lake, and Overland Surges from Hurricanes \citep{jelesnianski1992} is a
     data pertaining to the eye of the storm when it made landfall---bearing, 
     velocity, and latitude, minimum atmospheric pressure of the storm when it 
     made landfall, and projections of sea level rise over time.  A 
-    \emph{simulation} from the model is a grid containing \num{23119800} 
-    elements wih a spatial resolution of \num{0.001} degrees \makenote{(verify)}, 
+    \emph{simulation} from the model, for the basin we are analyzing, is a grid 
+    containing \num{23119800} 
+    elements wih a spatial resolution of \num{0.001} degrees, or approximately 
+    90 meters, \makenote{(verify)}, 
     covering an area extending from Virginia Beach, Virginia, to Long Island, 
     New York.  We have \num{4000} such simulations, produced by SLOSH from a 
     sample of storm characteristics.
@@ -57,122 +59,25 @@ Unfortunately, with respect to flooding in general, SLOSH provides only an
     their banks.
 
 \makenote{I need to expound upon the necessity/applicability of extreme analysis
-    to inundation.}
+    to inundation.  Mention: importance of tails of the distribution, relevance of
+    extremes to such analysis, }
 
-\subsection{Extreme Value Theory}
-Let $\bm{W} = (W_1,\ldots,W_d)$ be a $d$--dimensional random vector with 
-    cumulative distribution $F$.  Assuming there exists a sequence of vectors
-    $\bm{a}_n$, $\bm{b}_n$, and a $d$--variate distribution $G$ such that 
-    $\lim\limits_{n\to\infty}F^n(\bm{a}_n\bm{w} + \bm{b}_n) = G(\bm{w})$, then
-    $G$ is a $d$--variate generalized extreme value distribution.  Then,
-    \[
-        \lim\limits_{n\to\infty}\text{Pr}
-            \left[\bm{a}_n^{-1}(\bm{W} - \bm{b}_n) 
-                \leq \bm{w}\mid \bm{W}\not\leq \bm{b}_n\right]
-        = \frac{\log G(\bm{w}\wedge \bm{0}) - \log G(\bm{w})}{\log G(\bm{0})}
-        = H(\bm{w})
-    \]
-    where $H$ is the multivariate Pareto distribution.  \cite{rootzen2018}
-    provides a number of stochastic representations of $H$, and in particular,
-    Remark~1 justifies the representation given in \cite{ferreira2014} where,
-    in the limit, we factorize $\bm{W} = R\bm{V}$ with $R$ and $\bm{V}$ independent.
-    $R = \lVert \bm{W}\rVert_{\infty}$ is distributed as a standard Pareto random
-    variable, and $\bm{V} = \bm{W} / \lVert \bm{W}\rVert_{\infty}$ is a random
-    vector existing within $\mathbb{S}_{\infty}^{d-1}$, the positive orthant of
-    the unit sphere under the $\mathcal{L}_{\infty}$ norm.  $R$ and $\bm{V}$
-    respectively comprise the \emph{radial} and \emph{angular} components of $H$.
-    As $R$ and $\bm{V}$ are independent,  the distribution of $\bm{V}$ is 
-    effectively the dependence structure of $\bm{W}$.
-
-Let the threshold $b_{q\ell} = \hat{F}_{\ell}^{-1}(1 - 1/q)$, where $\hat{F}$ is
-    the empirical cumulative distribution function for the $\ell$th component.
-    Marginally, values exceeding the threshold $b_{q\ell}$ are assumed to follow
-    a univariate generalized Pareto distribution, and are used to estimate the
-    corresponding marginal scale and shape parameters $a_{\ell}$ and $\xi_{\ell}$
-    respectively.  Setting $\bm{b}$ and having inferred $\bm{a}$, and $\bm{\xi}$, 
-    we transform $\bm{w}\mid \bm{w}\not\leq \bm{b}$ to a standard multivariate 
-    Pareto form via the transformation
-    \begin{equation}
-        z_{i\ell} = \left(1 + \xi_{\ell}\frac{w_{i\ell} 
-            - b_{\ell}}{a_{\ell}}\right)_{+}^{1 / \xi_{\ell}}
-    \end{equation}
-    where $(\cdot)_+$ indicates the positive parts function.  Let 
-    $r_i = \lVert \bm{z}_i$, and $\bm{v}_i = \bm{z}_i / r_i$.  Due to 
-    thresholding, $i$ ranges from 1 to $m\leq n$, and $r_i > 1$.  Recall that
-    $R\in\mathbb{R}_+$ will by design follow a standard Pareto distribution,
-    the inferential task left to us is describing the distribution of the
-    angular component $\bm{V}\in\mathbb{S}_{\infty}^{d-1}$.  
-
-\subsection{Projected Gamma}
-A suitable distribution for $\bm{V}$ can be approximated by projecting a 
-    distribution in $\mathbb{R}_+^d$ onto $\mathbb{S}_{p}^{d-1}$.  
-    Recall that the $\mathcal{L}_p$ norm 
-    $\lVert \bm{s}\rVert_p = \left(\sum_{\ell = 1}^d\right)^{1/p}$.  Then
-    for $\bm{x}\in\mathbb{R}_+^d$, we define the transformation
-    \begin{equation}
-    \label{eqn:projection}
-        T_p(\bm{x}) = \left(\lVert \bm{x}\rVert_p, 
-            \frac{x_1}{\lVert \bm{x}\rVert_p},\ldots, 
-                \frac{x_{d-1}}{\lVert \bm{x}\rVert_p}\right)
-                =: (r,\bm{y})
-    \end{equation}
-    where $y = (y_1,\ldots,y_{d-1}) \in \mathbb{S}_{p}^{d-1}$, $r > 0$, and 
-    $y_d = \left(1 - \sum_{\ell = 1}^{d-1}y_{\ell}^p\right)^{\frac{1}{p}}$.
-    By transforming $\bm{x}$ to $(r,\bm{y})$ and integrating out $r$, we
-    succeed in establishing a distribution for $\bm{y}$ on 
-    $\mathbb{S}_{\infty}^{d-1}$
-    The Jacobian of the transformation in Equation~\eqref{eqn:projection} is
-    $r^{d-1}\left[Y_d + \sum_{\ell = 1}^{d-1}y_{\ell}^py_d^{1-p}\right]$.
-    This Jacobian is well suited to a product of gammas density, where 
-    $f(\bm{x}\mid\bm{\alpha},\bm{\beta}) = 
-        \prod_{\ell = 1}^d\mathcal{G}(x_{\ell}\mid\alpha_{\ell},\beta_{\ell})$.
-    Transforming $\bm{x}$ as described, $r$ can be integrated out in closed
-    form, and we are left with the \emph{projected gamma} density for arbitrary 
-    $p > 0$.
-    \[
-        f(\bm{y}\mid\bm{\alpha},\bm{\beta}) = \prod_{\ell = 1}^d\left[
-            \frac{\beta_{\ell}^{\alpha_{\ell}}}{\Gamma(\alpha_{\ell})}
-            y_{\ell}^{\alpha_{\ell} - 1}\right]
-            \left[y_d + \sum_{\ell = 1}^{d-1}y_{\ell}^py_d^{1-p}\right]
-            \frac{\Gamma(\sum_{\ell = 1}^d \alpha_{\ell})}{\left(
-                \sum_{\ell = 1}^d\beta_{\ell}y_{\ell}
-                \right)^{\sum_{\ell = 1}^d \alpha_{\ell}}
-            }
-    \]
-    Of course, for $p=\infty$, the transformation is not differentiable, so we
-    desire a high but finite $p$.
-    Here we balance two issues: as $p\to\infty$, the space $\mathbb{S}_{p}^{d-1}$ 
-    will approach asymptotically towards $\mathbb{S}_{\infty}^{d-1}$
-    Unfortunately also as $p\to\infty$, the stability of the Jacobian of the
-    transformation becomes increasingly dependent on the value of $y_d$.  If 
-    $y_d\to 0$, then the Jacobian diverges, and the distribution becomes 
-    numerically unstable. We select $p=10$ to balance these concerns.
+Our goal is then a consistent and performant model for multivariate extremes, 
+    such that we can learn the dependence structure of the inundation field.
 
 
-
-
-
-The projected gamma based model is not an inherently spatial model.  As such, 
-    rather than holding the entire grid in memory, it makes sense to consider 
-    data pertaining only to landmarks of interest.    If one is performing 
-    contingency planning in preparation for the storm season, it would be 
-    helpful to know the probability of such services being rendered inoperable 
-    simultaneously, precisely when they are needed most.  If one is seeking 
-    sites for a new service provider, it would be helpful understand the 
-    likelihood of a proposed location being rendered inoperable in the same 
-    manner.  For these reasons, and considering the computational complexity of 
-    a 23 million dimensional model, rather than consider the entire grid of data 
-    pertaining to any particular storm, we subset the data to grid cells in the 
-    vicinity of such locations of interest.  These locations are gathered from 
-    the 2023 US Census Bureau's \emph{TIGER} database \needcite and specifically 
-    the point and landmark file, and only grid cells that experienced \emph{some} 
-    inundation in greater than 2 \makenote{(subject to change)} percent of storm 
-    simulations.   This last requirement arises as consequence of fitting the 
-    generalized Pareto: the threshold for excesses $b$ needs to be set above the 
-    minimum observed value $(0)$ of the dataset.  
-    \makenote{(idea: zero-inflated projected gamma?)}  We identify grid cells in 
-    the vicinity of such locations by establishing a buffer 
-
-
+Section~\ref{ref:review} details the background for the relevant modelling methods
+    we will be using in this analysis.  In particular, \ref{ref:evt} provides
+    an overview of extreme value theory, to the justification for separating
+    the magnitude of a multivariate extreme from its angular component; \ref{ref:pg}
+    describes the process of creating an angular distribution as well as introducing
+    the component distribution we will be using in our Bayesian non-parametric 
+    mixture model, which is further expanded in \ref{ref:npbayes}; and 
+    \ref{ref:varbayes} introduces variational Bayesian methods, which we can use
+    to apply our model at large scale.  Section~\ref{ref:methodology} 
+    \makenote{does something.  probably most of review should be moved here?  
+    but none of that is new, only new thing is the particular variational model.}
+    Section~\ref{ref:results} presents the results of our analysis, and finally
+    Section~\ref{ref:conclusion} concludes.
 
 % EOF 
