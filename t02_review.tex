@@ -114,7 +114,21 @@ A suitable distribution for $\bm{V}$ can be approximated by projecting a
     becomes numerically unstable. We select $p = 10$ to balance these concerns.
 
 To better capture the variability in the data, we use the projected gamma density 
-    as a kernel density for a Pitman--Yor mixture model.
+    as a kernel density of an Bayesian non--parametric mixture model, based on 
+    the Pitman--Yor process introduced in~\cite{perman1992}.  Pitman--Yor processes
+    are fully atomic measures specified by two parameters and a centering
+    distribution.  Under a stick--breaking representation as described 
+    in~\cite{ishwaran2001}, 
+    \[
+        \text{Pr}(\bm{\alpha}\mid\ldots) = \sum_{j = 1}^Jp_j\delta_{\bm{\alpha}_j};\;\;\;
+        \sum_{j=1}^Jp_j = 1;\;\;\;p_j := \chi_j\prod_{k = 1}^{j-1}(1 - \chi_k)  
+    \]
+    where $\delta_{\bm{\alpha}_j}$ indicates a point mass at $\bm{\alpha}_j$ and
+    $\bm{\alpha}_j$ are sampled independently from the centering distribution $G_0$.
+    Under the Pitman--Yor process, $\chi_j \sim \text{Beta}(1 - d, \eta + jd)$
+    where $d \in [0, 1)$ denotes the \emph{discount} parameter and $\eta > -d$
+    denotes the \emph{concentration} parameter.
+
 
 The projected gamma based model is not an inherently spatial model.  As such, 
     rather than holding the entire grid in memory, it makes sense to consider 
