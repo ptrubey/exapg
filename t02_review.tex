@@ -120,15 +120,16 @@ To better capture the variability in the data, we use the projected gamma densit
     distribution.  Under a stick--breaking representation as described 
     in~\cite{ishwaran2001}, 
     \[
-        \text{Pr}(\bm{\alpha}\mid\ldots) = \sum_{j = 1}^Jp_j\delta_{\bm{\alpha}_j};\;\;\;
-        \sum_{j=1}^Jp_j = 1;\;\;\;p_j := \chi_j\prod_{k = 1}^{j-1}(1 - \chi_k)  
+        \text{Pr}(\bm{\alpha}\mid\ldots) 
+            = \sum_{j = 1}^Jp_j\delta_{\bm{\alpha}_j};\;\;\;
+            \sum_{j=1}^Jp_j = 1;\;\;\;
+            p_j := \chi_j\prod_{k = 1}^{j-1}(1 - \chi_k)
     \]
     where $\delta_{\bm{\alpha}_j}$ indicates a point mass at $\bm{\alpha}_j$ and
     $\bm{\alpha}_j$ are sampled independently from the centering distribution $G_0$.
     Under the Pitman--Yor process, $\chi_j \sim \text{Beta}(1 - d, \eta + jd)$
     where $d \in [0, 1)$ denotes the \emph{discount} parameter and $\eta > -d$
     denotes the \emph{concentration} parameter.
-
 
 The projected gamma based model is not an inherently spatial model.  As such, 
     rather than holding the entire grid in memory, it makes sense to consider 
@@ -154,9 +155,10 @@ The projected gamma based model is not an inherently spatial model.  As such,
     \st{locations, and spatially intersecting the buffer with the grid.}
 
 \subsection{Variational methods: a brief overview\label{ref:varbayes}}
-\makenote{these 2 paragraphs are intended to introduce the reasoning for varbayes.
-    I like the wordsmithing at the end of the second paragraph, but i'm unsure of
-    if they're necessary, or the most appropriate}
+\makenote{These 2 paragraphs are intended to introduce the justification for 
+    VarBayes. I like the wordsmithing at the end of the second paragraph, but 
+    I'm unsure of the necessity.  Specifically, the necessity of a generic 
+    VarBayes intro as detailed here.}
 Let $\bm{x}$ be the observed data, and $\bm{\theta}$ be an unobserved set of 
     parameters governing the distribution of the observed data.  We term 
     $f(\bm{x}\mid\bm{\theta})$ the likelihood.  The goal of inference in 
