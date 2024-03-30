@@ -2,8 +2,7 @@ Our analysis of the SLOSH data's extremal dependence requires some background.
     \makenote{introduce the review section.  avoid naked sections.}
 
 \subsection{Extreme Value Theory\label{ref:evt}}
-\makenote{first paragraph basically copy-pasted from ndpg.  should probably
-    rephrase more.}
+\makenote{first paragraph basically copy-pasted from ndpg.  Rephrase more?}
 Extreme value theory uses the limited information available in a sample to
     characterize the tails of a distribution.  In the univariate case, asymptotic
     results provide a unique parametric limiting family for the maximum observation
@@ -63,7 +62,7 @@ Let the threshold $b_{q\ell} = \hat{F}_{\ell}^{-1}(1 - 1/q)$, where $\hat{F}$ is
     where $(\cdot)_+$ indicates the positive parts function.  Let 
     $r_i = \lVert \bm{z}_i$, and $\bm{v}_i = \bm{z}_i / r_i$.  Due to 
     thresholding, $i$ ranges from 1 to $m\leq n$, and $r_i > 1$.  Recall that
-    $R\in\mathbb{R}_+$ will by design follow a standard Pareto distribution,
+    $R\in (1, \infty)$ will by design follow a standard Pareto distribution,
     the inferential task left to us is describing the distribution of the
     angular component $\bm{V}\in\mathbb{S}_{\infty}^{d-1}$.  
 
@@ -115,8 +114,8 @@ A suitable distribution for $\bm{V}$ can be approximated by projecting a
 
 To better capture the variability in the data, we use the projected gamma density 
     as a kernel density of an Bayesian non--parametric mixture model, based on 
-    the Pitman--Yor process introduced in~\cite{perman1992}.  Pitman--Yor processes
-    are fully atomic measures specified by two parameters and a centering
+    the Pitman--Yor process introduced in~\cite{perman1992}.  A Pitman--Yor process
+    is a fully atomic measure specified by two parameters and a centering
     distribution.  Under a stick--breaking representation as described 
     in~\cite{ishwaran2001}, 
     \[

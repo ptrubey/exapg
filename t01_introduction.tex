@@ -65,19 +65,20 @@ Unfortunately, with respect to flooding in general, SLOSH provides only an
 Our goal is then a consistent and performant model for multivariate extremes, 
     such that we can learn the dependence structure of the inundation field.
 
-
-Section~\ref{ref:review} details the background for the relevant modelling methods
-    we will be using in this analysis.  In particular, \ref{ref:evt} provides
-    an overview of extreme value theory, to the justification for separating
-    the magnitude of a multivariate extreme from its angular component; \ref{ref:pg}
-    describes the process of creating an angular distribution as well as introducing
-    the component distribution we will be using in our Bayesian non-parametric 
-    mixture model, which is further expanded in \ref{ref:npbayes}; and 
-    \ref{ref:varbayes} introduces variational Bayesian methods, which we can use
-    to apply our model at large scale.  Section~\ref{ref:methodology} 
+The roadmap for our paper is as follows:  Section~\ref{ref:review} details the 
+    background for the relevant modelling methods
+    we will be using in this analysis.  In particular, Section~\ref{ref:evt} 
+    provides an overview of extreme value theory, to the justification for 
+    separating the magnitude of a multivariate extreme from its angular 
+    component; Section~\ref{ref:pg} describes the process of creating an angular 
+    distribution as well as introducing the model we use in our analysis; and 
+    Section~\ref{ref:varbayes} introduces variational Bayesian methods, which we 
+    can use to apply our model at large scale.  Section~\ref{ref:methodology} 
     \makenote{does something.  probably most of review should be moved here?  
     but none of that is new, only new thing is the particular variational model.}
-    Section~\ref{ref:results} presents the results of our analysis, and finally
-    Section~\ref{ref:conclusion} concludes.
+    Section~\ref{ref:results} presents our analysis, first demonstrating the 
+    efficacy of variational methods on simulated data as compared to MCMC, then
+    presenting some interesting results. Finally, Section~\ref{ref:conclusion} 
+    concludes.
 
 % EOF 
