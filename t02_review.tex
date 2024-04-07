@@ -16,7 +16,7 @@ Extreme value theory uses the limited information available in a sample to
     but we are not without options.
 
 The multivariate PoT model considered in this paper has been developed 
-    in~\cite{trubey2022}, based on a definition of the limiting distribution proposed
+    in~\cite{trubey:pg}, based on a definition of the limiting distribution proposed
     proposed in~\cite{rootzen2018}.  
     Let $\bm{W} = (W_1,\ldots,W_d)$ be a $d$--dimensional random vector with 
     cumulative distribution $F$.  Assuming there exists a sequence of vectors
@@ -172,8 +172,7 @@ Let $\bm{x}$ be the observed data, and $\bm{\theta}$ be an unobserved set of
     \]
     where the demoninator $f(\bm{x})$ is obtained as
     \[
-        f(\bm{x}) = 
-            \int_{\Omega_\bm{\theta}}f(\bm{x}\mid\bm{\theta})f(\bm{\theta})d\bm{\theta}.
+        f(\bm{x}) = \int_{\Omega_{\bm{\theta}}}f(\bm{x}\mid\bm{\theta})f(\bm{\theta})d\bm{\theta}
     \]
     where $\Omega_{\bm{\theta}}$ denotes the support of $\bm{\theta}$.
 
@@ -229,9 +228,6 @@ One class of methods that shows promise in avoiding the computational and
                 \right]\\
             &= \text{E}_{q}\left[
                 \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})\right] + 
-                    \text{E}_{q}\left[\log f(\bm{x})\right].\\
-            &= \text{E}_{q}\left[
-                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})\right] + 
                    \log f(\bm{x}).
         \end{aligned}
     \]
@@ -239,12 +235,12 @@ One class of methods that shows promise in avoiding the computational and
     $\bm{\theta}$.  With a bit of rearrangement,
     \[
         \begin{aligned}
-        \log f(\bm{y}) 
-            &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
+        \log f(\bm{x}) 
+            &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
                 - \text{E}_q\left[
-                \log q(\bm{\theta}) - \log f(\bm{y},\bm{\theta})
+                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})
                 \right]\\
-            &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{y})}
+            &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
                 + \mathcal{L}(\bm{\theta})
         \end{aligned}
     \]
