@@ -1,0 +1,11 @@
+reduce problem to a few locations to expand story (joint tail probabilities, conditional tail probabilities)
+
+specify locations of interest (2-3 classes of critical infrastructure), identify probability of other critical infrastructure being affected.
+
+reduce problem to an area
+
+identify particularly brutal storm -- inundated very large areas.  what is return period of a storm like this?  (multivariate return levels)  https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/wrcr.20204
+
+look at parameter space for particularly brutal storms.  Associate parameter values with extreme behavior?
+
+regression analysis on posterior samples of $\int_{y_i} \pi(\alpha_i\mid y_i)\pi(y_i\mid\theta_i)dy_i$?  Except we only have 1 $y_i$ per $\theta_i$

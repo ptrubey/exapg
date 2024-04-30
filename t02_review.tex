@@ -113,10 +113,10 @@ A suitable distribution for $\bm{V}$ can be approximated by projecting a
     becomes numerically unstable. We select $p = 10$ to balance these concerns.
 
 To better capture the variability in the data, we use the projected gamma density 
-    as a kernel density of an Bayesian non--parametric mixture model, based on 
-    the Pitman--Yor process introduced in~\cite{perman1992}.  A Pitman--Yor process
+    as a kernel density of an Bayesian non-parametric mixture model, based on 
+    the Pitman-Yor process introduced in~\cite{perman1992}.  A Pitman-Yor process
     is a fully atomic measure specified by two parameters and a centering
-    distribution.  Under a stick--breaking representation as described 
+    distribution.  Under a stick-breaking representation as described 
     in~\cite{ishwaran2001}, 
     \[
         \text{Pr}(\bm{\alpha}\mid\ldots) 
@@ -126,7 +126,7 @@ To better capture the variability in the data, we use the projected gamma densit
     \]
     where $\delta_{\bm{\alpha}_j}$ indicates a point mass at $\bm{\alpha}_j$ and
     $\bm{\alpha}_j$ are sampled independently from the centering distribution $G_0$.
-    Under the Pitman--Yor process, $\chi_j \sim \text{Beta}(1 - d, \eta + jd)$
+    Under the Pitman-Yor process, $\chi_j \sim \text{Beta}(1 - d, \eta + jd)$
     where $d \in [0, 1)$ denotes the \emph{discount} parameter and $\eta > -d$
     denotes the \emph{concentration} parameter.
 
@@ -197,7 +197,8 @@ One class of methods that shows promise in avoiding the computational and
     the family of surrogate densities $\mathcal{Q}$, then selecting that density 
     $q^*$ which minimizes the \emph{Kullbeck-Liebler} (KL) divergence between 
     the surrogate and true posterior.  That is,
-    \[
+    \begin{equation}
+        \label{eqn:optimalq}
         q^*(\bm{\theta}) = \argmin_{q\in\mathcal{Q}}\left\lbrace
         \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{x})\right) 
         \coloneqq
@@ -205,9 +206,9 @@ One class of methods that shows promise in avoiding the computational and
         \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
         \right)\right]
         \right\rbrace.
-    \]
+    \end{equation}
     Using KL divergence as an analogue to distance, we are attempting to find
-    the \emph{closest} tractible surrogate posterior $q$ within the family 
+    the \emph{closest} tractable surrogate posterior $q$ within the family 
     $\mathcal{Q}$ to the true posterior.
     As has been explained however, we do not necessarily have 
     $f(\bm{\theta}\mid\bm{y})$ directly.  Let 
@@ -248,9 +249,14 @@ One class of methods that shows promise in avoiding the computational and
     KL divergence. In this form, as KL divergence is a positive quantity, it is
     readily apparent that $\mathcal{L}(\bm{\theta})$ establishes a lower bound
     on the evidence.  As such, the variational literature has christened it the
-    \emph{evidence lower bound}, frequently abbreviated to \emph{ELBO}.
+    \emph{evidence lower bound}, frequently abbreviated to \emph{ELBO}.  As such,
+    we can rewrite Equation~\eqref{eqn:optimalq} to
+    \[
+        q^*(\bm{\theta}) = \argmax_{q\in\mathcal{Q}} \mathcal{L}(\bm{\theta})
+    \]
     
 \subsection{Optimizing the ELBO: Automatic Differentiation}
+
 
 
 
