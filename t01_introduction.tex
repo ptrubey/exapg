@@ -42,7 +42,7 @@ Sea, Lake, and Overland Surges from Hurricanes \citep{jelesnianski1992} is a
     characteristics, the model takes into account local topology, bathymetry, 
     and surge management devices such as levees, to generate a spatial field of 
     inundation---the maximum observed height of water above ground level 
-    (or above normal water level for a data point in a body of water) for the 
+    (or above normal water level for a data point in a body of water) over the 
     duration of the storm at a location.   These storm characteristics include 
     data pertaining to the eye of the storm when it made landfall---bearing, 
     velocity, latitude, minimum atmospheric pressure of the storm when it 
@@ -54,35 +54,65 @@ Sea, Lake, and Overland Surges from Hurricanes \citep{jelesnianski1992} is a
     New York.  We have \num{4000} such simulations, produced by SLOSH from a 
     sample of storm characteristics.
 
-\begin{figure}[ht]
+\begin{figure}[t!]
     \centering
-    \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=0.99\linewidth]{./plots/slosh1run}
-    \end{minipage}%
-    \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=0.99\linewidth]{./plots/sloshthreshold}
-    \end{minipage}
-    \caption{(Left) Grid output from one storm simulation in SLOSH.  (Right)  
-        99th \%ile of storm surge simulations at selected points. 
-        \makenote{Make single plot, with only 1 legend on right. Either that
-        or maybe separate legends makes sense. Histogram on right next to legend would make most sense.  make points smaller, as well.\label{fig:sloshexplore}}}
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.99\linewidth]{./plots/slosh1run}
+        \caption{Grid output from one storm simulation in SLOSH, with a marginal
+            histogram (with log-scale counts) of surge levels in that storm.  Note
+            the bounds are determined by the data, with the maximum value for this
+            storm is 19 feet above ground level.\label{fig:slosh1run}}
+    \end{subfigure}%
+    ~ 
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.99\linewidth]{./plots/sloshthreshold}
+        \caption{99th percentile of storm-surge simulations at \num{5283} selected 
+            locations with marginal histogram (with log-scale counts) of 99th 
+            percentiles at said locations.  The maximum of the 99th percentiles 
+            calculated is 10.6 feet above ground level.\label{fig:sloshthreshold}}
+    \end{subfigure}
+    \caption{Exploration of SLOSH simulation data.\label{fig:sloshexplore}}
 \end{figure}
+
+
+% \begin{figure}[ht]
+%     \centering
+%     \begin{minipage}{0.45\textwidth}
+%     \centering
+%     \includegraphics[width=0.99\linewidth]{./plots/slosh1run}
+%     \end{minipage}%
+%     \begin{minipage}{0.45\textwidth}
+%     \centering
+%     \includegraphics[width=0.99\linewidth]{./plots/sloshthreshold}
+%     \end{minipage}
+%     \caption{
+%         (Left) Grid output from one storm simulation in SLOSH, with a marginal
+%         histogram (with log-scale counts) of surge levels in that storm.  Note
+%         the bounds are determined by the data, with the maximum value for this
+%         storm is 19 feet above ground level.  
+%         (Right) 99th percentile of storm-surge simulations at \num{5283} selected 
+%         locations, 
+%         with marginal histogram (with log-scale counts) of 99th percentiles at
+%         said locations.  The maximum of the 99th percentiles calculated is 10.6
+%         feet above ground level.\label{fig:sloshexplore}
+%         }
+% \end{figure}
 
 This paper analyzes SLOSH simulations under an extreme value framework, using a
     peaks-over-threshold model.  Extreme value theory is a branch of statistics
     that focuses on the tails of the distribution, low density regimes where,
     in this application, the \emph{worst} outcomes occur.  
     Figure~\ref{fig:sloshexplore} provides a visual depiction of the SLOSH 
-    simulation data.  The left plot indicates the output of a single storm surge 
-    simulation using the SLOSH model.   We should note that particularly high
-    values of inundation are localized events, effectively not visible at this
-    low scale. We should note here that a storm takes some time to occur, and 
-    the recorded value is the maximum over the duration of the storm.  That 
-    means that peak recorded values at two locations are not necessarily 
-    simultaneous.
-    On the right of Figure~\ref{fig:sloshexplore}, we have selected SLOSH grid 
+    simulation data.  Figure~\ref{fig:slosh1run} indicates the output of a single 
+    storm surge simulation using the SLOSH model. To the right of the map is a 
+    histogram (with log-scale counts) displaying observed levels of inundation 
+    in the storm.  Observe that particularly high levels of inundation beyond 9 
+    feet are so infrequent as to not be visible at this low scale. We should also 
+    note here that a storm takes some time to occur, and thus recorded values at 
+    two locations in a single storm are not necessarily simultaneous.
+    In Figure~\ref{fig:sloshthreshold}, we have selected SLOSH grid 
     cells that are in the vicinity of physical features, or locations, of 
     interest.  Displayed are the 99th\makenote{subject to change} percentile 
     of inundation for SLOSH simulations at each of those physical features.
@@ -91,18 +121,14 @@ This paper analyzes SLOSH simulations under an extreme value framework, using a
     that are in excess of this \emph{threshold} in at least one identified location.
     Our goal is then a consistent and performant model for multivariate extremes, 
     such that we can learn the dependence structure of extremes in the inundation field.
-    
-% Unfortunately, with respect to flooding in general, SLOSH provides only an 
-%     incomplete picture.  It does not account for inundation due to rainfall or
-%     rivers bursting their banks.
 
 \makenote{I need to expound upon the necessity/applicability of extreme analysis
     to inundation.  Mention: importance of tails of the distribution, relevance of
     extremes to such analysis, }
 
-The roadmap for our paper is as follows:  Section~\ref{ref:review} details the 
-    background for the relevant modelling methods
-    we will be using in this analysis.  In particular, Section~\ref{ref:evt} 
+The paper proceeds as follows:  Section~\ref{ref:review} details the background 
+    for the relevant modelling methods we will be using in this analysis.  In 
+    particular, Section~\ref{ref:evt} 
     provides an overview of extreme value theory, to the justification for 
     separating the magnitude of a multivariate extreme from its angular 
     component; Section~\ref{ref:pg} describes the process of creating an angular 
