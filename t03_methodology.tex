@@ -106,7 +106,7 @@ One potential application leverageing use of a Bayesian non-parametri prior is
     \emph{labelling}, or a fixed assignment of observations to clusters.
 
 There are multiple options for how cluster labelling can be accomplished.  A
-    simple option migbht be to take
+    simple option might be to take
     \[
         \bm{\alpha}_j^* = \frac{1}{S}\bm{\alpha}_{js},\;\;\;\;
         \bm{\nu}_j^* = \frac{1}{S}\nu_{js}
@@ -125,7 +125,7 @@ There are multiple options for how cluster labelling can be accomplished.  A
     the posterior of the fitted model, we can calculate this as
     \begin{equation}
         \label{eqn:coincidencemat}
-        C_{i,j} = \frac{1}{S}\sum_{s = 1}^S\mathbb{1}_{\delta_{i,s} = \delta_{j,s}}
+        C_{i,j} = \frac{1}{S}\sum_{s = 1}^S\mathbbm{1}_{\delta_{i,s} = \delta_{j,s}}
     \end{equation}
     where $i,j$ are iterating over observations. This reduces the size of 
     information in the posterior conditional distribution of $\bm{\delta}$
