@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+
+\begin{document}
+
+\subsubsection*{Current Model}
+\[
+    \begin{aligned}
+        \bm{y}_i \mid \bm{\alpha}_i &\sim
+        \mathcal{PG}_p\left(\bm{Y}\mid\bm{\alpha}_i,\bm{1}\right)\\
+        \bm{\alpha}_i &\sim G\\
+        G &\sim \mathcal{PY}\left(\eta, d, G_0\right)        
+    \end{aligned}
+    ~\hspace{1cm}
+    \begin{aligned}
+        G_0 &= {\textstyle\prod}_{\ell = 1}^{d}\mathcal{G}(\alpha_{\ell}\mid \xi_{\ell},\tau_{\ell})\\
+        \xi_{\ell} &\sim \mathcal{G}(\xi\mid a, b)\\
+        \tau_{\ell} &\sim \mathcal{G}(\tau\mid c, d)
+    \end{aligned}
+\]
+The current model, no regression.
+
+\subsubsection*{Proposed Regression Extension Model}
+\[
+    \begin{aligned}
+        \bm{y}_i \mid \bm{\alpha}_i &\sim
+        \mathcal{PG}_p\left(\bm{Y}\mid\bm{\alpha}_i,\bm{1}\right)\\
+        \bm{\alpha}_i &\sim G\\
+        G &\sim \mathcal{PY}\left(\eta, d, G_0\right)
+    \end{aligned}
+    ~\hspace{1cm}
+    \begin{aligned}
+        G_0 &= {\textstyle\prod}_{\ell = 1}^{d}\mathcal{LN}(\alpha_{\ell}\mid \exp(\theta_i^t\beta), \sigma_{\ell}^2)\\
+        \beta_{k\ell} &\sim \mathcal{N}(\beta\sim\mu_0,\sigma_0^2)\\
+        \sigma_{\ell}^2 &\sim \mathcal{IG}(\sigma^2\mid\nu,\psi)
+    \end{aligned}
+\]
+Notation is really awkward, but this is effectively the proposed model.  Note in particular the expectation of $\lvert \bm{\beta}\rvert = d * \lvert \theta\rvert$.  Is this reasonable?  If we are predicting a massive multivariate vector using a small number of predictors (in this case, the storm properties vector is length 5).  It seems like we could make this a bit less unwieldy...
+
+Do you have any suggestion of literature for multivariable GLM I should read?
+
+Choice of log-normal vs gamma centering distribution in the proposed model comes down to practicality with regression.  I'd prefer it describe the mean vector (or log-mean, as it were), but that would only work if we fixed rate to 1.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+\end{document}
+% EOF 

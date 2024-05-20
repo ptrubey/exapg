@@ -16,7 +16,7 @@ $\mathbb{S}_p^{d-1}$.
         G_0 &= {\textstyle\prod}_{\ell = 1}^{d}\mathcal{G}(\alpha_{\ell}\mid \xi_{\ell},\tau_{\ell})\\
         \xi_{\ell} &\sim \mathcal{G}(\xi\mid a, b)\\
         \tau_{\ell} &\sim \mathcal{G}(\tau\mid c, d)
-    \end{aligned}
+    \end{aligned} 
 \end{equation}
 If we expand the Pitman--Yor process using stick-breaking notation with truncation point $J$, we can write the above as
 \begin{equation}
@@ -84,5 +84,93 @@ and $\phi = (\bm{\gamma},\bm{\nu})$ be the latent parameters that will be sample
 \end{equation}
 
 \cite{tran2021}
+
+\subsection{Clustering of storm parameters based on angular distribution}
+
+One potential application leverageing use of a Bayesian non-parametri prior is 
+    exploiting the clustering inherent to the method. Recall $\delta_i$ is the 
+    cluster identifier for observation $i$.  Its sampling is made explicit in
+    the MCMC model, though it is integrated out in our variational model. In
+    posterior analysis, given $\bm{\alpha}$, and $\bm{\pi}$, where 
+    $\pi_j = \nu_j\prod_{k = 1}^{j-1}(1 - \nu_k)$, a probability of cluster 
+    assignment can be sampled as
+    \begin{equation}
+        \label{eqn:clusterprob}
+        \text{P}\left(\delta_i = j\mid\bm{\alpha},\bm{\nu},\bm{y}_i\right) 
+            = \frac{\pi_j\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_j,\bm{1})}{
+            \sum_{k = 1}^J \pi_j\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_k,\bm{1})}.
+    \end{equation}
+    This approach relies on samples of $\bm{\alpha},\bm{\nu}$ from the fitted
+    model to generate \emph{loose} clusters for which there is no inherent 
+    labelling.  This presents a problem, as interpreting clusters first requires
+    \emph{labelling}, or a fixed assignment of observations to clusters.
+
+The variational implementation avoids a label-switching issue inherent to 
+    MCMC sampling.  A label-switch between clusters $a$ and $b$ has occured when
+    the parameters of clusters $a$ and $b$ have nearly swapped, such that the
+    bulk of observations formerly in cluster $a$ are now in cluster $b$, and 
+    visa-versa.  This issue does not tend to follow to a variational 
+    implementation, as post-fitting, the distributions of cluster parameters are 
+    fixed.
+
+With that being the case, a simple option for cluster labelling might be to take
+    \[
+        \bm{\alpha}_j^* = \frac{1}{S}\sum_{s = 1}^S\ bm{\alpha}_{js},\;\;\;\;
+        \bm{\nu}_j^* = \frac{1}{S}\sum_{s = 1}^S \nu_{js},
+    \]
+    the posterior mean of cluster parameters and cluster weights, then set
+    $\delta_i^{*} = \argmax P(\delta_i = j\mid\bm{\alpha}^*,\bm{\nu}^*,\bm{y}_i)$
+    as defined in Equation~\eqref{eqn:clusterprob}. We refer to cluster labels
+    being assigned in this fashion as \emph{posterior mean clustering}.
+
+Alternative to posterior mean clustering, we could instead take samples of 
+    $\bm{\pi}$, $\bm{\alpha}$, then compute 
+    $\delta_{is}\mid\bm{\pi}_s,\bm{\alpha}_s$
+    as per Equation~\eqref{eqn:clusterprob}.  Then set 
+    $\delta_i^{*} = \argmax \mathbbm{1}_{\delta_{is} = j}$.
+    We refer to cluster labels being assigned in this fashion as
+    \emph{posterior assignment clustering}.  We find, in practice, this method
+    results in largely the same label sets as posterior mean clustering.
+    
+% \makenote{
+% An alternative that works for both the MCMC model and variational model
+%     is to consider pairwise coincidence of observations in clusters.
+%     We define a \emph{Coincidence}\makenote{this or similarity?} matrix $C$ as
+%     denoting the pairwise posterior probability of cluster coincidence--that is,
+%     probability of being in the same cluster.  With a sample of size $S$ from
+%     the posterior of the fitted model, we can calculate this as
+%     \begin{equation}
+%         \label{eqn:coincidencemat}
+%         C_{i,j} = \frac{1}{S}\sum_{s = 1}^S\mathbbm{1}_{\delta_{i,s} = \delta_{j,s}}
+%     \end{equation}
+%     where $i,j$ are iterating over observations. This reduces the size of 
+%     information in the posterior conditional distribution of $\bm{\delta}$
+%     to the lower-diagonal of an $n\times n$ matrix.  Perhaps more importantly,
+%     this creates a network graph between observations, where the edge weight
+%     denotes the posterior probability of cluster coincidence.
+
+% There is a rich field of literature on assigning cluster labels to a netork graph.
+% }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 % EOF
