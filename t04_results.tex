@@ -9,9 +9,10 @@ To validate the variational model, we conduct a simulation study.
     \emph{testing} dataset, another \num{1000} replicates are sampled using
     the same distributional parameters.
 
-To evaluate the fidelity of our model fitting, we use a generalization of the
-    \emph{continuous ranked probability score}, generalized to a multivariate
-    setting.  This \emph{energy score} \citep{gneiting2007} takes the form:
+To evaluate the fidelity of the variational implementation as compared to MCMC, 
+    we use a the \emph{energy score} criterion \citep{gneiting2007}, which is a
+    generalization of the \emph{continuous ranked probability score} to a
+    multivariate setting.  This energy score criterion takes the form
     \[
       S_{\text{ES}}(P, \bm{x}) = \text{E}_p\left[g(\bm{X},\bm{x})\right] - 
         \frac{1}{2}\text{E}_p\left[g(\bm{X},\bm{X}^{\prime})\right]
@@ -32,8 +33,8 @@ To evaluate the fidelity of our model fitting, we use a generalization of the
     model over a \emph{baseline} energy score.  This baseline energy score is so
     named because it is the energy score between a target dataset and another
     dataset from the same generating distribution.  A value of 0 is optimal.
-    \makenote{add additional model for comparison}  Note displayed scores are averaged
-    over 10 iterations \makenote{rewrite}.
+    \makenote{add additional model for comparison}  Note displayed scores are 
+    averaged over 10 iterations \makenote{rewrite}.
 
     \begin{figure}[ht]
         \centering
@@ -47,7 +48,13 @@ To evaluate the fidelity of our model fitting, we use a generalization of the
     the MCMC model as is expected from the variational approximation.  With that
     said, the variational approximation is still quite good.
 
-\subsection{}
+\subsection{SLOSH}
+
+
+
+
+
+
     
 
 % EOF
