@@ -1,25 +1,20 @@
-%% ABSTRACT %%
-% In order to account for the model flexibility required by the multivariate
-%     peaks-over-threshold scenario, a Dirichlet process mixture model using
-%     the projection of independent gamma random variables onto the unit 
-%     hypersphere under the $\mathcal{L}_p$ norm was developed.  This very
-%     quickly presents computational issues, as the computational burden for
-%     MCMC inference scales superlinearly with sample size, and will scale
-%     either linearly or exponentially depending on choice of centering 
-%     distribution. We propose an alternate approach, developing a 
-%     variational Bayes approach for model inference.  We apply this model
-%     to a dataset of simulations of storm surge; comprised of 4 thousand
-%     observations at more than 21 million locations.
+\begin{comment}
+    \begin{itemize}
+        \item Introduce dataset
+        \item Brief discussion of extreme analysis (up to thresholding)
+    \end{itemize}
+\end{comment}
 
-\subsection{SLOSH}]
+\subsection{SLOSH}
 \makenote{a lot of this is fluff.}
 Storm surge inundation is localized flooding, defined as water height above
-    ground level.  Its effect can be catastrophic.  Setting aside potential 
+    ground level, that arises as a result of a storm pushing sea-water onto
+    land. Its effect can be catastrophic.  Setting aside potential 
     for direct loss of life, 
     flooding can impose costly damage to property: inundation of homes and 
     businesses destroys possessions, and damages buildings through saturating 
     walls and eroding foundations.  Corrosion resulting from high--salinity 
-    flooding can create more long--term  damage.\makenote{expand}\needcite  
+    flooding can create more long--term damage.\makenote{expand}\needcite  
     Flooding can damage vehicles, such that a single storm can force insurance 
     companies to declare large quantities of vehicles as total losses. 
     \makenote{expand}\needcite.  Flooding damages agriculture: beyond 
@@ -68,7 +63,8 @@ Sea, Lake, and Overland Surges from Hurricanes \citep{jelesnianski1992} is a
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=0.99\linewidth]{./plots/sloshthreshold}
-        \caption{99th percentile of storm-surge simulations at \num{5283} selected 
+        \caption{\makenote{replace with 90th percentile}
+            99th percentile of storm-surge simulations at \num{5283} selected 
             locations with marginal histogram (with log-scale counts) of 99th 
             percentiles at said locations.  The maximum of the 99th percentiles 
             calculated is 10.6 feet above ground level.\label{fig:sloshthreshold}}
@@ -76,45 +72,28 @@ Sea, Lake, and Overland Surges from Hurricanes \citep{jelesnianski1992} is a
     \caption{Exploration of SLOSH simulation data.\label{fig:sloshexplore}}
 \end{figure}
 
-
-% \begin{figure}[ht]
-%     \centering
-%     \begin{minipage}{0.45\textwidth}
-%     \centering
-%     \includegraphics[width=0.99\linewidth]{./plots/slosh1run}
-%     \end{minipage}%
-%     \begin{minipage}{0.45\textwidth}
-%     \centering
-%     \includegraphics[width=0.99\linewidth]{./plots/sloshthreshold}
-%     \end{minipage}
-%     \caption{
-%         (Left) Grid output from one storm simulation in SLOSH, with a marginal
-%         histogram (with log-scale counts) of surge levels in that storm.  Note
-%         the bounds are determined by the data, with the maximum value for this
-%         storm is 19 feet above ground level.  
-%         (Right) 99th percentile of storm-surge simulations at \num{5283} selected 
-%         locations, 
-%         with marginal histogram (with log-scale counts) of 99th percentiles at
-%         said locations.  The maximum of the 99th percentiles calculated is 10.6
-%         feet above ground level.\label{fig:sloshexplore}
-%         }
-% \end{figure}
-
-This paper analyzes SLOSH simulations under an extreme value framework, using a
-    peaks-over-threshold model.  Extreme value theory is a branch of statistics
-    that focuses on the tails of the distribution, low density regimes where,
+This paper analyzes SLOSH simulations under an extreme value theory (EVT) framework, 
+    using a peaks-over-threshold model.  EVT is a branch of statistics
+    that focuses on the tails of the distribution---low density regimes where,
     in this application, the \emph{worst} outcomes occur.  
+    We stress here a caveat. EVT assumes that the originating data are independent
+    and identically distributed; SLOSH simulations do not meet the second criterion.
+    They arise as a result of partially stochastic simulation given a set of input
+    parameters---the storm characteristics.  Those storm characteristics themselves
+    are sampled via Latin hypercube to fill the allowable parameter space.  That
+    having been said, application of the EVT framework to SLOSH still provides us
+    with a great deal of information.  It is with that caveat that we continue analysis.
     Figure~\ref{fig:sloshexplore} provides a visual depiction of the SLOSH 
     simulation data.  Figure~\ref{fig:slosh1run} indicates the output of a single 
     storm surge simulation using the SLOSH model. To the right of the map is a 
     histogram (with log-scale counts) displaying observed levels of inundation 
     in the storm.  Observe that particularly high levels of inundation beyond 9 
     feet are so infrequent as to not be visible at this low scale. We should also 
-    note here that a storm takes some time to occur, and thus recorded values at 
+    note here that a storm takes some time to occur, and thus values recorded at 
     two locations in a single storm are not necessarily simultaneous.
     In Figure~\ref{fig:sloshthreshold}, we have selected SLOSH grid 
     cells that are in the vicinity of physical features, or locations, of 
-    interest.  Displayed are the 99th\makenote{subject to change} percentile 
+    interest.  Displayed are the 99th\makenote{change to 90th} percentile 
     of inundation for SLOSH simulations at each of those physical features.
     We make clear now, that this analysis is primarily concerned with the
     inferring and applying the dependence structure between storm simulations
@@ -134,7 +113,7 @@ The paper proceeds as follows:  Section~\ref{ref:review} details the background
     component; Section~\ref{ref:pg} describes the process of creating an angular 
     distribution as well as introducing the model we use in our analysis; and 
     Section~\ref{ref:varbayes} introduces variational Bayesian methods, which we 
-    can use to apply our model at large scale.  Section~\ref{ref:methodology} 
+    can use to apply our model at large scale. Section~\ref{ref:methodology} 
     \makenote{does something.  probably most of review should be moved here?  
     but none of that is new, only new thing is the particular variational model.}
     Section~\ref{ref:results} presents our analysis, first demonstrating the 
