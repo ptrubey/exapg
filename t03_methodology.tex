@@ -132,31 +132,7 @@ Alternative to posterior mean clustering, we could instead take samples of
     \emph{posterior assignment clustering}.  We find, in practice, this method
     results in largely the same label sets as posterior mean clustering.
 
-% \makenote{
-% An alternative that works for both the MCMC model and variational model
-%     is to consider pairwise coincidence of observations in clusters.
-%     We define a \emph{Coincidence}\makenote{this or similarity?} matrix $C$ as
-%     denoting the pairwise posterior probability of cluster coincidence--that is,
-%     probability of being in the same cluster.  With a sample of size $S$ from
-%     the posterior of the fitted model, we can calculate this as
-%     \begin{equation}
-%         \label{eqn:coincidencemat}
-%         C_{i,j} = \frac{1}{S}\sum_{s = 1}^S\mathbbm{1}_{\delta_{i,s} = \delta_{j,s}}
-%     \end{equation}
-%     where $i,j$ are iterating over observations. This reduces the size of 
-%     information in the posterior conditional distribution of $\bm{\delta}$
-%     to the lower-diagonal of an $n\times n$ matrix.  Perhaps more importantly,
-%     this creates a network graph between observations, where the edge weight
-%     denotes the posterior probability of cluster coincidence.
-
-% There is a rich field of literature on assigning cluster labels to a netork graph.
-% }
-
 \subsection{BNP Projected Gamma GLM}
-We 
-
-
-
 Let $i$ iterate over observations, $s$ iterate over sites (locations), and $\ell$ iterate over 
     dimensions of $\bm{\theta}$
 \begin{equation}
@@ -172,8 +148,35 @@ Let $i$ iterate over observations, $s$ iterate over sites (locations), and $\ell
         \mu,\Sigma &\sim \mathcal{NIW}(\mu,\Sigma\mid \bm{0}, \kappa, \nu, \psi)
     \end{aligned}
 \end{equation}
+
+
+
+\begin{figure}[ht]
+    \centering
+    \caption{Posterior predictive distribution under a \emph{fully specified} model, colored 
+        by cluster.  Left is the regressors, $\bm{X}$.  Center is after linear transformation, 
+        projected onto unit simplex, $T_{1}(\bm{X}\bm{\theta})$.  Right is posterior predictive 
+        distribution, $T_1(\bm{X}\bm{\theta}^*).$\label{fig:simreg}}
+    \includegraphics[width = \textwidth]{plots/simulated_reg}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 The term $\bm{x}_i$ is overloaded.  For $\bm{y}_{is}$ ($i$th observation, $s$th location), 
-    $\bm{x}_{is}$ (covariates associated with observation $i$ at location $s$) include $\bm{x}_{i,\text{obs}}$, the parameters under which the $i$th storm 
+    $\bm{x}_{is}$ (covariates associated with observation $i$ at location $s$) include 
+    $\bm{x}_{i,\text{obs}}$, the parameters under which the $i$th storm 
     was modelled; $\bm{x}_{s,\text{loc}}$, information pertaining to the $s$th location, such
     as latitude and longitude; and $\bm{x}_{is,\text{int}}$, any interaction thereof.  Currently
     this consists of a single term, the linear interaction between latitude of storm eye at landfall, 

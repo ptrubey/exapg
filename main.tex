@@ -17,12 +17,21 @@
 \usepackage{mathtools}
 \usepackage{subcaption}
 \usepackage[group-separator={,},output-decimal-marker={.},group-minimum-digits=4]{siunitx}
+\usepackage{framed} % will be removed
 
 \title{Analysis of Extremal Dependence of Storm Surge using Peaks-over-Threshold Model}
-% \title{Large scale inference in multivariate peaks-over-threshold scenarios}
 \author{Peter Trubey \& Bruno Sanso}
-
 \date{}
+
+\newenvironment{comment}{
+  \medskip
+  \begin{framed}
+    \bgroup\color{red}
+    {}
+    }{
+  \egroup\end{framed}
+  \medskip
+}
 
 \newcommand{\bruno}[1]{\textcolor{blue}{#1}} % Bruno Sanso edits - blue
 \newcommand{\makenote}[1]{\textcolor{red}{#1}} % Peter edits - red
@@ -44,11 +53,20 @@
 \section{Introduction\label{ref:introduction}}
 \input{t01_introduction}
 
-\section{Review\label{ref:review}}
+\section{Review and Background\label{ref:review}}
 \input{t02_review}
 
-\section{Methodology\label{ref:methodology}}
-\input{t03_methodology}
+%\section{Methodology\label{ref:methodology}}
+%\input{t03_methodology}
+
+\section{Joint Maxima (revise name)\label{sec:jointmaxima}}
+\input{t03a_joint_maxima}
+
+\section{Clustering of Storm Parameters\label{sec:clustering}}
+\input{t03b_clustering}
+
+\section{Regression on the unit sphere\label{sec:regression}}
+\input{t03c_regression}
 
 \section{Results\label{ref:results}}
 \input{t04_results}

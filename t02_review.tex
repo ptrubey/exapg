@@ -1,3 +1,17 @@
+\begin{comment}
+    \begin{itemize}
+        \item Formal introduction of extreme analysis
+        \begin{itemize}
+            \item Separation of angular and radial components
+        \end{itemize}
+        \item Introduction of Projected gamma distribution
+        \item More in-depth discussion of dataset
+        \begin{itemize}
+            \item Break dataset down into 3 levels of analysis; t90, all--but--road--features, airports.
+            \item Descriptive statistics thereof
+        \end{itemize}
+    \end{itemize}
+\end{comment}
 Our analysis of the SLOSH data's extremal dependence requires some background.
     \makenote{introduce the review section.  avoid naked sections.}
 
@@ -23,20 +37,21 @@ The multivariate PoT model considered in this paper has been developed
     $\bm{a}_n$, $\bm{b}_n$, and a $d$--variate distribution $G$ such that 
     $\lim\limits_{n\to\infty}F^n(\bm{a}_n\bm{w} + \bm{b}_n) = G(\bm{w})$, then
     $G$ is a $d$--variate generalized extreme value distribution.  Then,
-    \[
+    \begin{equation}
+        \label{eqn:threshold}
         \lim\limits_{n\to\infty}\text{Pr}
             \left[\bm{a}_n^{-1}(\bm{W} - \bm{b}_n) 
                 \leq \bm{w}\mid \bm{W}\not\leq \bm{b}_n\right]
         = \frac{\log G(\bm{w}\wedge \bm{0}) - \log G(\bm{w})}{\log G(\bm{0})}
         = H(\bm{w})
-    \]
+    \end{equation}
     where $H$ is the multivariate Pareto distribution.  \cite{rootzen2018}
     provides a number of stochastic representations of $H$, and in particular,
     Remark~1 justifies the representation given in \cite{ferreira2014} where,
     in the limit, we factorize $\bm{W} = R\bm{V}$ with $R$ and $\bm{V}$ independent.
     \makenote{I'm not very fond of this transition.  We standardize $\bm{W}$ to 
     $\bm{Z}$, then factorize $\bm{Z} = R\bm{V}$.  Separability holds true in both
-    cases (i think), but is still dependent on marginal distributional parameters.
+    cases (i think), but the former is still dependent on marginal distributional parameters.
     standardization allows those to be ignored.  We should mention standardization
     before factorization.}
     $R = \lVert \bm{W}\rVert_{\infty}$ is distributed as a standard Pareto random
@@ -60,9 +75,9 @@ Let the threshold $b_{q\ell} = \hat{F}_{\ell}^{-1}(1 - 1/q)$, where $\hat{F}$ is
             - b_{\ell}}{a_{\ell}}\right)_{+}^{1 / \xi_{\ell}}
     \end{equation}
     where $(\cdot)_+$ indicates the positive parts function.  Let 
-    $r_i = \lVert \bm{z}_i$, and $\bm{v}_i = \bm{z}_i / r_i$.  Due to 
+    $r_i = \lVert \bm{z}_i\rVert$, and $\bm{v}_i = \bm{z}_i / r_i$.  Due to 
     thresholding, $i$ ranges from 1 to $m\leq n$, and $r_i > 1$.  Recall that
-    $R\in (1, \infty)$ will by design follow a standard Pareto distribution,
+    $R\in (1, \infty)$ will, by design, follow a standard Pareto distribution,
     the inferential task left to us is describing the distribution of the
     angular component $\bm{V}\in\mathbb{S}_{\infty}^{d-1}$.  
 
@@ -112,7 +127,7 @@ A suitable distribution for $\bm{V}$ can be approximated by projecting a
     $y_d$.  If $y_d\to 0$, then the Jacobian diverges, and the distribution 
     becomes numerically unstable. We select $p = 10$ to balance these concerns.
 
-To better capture the variability in the data, we use the projected gamma density 
+To more faithfully capture the structure of the data, we use the projected gamma density 
     as a kernel density of an Bayesian non-parametric mixture model, based on 
     the Pitman-Yor process introduced in~\cite{perman1992}.  A Pitman-Yor process
     is a fully atomic measure specified by two parameters and a centering
@@ -130,6 +145,34 @@ To better capture the variability in the data, we use the projected gamma densit
     where $d \in [0, 1)$ denotes the \emph{discount} parameter and $\eta > -d$
     denotes the \emph{concentration} parameter.
 
+For the rest of this paper, let $i$ denote indexing over storm simulations (observations), 
+    specifically those which survived the thresholding necessitated by the assumption of 
+    Equation~\eqref{eqn:threshold}.  Let $s \in \lbrace 1, \ldots, S\rbrace$ denote indexing 
+    over locations t which the storm surge is simulated.  That is, $y_{is}$ is the maximum simulated
+    storm surge at location $s$ during storm $i$, after projection onto $\mathbb{S}_p^{d-1}$.
+    Let $j\in \lbrace 1,\ldots,J\rbrace$ denote indexing over \emph{clusters}, the aforementioned
+    mixture components up to truncation point $J$.  Then, the model can be specified as
+    \begin{equation}
+        \begin{aligned}
+            \bm{y}_i \mid \bm{\alpha}_i &\sim
+                \mathcal{PG}_p\left(\bm{Y}\mid\bm{\alpha}_i,\bm{1}\right)\\
+            \bm{\alpha}_i &\sim G\\
+            G &\sim \mathcal{PY}\left(\eta, \zeta, G_0\right)        
+        \end{aligned}
+        ~\hspace{1cm}
+        \begin{aligned}
+            G_0 &= {\textstyle\prod}_{s = 1}^{S}\mathcal{G}(\alpha_{s}\mid \xi_{s},\tau_{s})\\
+            \xi_{s} &\sim \mathcal{G}(\xi\mid a, b)\\
+            \tau_{s} &\sim \mathcal{G}(\tau\mid c, d)
+        \end{aligned} 
+    \end{equation}
+    where $\eta$ and $\zeta$ are respectively the concentration and discount parameters
+    of the Pitman--Yor process.  Fitting this model for a moderate number of sites can be 
+    accomplished via Markov-chain Monte Carlo methods.  Using the collapsed Gibbs sampler,
+    We introduce a latent cluster assignment variable $\delta_i$ for each storm $i$ which 
+    indicates which cluster storm $i$ belongs to.  Then the posterior distribution of
+
+\subsection{SLOSH}
 The projected gamma based model is not an inherently spatial model.  As such, 
     rather than holding the entire grid in memory, it makes sense to consider 
     data pertaining only to landmarks of interest.    If one is performing 
@@ -153,110 +196,10 @@ The projected gamma based model is not an inherently spatial model.  As such,
     \st{the vicinity of such locations by establishing a small buffer around said}
     \st{locations, and spatially intersecting the buffer with the grid.}
 
-\subsection{Variational methods: a brief overview\label{ref:varbayes}}
-\makenote{These 2 paragraphs are intended to introduce the justification for 
-    VarBayes. I like the wordsmithing at the end of the second paragraph, but 
-    I'm unsure of the necessity.  Specifically, the necessity of a generic 
-    VarBayes intro as detailed here.}
-Let $\bm{x}$ be the observed data, and $\bm{\theta}$ be an unobserved set of 
-    parameters governing the distribution of the observed data.  We term 
-    $f(\bm{x}\mid\bm{\theta})$ the likelihood.  The goal of inference in 
-    general is to obtain information about $\theta$, using information 
-    obtained from $\bm{x}$. Bayesian inference in particular places a prior
-    distribution on $\theta$, $f(\bm{\theta})$, and from this we can obtain a
-    posterior distribution on $\bm{\theta}$ that incorporates both information
-    from the likelihood as well as the prior.  That is,
-    \[
-        f(\bm{\theta}\mid\bm{x}) = 
-            \frac{f(\bm{x}\mid\bm{\theta})f(\bm{\theta})}{f(\bm{x})},
-    \]
-    where the demoninator $f(\bm{x})$ is obtained as
-    \[
-        f(\bm{x}) = \int_{\Omega_{\bm{\theta}}}f(\bm{x}\mid\bm{\theta})f(\bm{\theta})d\bm{\theta}
-    \]
-    where $\Omega_{\bm{\theta}}$ denotes the support of $\bm{\theta}$.
 
-When a given model is sufficiently complex that the above integration is no
-    longer feasible analytically, or if the posterior cannot be described in
-    closed form\makenote{when the posterior is not tractible...}, we frequently 
-    turn to sampling--based classes of methods, such as 
-    \emph{Markov chain Monte Carlo} (MCMC)\needcite. There are myriad approaches, 
-    \makenote{expand?}, but central to all sampling--based 
-    methods is the stochastic nature of model fitting, and the 
-    necessity of samples for posterior inference.  Sampling methods can be 
-    tempermental, requiring many numbers of iterations to reach convergence.
-    Samples take time to draw, and memory to store; but for sufficiently large 
-    problems, both can be in short supply.
 
-One class of methods that shows promise in avoiding the computational and 
-    storage burdens of sampling methods is variational inference.\needcite 
-    Based on variational calculus, this approach attempts to approximate the 
-    true posterior distribution
-    $f(\bm{\theta}\mid\bm{x})$ using a tractible \emph{surrogate posterior} 
-    $q(\bm{\theta})$.  Model fitting under this class involves specification of 
-    the family of surrogate densities $\mathcal{Q}$, then selecting that density 
-    $q^*$ which minimizes the \emph{Kullbeck-Liebler} (KL) divergence between 
-    the surrogate and true posterior.  That is,
-    \begin{equation}
-        \label{eqn:optimalq}
-        q^*(\bm{\theta}) = \argmin_{q\in\mathcal{Q}}\left\lbrace
-        \text{KL}\left(q(\bm{\theta})||f(\bm{\theta}\mid\bm{x})\right) 
-        \coloneqq
-        \text{E}_{q}\left[\log\left(
-        \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
-        \right)\right]
-        \right\rbrace.
-    \end{equation}
-    Using KL divergence as an analogue to distance, we are attempting to find
-    the \emph{closest} tractable surrogate posterior $q$ within the family 
-    $\mathcal{Q}$ to the true posterior.
-    As has been explained however, we do not necessarily have 
-    $f(\bm{\theta}\mid\bm{y})$ directly.  Let 
-    $f(\bm{y},\bm{\theta}) = f(\bm{y}\mid\bm{\theta})f(\bm{\theta})$.
-    Then we reformulate the KL divergence into
-    \[
-        \begin{aligned}
-        \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
-            &=\text{E}_{q}\left[\log\left(
-                \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
-                \right)\right]\\
-            &= \text{E}_{q}\left[
-                \frac{q(\bm{\theta})f(\bm{x})}{f(\bm{y},\bm{\theta})}
-                \right]\\
-            &= \text{E}_{q}\left[
-                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta}) 
-                + \log f(\bm{x})
-                \right]\\
-            &= \text{E}_{q}\left[
-                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})\right] + 
-                   \log f(\bm{x}).
-        \end{aligned}
-    \]
-    Note that the second term, the \emph{evidence}, is constant with respect to 
-    $\bm{\theta}$.  With a bit of rearrangement,
-    \[
-        \begin{aligned}
-        \log f(\bm{x}) 
-            &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
-                - \text{E}_q\left[
-                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})
-                \right]\\
-            &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
-                + \mathcal{L}(\bm{\theta})
-        \end{aligned}
-    \]
-    Thus maximizing $\mathcal{L}(\bm{\theta})$ is equvivalent to minimizing the 
-    KL divergence. In this form, as KL divergence is a positive quantity, it is
-    readily apparent that $\mathcal{L}(\bm{\theta})$ establishes a lower bound
-    on the evidence.  As such, the variational literature has christened it the
-    \emph{evidence lower bound}, frequently abbreviated to \emph{ELBO}.  As such,
-    we can rewrite Equation~\eqref{eqn:optimalq} to
-    \[
-        q^*(\bm{\theta}) = \argmax_{q\in\mathcal{Q}} \mathcal{L}(\bm{\theta})
-    \]
-    
-\subsection{Optimizing the ELBO: Automatic Differentiation}
-    
+
+
 
 
 
