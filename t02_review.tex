@@ -220,10 +220,12 @@ The projected gamma based model is not an inherently spatial model.
 
 \begin{figure}[ht]
     \centering
-    \caption{The trade-off in threshold specification.  
+    \caption{Trade-offs in threshold specification:
+    \makenote{remake with better labels}
     (Left) Proportion of sites with threshold $b_{qs} > 0$ versus $(1 - q)$; 
     (Right) Proportion of storms $\bm{W}_i \not< \bm{b}_q$ versus $(1-q)$.
     \label{fig:thresholdselection}}
+    \includegraphics[width=0.9\linewidth]{plots/explore_threshold}
 \end{figure}
 
 \begin{table}
@@ -232,22 +234,24 @@ The projected gamma based model is not an inherently spatial model.
 \end{table}
 
 At this point, we split the analysis into three parts.  First, we look at locations
-    pertaining to critical services, which if rendered unable to 
+    pertaining to critical services, which if rendered unable to operate could
+    drastically increase the negative effects, or loss of life, due to the storm.
+    This means isolating locations in the dataset specific to critical services, or
+    other locations of interest.  This is the \emph{critical services} dataset.  We
+    set the threshold in this dataset at the marginal 95\% quantile.
+    \makenote{mention feature class codes used}
+    Second, we look at the overall shape of the storm inundation field in order to
+    use the clustering action of the Pitman-Yor process model to find emergent clusters
+    of storm characteristics.  For this purpose, we are interested in a large sample
+    size, with a large number of locations.  We select the threshold at the 90\% quantile, 
+    and select all identified locations with at least some inundation at that quantile.
+    The resulting number of locations---and number of storms exceeding the threshold---for 
+    each of the analysis datasets is delineated in Table~\ref{tab:datasets}.
+    \makenote{airports dataset?}
 
-
-    \begin{description}
-        \item[90\% Threshold]: Locations surviving intersection with the grid,
-            for which $\bm{w}_i \not< \bm{q}$, where $q = 0.1$.
-        \item[Not-Street-Locations]: Locations which are neither cul-de-sacs, nor 
-            \emph{localities}---centers of towns, intersections, and the like.
-        \item[Critical Services]: Critical locations--airports, police and fire stations,
-            hospitals, military bases, and similar.
-        \item[Airports]: Airports exclusively.      
-    \end{description}
-    Table~\ref{tab:datasets} 
 
 Figure~\ref{fig:thetahistogram} gives the marginal histograms of storm parameters, for 
-    storms which survived thresholding in the 90\% threshold dataset.
+    storms which survived thresholding in the 90\% threshold dataset.  One
     
 \begin{figure}[ht]
     \centering 
