@@ -249,23 +249,29 @@ At this point, we split the analysis into three parts.  First, we look at locati
     each of the analysis datasets is delineated in Table~\ref{tab:datasets}.
     \makenote{airports dataset?}
 
-
-Figure~\ref{fig:thetahistogram} gives the marginal histograms of storm parameters, for 
-    storms which survived thresholding in the 90\% threshold dataset.  One
-    
-\begin{figure}[ht]
+\begin{figure}[b]
     \centering 
     \caption{Histogram of storm characteristics for storm simulations 
         which surived thresholding.\label{fig:thetahistogram}}
+    \includegraphics[width=0.9\linewidth]{plots/threshold_histogram}
 \end{figure}
 
-
-
-
-
-
-
-
-
+Figure~\ref{fig:thetahistogram} shows the marginal histograms of storm parameters, for 
+    storms which survived thresholding in the 90\% threshold dataset.  Storm parameters in 
+    the originating dataset were sampled via Latin hypercube, so would appear marginally
+    uniform.  The difference between marginal uniform, and the observed densities provides
+    some indication of what characteristics are necessary for a storm to exceed the threshold.
+    In the first case, for sea level rise, it is readily apparent that a higher sea level will
+    make it easier for a storm to inundate larger swaths of land, or inundate locations to a
+    greater degree.  So we expect to see, and do see, a higher probability of a storm exceeding
+    the threshold, for a higher sea level rise.  Similarly, a lower minimum pressure in the storm's
+    eye corresponds to a more intense storm.  We expect to see, and do see, a higher percentage of
+    exceeding the threshold, for a lower minimum pressure.  The relationship to approach speed is 
+    interesting in that it's almost linear.  Perhaps, the mechanism there lies in that a higher
+    approach speed indicates more power behind the storm.  The spike in approach angle past 360
+    degrees is interesting as well. 360 degrees indicates due North, thus approach angles 
+    beyond 360 degrees indicate the storm is heading slightly northeast. As these approaches are
+    on the eastern seaboard, this indicates a shallower approach angle relative to the
+    land---perhaps offering a given storm more time to inundate larger swaths of land.
 
 % EOF 
