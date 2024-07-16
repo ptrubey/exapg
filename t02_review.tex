@@ -1,21 +1,15 @@
+Our analysis of the SLOSH data's extremal dependence requires some background.
+    \makenote{introduce the review section.  avoid naked sections.}
+
+\subsection{Extreme Value Theory\label{ref:evt}}
 \begin{comment}
     \begin{itemize}
         \item Formal introduction of extreme analysis
         \begin{itemize}
             \item Separation of angular and radial components
         \end{itemize}
-        \item Introduction of Projected gamma distribution
-        \item More in-depth discussion of dataset
-        \begin{itemize}
-            \item Break dataset down into 3 levels of analysis; t90, all--but--road--features, airports.
-            \item Descriptive statistics thereof
-        \end{itemize}
     \end{itemize}
 \end{comment}
-Our analysis of the SLOSH data's extremal dependence requires some background.
-    \makenote{introduce the review section.  avoid naked sections.}
-
-\subsection{Extreme Value Theory\label{ref:evt}}
 \makenote{first paragraph basically copy-pasted from ndpg.  Rephrase more?}
 Extreme value theory uses the limited information available in a sample to
     characterize the tails of a distribution.  In the univariate case, asymptotic
@@ -51,9 +45,9 @@ The multivariate PoT model considered in this paper has been developed
     in the limit, we factorize $\bm{W} = R\bm{V}$ with $R$ and $\bm{V}$ independent.
     \makenote{I'm not very fond of this transition.  We standardize $\bm{W}$ to 
     $\bm{Z}$, then factorize $\bm{Z} = R\bm{V}$.  Separability holds true in both
-    cases (i think), but the former is still dependent on marginal distributional parameters.
-    standardization allows those to be ignored.  We should mention standardization
-    before factorization.}
+    cases (i think), but in the former. $\bm{V}$ is still dependent on the marginal 
+    distributional parameters.  Standardization allows those to be ignored.  
+    We should mention standardization before factorization.}
     $R = \lVert \bm{W}\rVert_{\infty}$ is distributed as a standard Pareto random
     variable, and $\bm{V} = \bm{W} / \lVert \bm{W}\rVert_{\infty}$ is a random
     vector existing within $\mathbb{S}_{\infty}^{d-1}$, the positive orthant of
@@ -62,17 +56,18 @@ The multivariate PoT model considered in this paper has been developed
     As $R$ and $\bm{V}$ are independent,  the distribution of $\bm{V}$ is 
     effectively the dependence structure of $\bm{W}$.
 
-Let the threshold $b_{q\ell} = \hat{F}_{\ell}^{-1}(1 - 1/q)$, where $\hat{F}$ is
-    the empirical cumulative distribution function for the $\ell$th component.
-    Marginally, values exceeding the threshold $b_{q\ell}$ are assumed to follow
+Let the threshold $b_{qs} = \hat{F}_{s}^{-1}(1 - q)$, where $\hat{F}$ is
+    the empirical cumulative distribution function for the $s$th component.
+    Marginally, values exceeding the threshold $b_{qs}$ are assumed to follow
     a univariate generalized Pareto distribution, and are used to estimate the
-    corresponding marginal scale and shape parameters $a_{\ell}$ and $\xi_{\ell}$
+    corresponding marginal scale and shape parameters $a_{s}$ and $\xi_{s}$
     respectively.  Setting $\bm{b}$ and having inferred $\bm{a}$, and $\bm{\xi}$, 
     we transform $\bm{w}\mid \bm{w}\not\leq \bm{b}$ to a standard multivariate 
     Pareto form via the transformation
     \begin{equation}
-        z_{i\ell} = \left(1 + \xi_{\ell}\frac{w_{i\ell} 
-            - b_{\ell}}{a_{\ell}}\right)_{+}^{1 / \xi_{\ell}}
+        \label{eqn:standardization}
+        z_{is} = \left(1 + \xi_{s}\frac{w_{is} 
+            - b_{s}}{a_{s}}\right)_{+}^{1 / \xi_{s}}
     \end{equation}
     where $(\cdot)_+$ indicates the positive parts function.  Let 
     $r_i = \lVert \bm{z}_i\rVert$, and $\bm{v}_i = \bm{z}_i / r_i$.  Due to 
@@ -82,10 +77,18 @@ Let the threshold $b_{q\ell} = \hat{F}_{\ell}^{-1}(1 - 1/q)$, where $\hat{F}$ is
     angular component $\bm{V}\in\mathbb{S}_{\infty}^{d-1}$.  
 
 \subsection{Projected Gamma\label{ref:pg}}
+\begin{comment}
+    \begin{itemize}
+        \item Introduction of Projected gamma distribution
+        \begin{itemize}
+            \item Projected Gamma as the kernel density of a BNP mixture
+        \end{itemize}
+    \end{itemize}
+\end{comment}
 A suitable distribution for $\bm{V}$ can be approximated by projecting a 
     distribution in $\mathbb{R}_+^d$ onto $\mathbb{S}_{p}^{d-1}$.  
-    Recall that the $\mathcal{L}_p$ norm 
-    $\lVert \bm{s}\rVert_p = \left(\sum_{\ell = 1}^d\right)^{1/p}$.  Then
+    Recall the $\mathcal{L}_p$ norm 
+    $\lVert \bm{x}\rVert_p = \left(\sum_{s = 1}^dx^p\right)^{1/p}$.  Then
     for $\bm{x}\in\mathbb{R}_+^d$, we define the transformation
     \begin{equation}
         \label{eqn:projection}
@@ -95,26 +98,25 @@ A suitable distribution for $\bm{V}$ can be approximated by projecting a
                 =: (r,\bm{y})
     \end{equation}
     where $y = (y_1,\ldots,y_{d-1}) \in \mathbb{S}_{p}^{d-1}$, $r > 0$, and 
-    $y_d = \left(1 - \sum_{\ell = 1}^{d-1}y_{\ell}^p\right)^{\frac{1}{p}}$.
+    $y_d = (1 - \sum_{s = 1}^{d-1}y_{s}^p)^{\frac{1}{p}}$.
     By transforming $\bm{x}$ to $(r,\bm{y})$ and integrating out $r$, we
     succeed in establishing a distribution for $\bm{y}$ on 
     $\mathbb{S}_{\infty}^{d-1}$
     The Jacobian of the transformation in Equation~\eqref{eqn:projection} is
-    $r^{d-1}\left[Y_d + \sum_{\ell = 1}^{d-1}y_{\ell}^py_d^{1-p}\right]$.
+    $r^{d-1}[Y_d + \sum_{s = 1}^{d-1}y_{s}^py_d^{1-p}]$.
     This Jacobian is well suited to a product of gammas density, where 
     $f(\bm{x}\mid\bm{\alpha},\bm{\beta}) = 
-        \prod_{\ell = 1}^d\mathcal{G}(x_{\ell}\mid\alpha_{\ell},\beta_{\ell})$.
+        \prod_{s = 1}^d\mathcal{G}(x_{s}\mid\alpha_{s},\beta_{s})$.
     Transforming $\bm{x}$ as described, $r$ can be integrated out in closed
-    form, and we are left with the \emph{projected gamma} density for arbitrary 
-    $p > 0$.
+    form, leaving the \emph{projected gamma} density for arbitrary $p > 0$.
     \[
-        f(\bm{y}\mid\bm{\alpha},\bm{\beta}) = \prod_{\ell = 1}^d\left[
-            \frac{\beta_{\ell}^{\alpha_{\ell}}}{\Gamma(\alpha_{\ell})}
-            y_{\ell}^{\alpha_{\ell} - 1}\right]
-            \left[y_d + \sum_{\ell = 1}^{d-1}y_{\ell}^py_d^{1-p}\right]
-            \frac{\Gamma(\sum_{\ell = 1}^d \alpha_{\ell})}{\left(
-                \sum_{\ell = 1}^d\beta_{\ell}y_{\ell}
-                \right)^{\sum_{\ell = 1}^d \alpha_{\ell}}
+        f(\bm{y}\mid\bm{\alpha},\bm{\beta}) = \prod_{s = 1}^d\left[
+            \frac{\beta_{s}^{\alpha_{s}}}{\Gamma(\alpha_{s})}
+            y_{s}^{\alpha_{s} - 1}\right]
+            \left[y_d + \sum_{s = 1}^{d-1}y_{s}^py_d^{1-p}\right]
+            \frac{\Gamma(\sum_{s = 1}^d \alpha_{s})}{\left(
+                \sum_{s = 1}^d\beta_{s}y_{s}
+                \right)^{\sum_{s = 1}^d \alpha_{s}}
             }
     \]
     Of course, at $p=\infty$, the transformation is not differentiable, so a 
@@ -173,8 +175,22 @@ For the rest of this paper, let $i$ denote indexing over storm simulations (obse
     indicates which cluster storm $i$ belongs to.  Then the posterior distribution of
 
 \subsection{SLOSH}
-The projected gamma based model is not an inherently spatial model.  As such, 
-    rather than holding the entire grid in memory, it makes sense to consider 
+\begin{comment}
+    \begin{itemize}
+        \item More in-depth discussion of dataset
+        \begin{itemize}
+            \item Break dataset down into 3 levels of analysis; t90, all--but--road--features, airports.
+            \item Descriptive statistics thereof
+            \item Pitfalls in analysis?
+        \end{itemize}
+    \end{itemize}
+\end{comment}
+
+The projected gamma based model is not an inherently spatial model.  
+    \makenote{change reasoning such that we are interested in \emph{specific} locations
+    rather than change from grid to specific locations being due to computational
+    complexity.}
+    As such, rather than holding the entire grid in memory, it makes sense to consider 
     data pertaining only to landmarks of interest.    If one is performing 
     contingency planning in preparation for the storm season, it would be 
     helpful to know the probability of such services being rendered inoperable 
@@ -186,15 +202,59 @@ The projected gamma based model is not an inherently spatial model.  As such,
     pertaining to any particular storm, we subset the data to grid cells in the 
     vicinity of such locations of interest.  These locations are gathered from 
     the 2023 US Census Bureau's \emph{TIGER} database \needcite and specifically 
-    the point and landmark file, and only grid cells that experienced \emph{some} 
-    inundation in greater than 2 \makenote{(subject to change)} percent of storm 
-    simulations.   This last requirement arises as consequence of fitting the 
-    generalized Pareto: the threshold for excesses $b$ needs to be set above the 
-    minimum observed value $(0)$ of the dataset.  
-    \makenote{(idea: zero-inflated projected gamma?)}  \makenote{Probably not
-    necessary...} \st{We identify grid cells in}
-    \st{the vicinity of such locations by establishing a small buffer around said}
-    \st{locations, and spatially intersecting the buffer with the grid.}
+    the point and landmark file.  If a grid cell falls within 70 meters of a location,
+    then the grid cell is identified with the location.  If multiple grid cells
+    are within 70 meters, then the nearer one is identified with the location.
+    Additionally, we select locations, or grid cells, that have experienced at
+    at least some inundation in some $q$ proportion of storm simulations.  That is,
+    such that $b_{qs} > 0$, for all $s$ of interest.  This restriction arises
+    as a consequence of fitting the parameters for the marginal generalized Paretos:
+    if the threshold for excesses $b$ is not set above $0$, the likelihood can diverge, 
+    and MLE estimation of the parameters suffers. Here we experience another
+    tradeoff, the implications of which are explored in 
+    Figure~\ref{fig:thresholdselection}.  Setting a higher threshold allows more 
+    sites to be included in the analysis, but in turn reduces the number of storm 
+    simulations which exceed the threshold in at least one dimension.  This in turn 
+    reduces the amount of information available by which we can estimate the 
+    dependence structure.
+
+\begin{figure}[ht]
+    \centering
+    \caption{The trade-off in threshold specification.  
+    (Left) Proportion of sites with threshold $b_{qs} > 0$ versus $(1 - q)$; 
+    (Right) Proportion of storms $\bm{W}_i \not< \bm{b}_q$ versus $(1-q)$.
+    \label{fig:thresholdselection}}
+\end{figure}
+
+\begin{table}
+    \centering
+    \caption{Table of Dataset Slices\label{tab:datasets}}    
+\end{table}
+
+At this point, we split the analysis into three parts.  First, we look at locations
+    pertaining to critical services, which if rendered unable to 
+
+
+    \begin{description}
+        \item[90\% Threshold]: Locations surviving intersection with the grid,
+            for which $\bm{w}_i \not< \bm{q}$, where $q = 0.1$.
+        \item[Not-Street-Locations]: Locations which are neither cul-de-sacs, nor 
+            \emph{localities}---centers of towns, intersections, and the like.
+        \item[Critical Services]: Critical locations--airports, police and fire stations,
+            hospitals, military bases, and similar.
+        \item[Airports]: Airports exclusively.      
+    \end{description}
+    Table~\ref{tab:datasets} 
+
+Figure~\ref{fig:thetahistogram} gives the marginal histograms of storm parameters, for 
+    storms which survived thresholding in the 90\% threshold dataset.
+    
+\begin{figure}[ht]
+    \centering 
+    \caption{Histogram of storm characteristics for storm simulations 
+        which surived thresholding.\label{fig:thetahistogram}}
+\end{figure}
+
 
 
 

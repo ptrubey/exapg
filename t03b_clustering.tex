@@ -1,15 +1,15 @@
 \begin{comment}
     \begin{itemize}
-        \item description of storm parameter clustering problem
+        \item Description of storm parameter clustering problem
         \item Introduction of variational inference
         \begin{itemize}
-            \item describe variational distribution
-            \item necessity (only model using t90 dataset)
-            \item relative performance (computational speed)
+            \item Describe variational distribution
+            \item Necessity (only model using t90 dataset)
+            \item Relative performance (computational speed)
         \end{itemize}
-        \item describe clustering methodology
+        \item Describe clustering methodology
         \item Emergent clusters from both t90 and all--but--road--features in input space.
-        \item what does this mean?
+        \item What does this mean?
     \end{itemize}
 \end{comment}
 
@@ -41,7 +41,7 @@ The variational implementation avoids a label-switching issue inherent to
 
 With that being the case, a simple option for cluster labelling might be to take
     \[
-        \bm{\alpha}_j^* = \frac{1}{S}\sum_{s = 1}^S\ bm{\alpha}_{js},\;\;\;\;
+        \bm{\alpha}_j^* = \frac{1}{S}\sum_{s = 1}^S\bm{\alpha}_{js}\hspace{2cm}
         \bm{\nu}_j^* = \frac{1}{S}\sum_{s = 1}^S \nu_{js},
     \]
     the posterior mean of cluster parameters and cluster weights, then set
