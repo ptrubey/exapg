@@ -2,13 +2,27 @@
     \begin{itemize}
         \item Description of joint maxima problem/application
         \item Extremal dependence
+        \begin{itemize}
+            \item Following the example of \cite{trubey:pg}, ...
+        \end{itemize}
         \item Multi-site return levels
+        \begin{itemize}
+            \item Using 
+        \end{itemize}
         \item Application results
     \end{itemize}
 \end{comment}
 
 
-        
+\begin{equation}
+    \text{Pr}\left[\bigcap_{s\in\alpha}Z_s > z_s\;\middle|\;\bigcap_{s\not\in\alpha}Z_s > z_s\right] =
+    \frac{
+        \text{E}\left[\bigwedge_{s=1}^S 1\wedge \frac{V_s}{z_s}\right]
+    }{
+        \text{E}\left[\bigwedge_{s\not\in\alpha} 1\wedge \frac{V_s}{z_s}\right]
+    }    
+\end{equation}
+
 
 
 

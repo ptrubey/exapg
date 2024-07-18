@@ -55,19 +55,17 @@ Sea, Lake, and Overland Surges from Hurricanes \citep{jelesnianski1992} is a
         \centering
         \includegraphics[width=0.99\linewidth]{./plots/slosh1run}
         \caption{Grid output from one storm simulation in SLOSH, with a marginal
-            histogram (with log-scale counts) of surge levels in that storm.  Note
-            the bounds are determined by the data, with the maximum value for this
-            storm is 19 feet above ground level.\label{fig:slosh1run}}
+            histogram (with log-scale counts) of surge levels in that storm 
+            (truncated at 9 feet).\label{fig:slosh1run}}
     \end{subfigure}%
     ~ 
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=0.99\linewidth]{./plots/sloshthreshold}
-        \caption{\makenote{replace with 90th percentile}
-            99th percentile of storm-surge simulations at \num{5283} selected 
-            locations with marginal histogram (with log-scale counts) of 99th 
-            percentiles at said locations.  The maximum of the 99th percentiles 
-            calculated is 10.6 feet above ground level.\label{fig:sloshthreshold}}
+        \caption{
+            90th percentile of storm-surge simulations at \num{5283} selected 
+            locations with marginal histogram (with log-scale counts).
+            \label{fig:sloshthreshold}}
     \end{subfigure}
     \caption{Exploration of SLOSH simulation data.\label{fig:sloshexplore}}
 \end{figure}
@@ -87,17 +85,21 @@ This paper analyzes SLOSH simulations under an extreme value theory (EVT) framew
     simulation data.  Figure~\ref{fig:slosh1run} indicates the output of a single 
     storm surge simulation using the SLOSH model. To the right of the map is a 
     histogram (with log-scale counts) displaying observed levels of inundation 
-    in the storm.  Observe that particularly high levels of inundation beyond 9 
-    feet are so infrequent as to not be visible at this low scale. We should also 
+    in the storm, color-coded by the height of the surge at that location.  In this
+    plot, there were 45 locations with surge greater than 9 feet above ground level,
+    with the maximum value being approximately 19 feet above.  Such occurances
+    are highly localized, and are not visible at this scale, so we truncated surge values
+    in this plot at 9 feet.  We should also 
     note here that a storm takes some time to occur, and thus values recorded at 
     two locations in a single storm are not necessarily simultaneous.
     In Figure~\ref{fig:sloshthreshold}, we have selected SLOSH grid 
     cells that are in the vicinity of physical features, or locations, of 
-    interest.  Displayed are the 99th\makenote{change to 90th} percentile 
+    interest.  Displayed are the 90th percentile 
     of inundation for SLOSH simulations at each of those physical features.
     We make clear now, that this analysis is primarily concerned with the
-    inferring and applying the dependence structure between storm simulations
-    that are in excess of this \emph{threshold} in at least one identified location.
+    inferring and applying the dependence structure between storm surge at these locations,
+    for storm simulations
+    that are in excess of this threshold in at least one identified location.
     Our goal is then a consistent and performant model for multivariate extremes, 
     such that we can learn the dependence structure of extremes in the inundation field.
 
