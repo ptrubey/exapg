@@ -1,15 +1,13 @@
 Our analysis of the SLOSH data's extremal dependence requires some background.
-    \makenote{introduce the review section.  avoid naked sections.}
-
 \subsection{Extreme Value Theory\label{ref:evt}}
-\begin{comment}
-    \begin{itemize}
-        \item Formal introduction of extreme analysis
-        \begin{itemize}
-            \item Separation of angular and radial components
-        \end{itemize}
-    \end{itemize}
-\end{comment}
+% \begin{comment}
+%     \begin{itemize}
+%         \item Formal introduction of extreme analysis
+%         \begin{itemize}
+%             \item Separation of angular and radial components
+%         \end{itemize}
+%     \end{itemize}
+% \end{comment}
 \makenote{first paragraph basically copy-pasted from ndpg.  Rephrase more?}
 Extreme value theory uses the limited information available in a sample to
     characterize the tails of a distribution.  In the univariate case, asymptotic
@@ -77,14 +75,14 @@ Let the threshold $b_{qs} = \hat{F}_{s}^{-1}(1 - q)$, where $\hat{F}$ is
     angular component $\bm{V}\in\mathbb{S}_{\infty}^{d-1}$.  
 
 \subsection{Projected Gamma\label{ref:pg}}
-\begin{comment}
-    \begin{itemize}
-        \item Introduction of Projected gamma distribution
-        \begin{itemize}
-            \item Projected Gamma as the kernel density of a BNP mixture
-        \end{itemize}
-    \end{itemize}
-\end{comment}
+% \begin{comment}
+%     \begin{itemize}
+%         \item Introduction of Projected gamma distribution
+%         \begin{itemize}
+%             \item Projected Gamma as the kernel density of a BNP mixture
+%         \end{itemize}
+%     \end{itemize}
+% \end{comment}
 A suitable distribution for $\bm{V}$ can be approximated by projecting a 
     distribution in $\mathbb{R}_+^d$ onto $\mathbb{S}_{p}^{d-1}$.  
     Recall the $\mathcal{L}_p$ norm 
@@ -252,7 +250,7 @@ At this point, we split the analysis into three parts.  First, we look at locati
 \begin{figure}[b]
     \centering 
     \caption{Histogram of storm characteristics for storm simulations 
-        which surived thresholding.\label{fig:thetahistogram}}
+        which surived thresholding, in the 90\% quantile dataset.\label{fig:thetahistogram}}
     \includegraphics[width=0.9\linewidth]{plots/threshold_histogram}
 \end{figure}
 
@@ -271,7 +269,7 @@ Figure~\ref{fig:thetahistogram} shows the marginal histograms of storm parameter
     approach speed indicates more power behind the storm.  The spike in approach angle past 360
     degrees is interesting as well. 360 degrees indicates due North, thus approach angles 
     beyond 360 degrees indicate the storm is heading slightly northeast. As these approaches are
-    on the eastern seaboard, this indicates a shallower approach angle relative to the
+    on the eastern seaboard, this means a shallower approach angle relative to the
     land---perhaps offering a given storm more time to inundate larger swaths of land.
 
 % EOF 
