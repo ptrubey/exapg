@@ -87,7 +87,7 @@ and $\phi = (\bm{\gamma},\bm{\nu})$ be the latent parameters that will be sample
 
 \subsection{Clustering of storm parameters based on angular distribution}
 
-One potential application leverageing use of a Bayesian non-parametri prior is 
+One potential application leveraging use of a Bayesian non-parametric prior is 
     exploiting the clustering inherent to the method. Recall $\delta_i$ is the 
     cluster identifier for observation $i$.  Its sampling is made explicit in
     the MCMC model, though it is integrated out in our variational model. In
@@ -106,7 +106,7 @@ One potential application leverageing use of a Bayesian non-parametri prior is
     \emph{labelling}, or a fixed assignment of observations to clusters.
 
 The variational implementation avoids a label-switching issue inherent to 
-    MCMC sampling.  A label-switch between clusters $a$ and $b$ has occured when
+    MCMC sampling.  A label-switch between clusters $a$ and $b$ has occurred when
     the parameters of clusters $a$ and $b$ have nearly swapped, such that the
     bulk of observations formerly in cluster $a$ are now in cluster $b$, and 
     visa-versa.  This issue does not tend to follow to a variational 
