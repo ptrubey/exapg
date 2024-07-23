@@ -7,35 +7,91 @@
     \end{itemize}
 \end{comment}
 
-Let $i$ iterate over observations, $s$ iterate over sites (locations), and $\ell$ iterate over 
-    dimensions of $\bm{\theta}$
-\begin{equation}
-    \begin{aligned}
-        \bm{y}_i &\sim \mathcal{PG}(\bm{y}\mid f(\bm{x}_i^T\bm{\theta}_i + \bm{\varepsilon}), \bm{1})\\
-        \theta_i &\sim G\\
-        G &\sim \mathcal{PY}(G\mid\eta, d, G_0)
-    \end{aligned}
-    ~\hspace{2cm}
-    \begin{aligned}
-        G_0 &= \mathcal{N}(\bm{\theta} \mid \mu, \Sigma)\\
-        \varepsilon_{\ell} &\sim \mathcal{N}(\varepsilon \mid 0, \sigma_{\epsilon})\\
-        \mu,\Sigma &\sim \mathcal{NIW}(\mu,\Sigma\mid \bm{0}, \kappa, \nu, \psi)
-    \end{aligned}
-\end{equation}
+\subsection{The Model}
+We attempt to develop a flexible regression model on $\mathbb{S}_p^{d-1}$, using the projected gamma as
+    the base distribution.  Consider
+    \[
+        \bm{y}_i \sim \mathcal{PG}(\bm{y}\mid g(\bm{x}_i^T\bm{\theta}), \bm{1})    
+    \]
+    where $g(\cdot)$ is some linking function that maps $\mathbb{R}\to\mathbb{R}_+$ to maintain the
+    viability of inputs for the underlying gamma density.  For our purpose, we use the \emph{softplus}
+    function, $g(x) = \log(1 + \exp x)$. The major reason for this choice over the more commonly used
+    $\exp(\cdot)$ is numerical: for softplus, small deviations in inputs produce small deviations in
+    outputs.  For $\exp(\cdot)$, small deviations in inputs can produce very large deviations in
+    outputs.  Some discussion 
+    is necessary here as to the dimensionality of $\bm{x}_i$ and $\bm{\theta}$.  Consider a vector 
+    $\bm{x}_i$ of dimension $d$, where we might expect each element of $\bm{x}_i$ to contribute to each
+    dimension $s$ of $\bm{y}_i$.  We call a model \emph{fully specified} if, for each dimension $s$, we
+    have a vector $\bm{\theta}_{is}$, with the same dimensionality as $\bm{x}$.. With some abuse of 
+    notation, the fully specified model can be written as
+    \[
+        \bm{y}_i \sim \int_0^{\infty}
+            \prod_{s = 1}^S \mathcal{G}\left(r_iy_{is}\mid g(\bm{x}_i^T\bm{\theta}_{is}), 1\right) \times J(\bm{y}_i) r^{d-1}\text{d}r
+    \]
+    where $J(\bm{y}_i)$ is the rest of the Jacobian of the projection.  Or more succinctly, 
+    \[
+        \bm{y}_i \sim \mathcal{PG}\left(\bm{y}_i \mid g((\bm{x}_i \otimes \bm{I}_{S})^T\bm{\theta}), \bm{1}\right)
+    \]
+    where $\otimes$ denotes the Kronecker product.  To fully realize the flexibility of this model,
+    we feature it as the kernel density of a Bayesian non-parametric mixture.
+    \begin{equation}
+        \label{eqn:regressionmodel}
+        \begin{aligned}
+            \bm{y}_i &\sim \mathcal{PG}\left(\bm{y}\mid g\left((\bm{x}_i\otimes\bm{I}_S)^T\bm{\theta}_i\right), \bm{1}\right)\\
+            \theta_i &\sim G\\
+            G &\sim \mathcal{PY}(G\mid\eta, d, G_0)
+        \end{aligned}
+        ~\hspace{2cm}
+        \begin{aligned}
+            G_0 &= \mathcal{N}(\bm{\theta} \mid \mu, \Sigma)\\
+            \Sigma &\sim \mathcal{IW}(\Sigma\mid \nu, \psi)\\
+            \mu\mid\Sigma &\sim \mathcal{N}(\mu\mid \bm{0}, \Sigma / \kappa)
+        \end{aligned}
+    \end{equation}
+    Note the dimensionality of $\bm{\theta}$ under the fully specified model is $d\times S$.
+    To explore the efficacy of the regression model, we conduct a minor simulation example using a 
+    fully specified model in Figure~\ref{fig:simreg}.  In the left plot, we have the $\bm{x}_i$'s in
+    3 distinct clusters. With 2 input dimensions, and 3 output dimensions 
+    (with 2 degrees of freedom), $\bm{\theta}$ has a dimensionality of 6. For each cluster
+    of inputs, we generate an associated $\bm{\theta}_j$, and project 
+    $y_i = g\left((\bm{x}_i\otimes\bm{I}_S)^T\bm{\theta}_j\right) + \bm{\epsilon}_i$ where 
+    $\epsilon_{is}$ is a small jitter term onto 
+    $\mathbb{S}_{10}^{2}$.  The center plot re-projects that onto $\mathbb{S}_1^{2}$ for display.
+    In the right plot, we have the posterior predictive distribution of $\bm{y}_i^{*}\mid \bm{x}_i$.
+    We see that we can reasonably recover the original clusters.  In truth, we've given it a hard
+    task, as for the fully specified model and the separated nature of the inputs might mean that 
+    a single $\bm{\theta}$ vector might reasonably cover 2 or more clusters.  We find 3 emergent
+    clusters, with relatively stable cluster assignment that matches the input data.
 
-\begin{figure}[ht]
+\begin{figure}[t]
     \centering
     \caption{Posterior predictive distribution under a \emph{fully specified} model, colored 
-        by cluster.  Left is the regressors, $\bm{X}$.  Center is after linear transformation, 
-        projected onto unit simplex, $T_{1}(\bm{X}\bm{\theta})$.  Right is posterior predictive 
-        distribution, $T_1(\bm{X}\bm{\theta}^*).$\label{fig:simreg}}
+        by cluster.  Left is the regressors, $\bm{X}$.  Center is 
+        $g(\bm{x}_i^T\bm{\theta}_j + \bm{\epsilon}_i)$ projected onto $\mathbb{S}_1^2$.}
     \includegraphics[width = \textwidth]{plots/simulated_reg}
 \end{figure}
 
-The term $\bm{x}_i$ is overloaded.  For $\bm{y}_{is}$ ($i$th observation, $s$th location), 
-    $\bm{x}_{is}$ (covariates associated with observation $i$ at location $s$) include 
-    $\bm{x}_{i,\text{obs}}$, the parameters under which the $i$th storm 
-    was modelled; $\bm{x}_{s,\text{loc}}$, information pertaining to the $s$th location, such
-    as latitude and longitude; and $\bm{x}_{is,\text{int}}$, any interaction thereof.  Currently
-    this consists of a single term, the linear interaction between latitude of storm eye at landfall, 
-    and latitude of location.
+The fully specified model is extremely inefficient. As $S$ increases, the dimensionality of
+    $\bm{\theta}$ increases linearly, which renders it inappropriate for modelling the SLOSH data.  
+    However, we can consider other transformations of the data to keep the dimensionality of 
+    $\bm{\theta}$ at an appropriate level.
+    In the SLOSH data, let $\bm{x}_{is}$, the covariates associated with observation $i$ at location $s$,
+    consist of $\bm{x}_{i,\text{obs}}$, the (scaled) parameters under which the $i$th storm is modelled,
+    along with $\bm{x}_{s,\text{loc}}$, information pertaining to the $s$th location such as (scaled) 
+    latitude and longitude, and $\bm{x}_{is,\text{int}}$, any interaction thereof.  We consider a 
+    single linear interaction term between latitude of the storm eye at landfall, and latitude of the
+    location $s$.  This results in a $\bm{\theta}$ of dimension $5 + 2 + 1 = 8$.  Then we add
+    an additional fixed effect by location, $\varepsilon_s$. Equation~\eqref{eqn:regressionmodelredux}
+    summarizes the differences from Equation~\eqref{eqn:regressionmodel} for adapting the regression
+    model to SLOSH.
+    \begin{equation}
+        \label{eqn:regressionmodelredux}
+        \bm{y}_i \sim 
+            \mathcal{PG}\left(\bm{y}\mid g(\bm{x}_i^T\bm{\theta}_i + \bm{\varepsilon}), \bm{1}\right)
+            \;\hspace{1cm}\;
+            \varepsilon_s \sim \mathcal{N}(\varepsilon \mid 0, \sigma_{\varepsilon}^2)
+    \end{equation}
+    where $\bm{x}_i$ is overloaded as discussed.  
+
+
+    
