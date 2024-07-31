@@ -42,14 +42,6 @@ To evaluate the fidelity of the variational implementation as compared to MCMC,
     dataset from the same generating distribution.  A value of 0 is optimal.
     \makenote{add additional model for comparison}  Note displayed scores are 
     averaged over 10 iterations \makenote{rewrite}.
-
-    \begin{figure}[ht]
-        \centering
-        \caption{Rise in energy score over baseline (Y) versus dimensionality (X),
-            by number of latent mixture components in generating distribution
-            \label{fig:energyscore}}
-        \includegraphics{./plots/energy_score}
-    \end{figure}
     
     We see some minor loss in fidelity for the variational model as compared to 
     the MCMC model as is expected from the variational approximation.  With that

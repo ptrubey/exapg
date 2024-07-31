@@ -138,22 +138,21 @@ One class of methods that shows promise in avoiding the computational and
     \end{equation}
     Using KL divergence as an analogue to distance, we are attempting to find
     the \emph{closest} tractable surrogate posterior $q$ within the family 
-    $\mathcal{Q}$ to the true posterior.
+    $\mathcal{Q}$ to the true posterior.  
     As has been explained however, we do not necessarily have 
     $f(\bm{\theta}\mid\bm{y})$ directly.  Let 
     $f(\bm{y},\bm{\theta}) = f(\bm{y}\mid\bm{\theta})f(\bm{\theta})$.
     Then we reformulate the KL divergence into
     \[
         \begin{aligned}
-        \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
-            &=\text{E}_{q}\left[\log\left(
-                \frac{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
+        \text{KL}\infdiv{q(\bm{\theta}\mid\bm{\psi})}{f(\bm{\theta}\mid\bm{x})}
+            &=\text{E}_{\bm{\psi}}\left[\log\left(
+                \frac{q(\bm{\theta}\mid\bm{\psi})}{f(\bm{\theta}\mid\bm{x})}
+                \right)\right] = \text{E}_{\bm{\psi}}\left[
+                \log\left(\frac{q(\bm{\theta}\mid\bm{\psi})f(\bm{x})}{f(\bm{y},\bm{\theta})}
                 \right)\right]\\
-            &= \text{E}_{q}\left[
-                \frac{q(\bm{\theta})f(\bm{x})}{f(\bm{y},\bm{\theta})}
-                \right]\\
-            &= \text{E}_{q}\left[
-                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta}) 
+            &= \text{E}_{\bm{\psi}}\left[
+                \log q(\bm{\theta}\mid\bm{\psi}) - \log f(\bm{x},\bm{\theta}) 
                 + \log f(\bm{x})
                 \right]\\
             &= \text{E}_{q}\left[
@@ -178,24 +177,61 @@ One class of methods that shows promise in avoiding the computational and
     KL divergence. In this form, as KL divergence is a positive quantity, it is
     readily apparent that $\mathcal{L}(\bm{\theta})$ establishes a lower bound
     on the evidence.  As such, the variational literature has christened it the
-    \emph{evidence lower bound}, frequently abbreviated to \emph{ELBO}.  As such,
+    \emph{evidence lower bound}, often abbreviated to \emph{ELBO}.  As such,
     we can rewrite Equation~\eqref{eqn:optimalq} to
     \[
         q^*(\bm{\theta}) = \argmax_{q\in\mathcal{Q}} \mathcal{L}(\bm{\theta})
     \]
-    
-\subsection{Optimizing the ELBO: Automatic Differentiation}
+    Note that we specify $q$ so as to depend on a set of variational parameters 
+    $\bm{\psi}$, such that choosing the optimal $\bm{q}$ means in effect choosing
+    the optimal $\bm{\psi}$.  
 
+Optimization of the ELBO with respect to $\bm{\psi}$ can be a daunting task.
+    If $q$ is specified in such a way that samples of $\bm{\theta}$ can be 
+    generated as a function of $\bm{\psi}$ and some independent random variable 
+    $\epsilon$ such as $\psi_0\epsilon + \psi_1$ as in the case of a normal
+    random variable, then given samples of $\bm{\theta}$ we can differentiate 
+    the ELBO with respect to $\bm{\psi}$ to calculate the gradient of $\bm{\psi}$
+    at the current value.  Using this gradient, we can iteratively move towards
+    a better position---a more optimal $\bm{\psi}$.
 
+That said, a path-based optimization is highly dependent upon the starting position,
+    and if multiple local optima exist, there is no guarantee we will reach the
+    true optimal value.  There are many approaches that seek to solve this issue,
+    such as stochastic gradient descent, simulated annealing, \makenote{add additional algorithms}
+    but the problem remains.  Even in our testing, using what is well regarded as
+    one of the best optimization algorithms available, our results are still
+    highly dependent upon starting position, both in terms of model fidelity, and
+    in terms of the resulting number of extant mixture components.  That said, 
+    another approach we can consider is finding a better starting position.
 
+\subsection{Optimal starting position}
 
-\subsection{Initialization of cluster weights}
+As we are considering a mixture model where potentially there exists a label switching
+    issue, if the initializing distribution of mixture component parameters provides
+    \emph{decent} coverage of the distribution of optimal parameters, then the most 
+    important part of the initialization is the distribution of mixture \emph{weights}.  
+    Here we consider three strategies.  First is, of course, random initialization.  
+    Second is uniform initialization---initializing the parameters such that, after
+    transformation via stick-breaking, the probability of cluster assignment is uniform
+    among all clusters up to the truncation point.  Finally, we can declare a rather
+    optimistically named \emph{optimal} starting point as a result of using an abridged
+    MCMC sampler solely for cluster assignments, then after some number of iterations,
+    declaring the full conditional distribution of the resultant mixture weights and
+    associated parameters as the starting point for the VB algorithm.
 
-\begin{figure}
-    \caption{Rise in energy score over baseline.}
-    
-    \include
+\begin{figure}[b]
+    \caption{Rise in energy score over baseline by number of dimensions, on simulated data for various model fitting strategies. The faceting denotes the number of mixture components in
+    the generating distribution. \label{fig:energyscore}}
+    \includegraphics[width=\linewidth]{plots/energy_score}
 \end{figure}
 
+Figure~\ref{fig:energyscore} displays the results of our foray looking into this 
+    optimal starting position, by examining the rise in energy score calculated from a
+    posterior predictive sample over a baseline energy score calculated from
+    another random sample from the same generating distribution.  We see that a pure 
+    MCMC approach performs best, but using an abridged MCMC sampler to set a 
+    starting position for the variational algorithm performs nearly as well.  It is
+    also much faster \makenote{this needs to be quantified}.
 
 % EOF
