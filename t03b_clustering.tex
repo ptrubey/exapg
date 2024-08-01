@@ -212,13 +212,30 @@ As we are considering a mixture model where potentially there exists a label swi
     \emph{decent} coverage of the distribution of optimal parameters, then the most 
     important part of the initialization is the distribution of mixture \emph{weights}.  
     Here we consider three strategies.  First is, of course, random initialization.  
-    Second is uniform initialization---initializing the parameters such that, after
-    transformation via stick-breaking, the probability of cluster assignment is uniform
-    among all clusters up to the truncation point.  Finally, we can declare a rather
-    optimistically named \emph{optimal} starting point as a result of using an abridged
-    MCMC sampler solely for cluster assignments, then after some number of iterations,
-    declaring the full conditional distribution of the resultant mixture weights and
-    associated parameters as the starting point for the VB algorithm.
+    Second is uniform initialization---initializing the variational parameters such that, 
+    after transformation via stick-breaking, the expected probability of cluster assignment 
+    is uniform among all clusters up to the truncation point. That is, for truncation 
+    point $J$,
+    \[
+    \text{E}[\bm{\nu}] = \left(\frac{1}{J},\frac{1}{J-1},\ldots,\frac{1}{3},\frac{1}{2}\right)
+    \]
+    Finally, we can declare a rather optimistically named \emph{optimal} starting point 
+    as a result of using an abridged MCMC sampler solely for cluster assignments, then after
+    some number of iterations, declaring the full conditional distribution of the resultant 
+    mixture weights and associated parameters as the starting point for the VB algorithm.  
+    Recall that under the stick-breaking representation of the PY sampler, the probability of 
+    cluster membership $\pi_j = \prod_{k = 1}^{j-1}(1 - \nu_k) \times \nu_j$, where
+    \[
+        \nu_j \sim \mathcal{B}\left(\nu \mid 1 - d + n_j, \eta + jd + \sum_{k = j+1}^J n_k\right).
+    \]
+    In the variational distribution $q$, we approximate the posterior distribution of $\nu$ 
+    using a $\text{Logit}\mathcal{N}(\mu,\sigma^2)$ density.  Following \cite{aitchison1980}, 
+    the \emph{best} approximation to $\mathcal{B}(\alpha_1,\alpha_2)$ as measured by minimum 
+    KL divergence is achieved by letting $\mu = \psi(\alpha_1) - \psi(\alpha_2)$, and 
+    $\sigma^2 = \psi^{\prime}(\alpha_1) + \psi^{\prime}(\alpha_2)$, where 
+    $\psi(\cdot)$ and $\psi^{\prime}(\cdot)$ represent the digamma and trigamma functions 
+    respectively.  We take these values $\bm{\mu}$, $\bm{\sigma}$ as a starting position for
+    the variational approximation.
 
 \begin{figure}[b]
     \caption{Rise in energy score over baseline by number of dimensions, on simulated data for various model fitting strategies. The faceting denotes the number of mixture components in
