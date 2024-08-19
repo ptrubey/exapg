@@ -10,18 +10,39 @@
                     \begin{aligned}
                     P\left(Z_{s} \geq z_{s} \mid \bm{Z}_{\neg s} \geq \bm{z}_{\neg s}\right)
                         &= P\left(RV_{s} \geq rv{s} \mid RV_{\neg s} \geq rv_{\neq s}\right)\\
-                        &= P\left(R\geq r\right)P\left(V_{s}\geq v_{s}\mid )
+                        &= P\left(R\geq r\right)P\left(V_{s}\geq v_{s}\mid ...? \right)
                     \end{aligned}
                 \end{equation*}
         \end{itemize}
         \item Multi-site return levels
         \begin{itemize}
-            \item Total Inundation field?  (some univariate transformation?)
-            \item number of locales under significant flooding?
+            \item What is a multivariate return period/level?
+            \begin{itemize}
+                \item Conceptually it's not easy to define.  No two storms will present exactly
+                    the same in magnitude or resulting scaled field.
+                \item Marginally, \[T_p = \frac{\mu}{1 - F_x(X_p)}\] where $\mu$ is average inter-arrival 
+                    in series of events.  Conceptual problem occurs in definition of $F$, which is unclear
+                    in a multivariate setting.
+                \item \url{https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/wrcr.20204}
+                \item \url{https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2009WR009040}
+                \item \url{https://hess.copernicus.org/articles/17/1281/2013/}
+                
+                \item need to make a statement harkening back to the fact this is a simulation of
+                    storm parameters sampled via latin hypercube, so the definition of 'return period'
+                    in this context is suspect.
+            \end{itemize}
+            \item Given shaky conception of multivariate return period, we might consider alternative 
+                definitions more relevant to an inundation field.
+            \begin{itemize}
+                \item Total Inundation field?  (some univariate transformation?)
+                \item number of locales under significant flooding?
+            \end{itemize}
         \end{itemize}
         \item Application results
     \end{itemize}
 \end{comment}
+
+Following the example of \cite{trubey:pg}, we 
 
 
 
