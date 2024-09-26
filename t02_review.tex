@@ -7,14 +7,6 @@ Our analysis of the SLOSH data's extremal dependence requires some background.
     $s$ refers to \emph{sites}, or locations.
 
 \subsection{Extreme Value Theory\label{ref:evt}}
-% \begin{comment}
-%     \begin{itemize}
-%         \item Formal introduction of extreme analysis
-%         \begin{itemize}
-%             \item Separation of angular and radial components
-%         \end{itemize}
-%     \end{itemize}
-% \end{comment}
 \makenote{first paragraph basically copy-pasted from ndpg.  Rephrase more?}
 Extreme value theory uses the limited information available in a sample to
     characterize the tails of a distribution.  In the univariate case, asymptotic
@@ -82,14 +74,6 @@ Let the threshold $b_{qs} = \hat{F}_{s}^{-1}(1 - q)$, where $\hat{F}$ is
     angular component $\bm{V}\in\mathbb{S}_{\infty}^{d-1}$.  
 
 \subsection{Projected Gamma\label{ref:pg}}
-% \begin{comment}
-%     \begin{itemize}
-%         \item Introduction of Projected gamma distribution
-%         \begin{itemize}
-%             \item Projected Gamma as the kernel density of a BNP mixture
-%         \end{itemize}
-%     \end{itemize}
-% \end{comment}
 A suitable distribution for $\bm{V}$ can be approximated by projecting a 
     distribution in $\mathbb{R}_+^d$ onto $\mathbb{S}_{p}^{d-1}$.  
     Recall the $\mathcal{L}_p$ norm 
@@ -161,6 +145,7 @@ For the rest of this paper, let $i$ denote indexing over storm simulations (obse
     Let $j\in \lbrace 1,\ldots,J\rbrace$ denote indexing over \emph{clusters}, the aforementioned
     mixture components up to truncation point $J$.  Then, the model can be specified as
     \begin{equation}
+        \label{eqn:pypg}
         \begin{aligned}
             \bm{y}_i \mid \bm{\alpha}_i &\sim
                 \mathcal{PG}_p\left(\bm{Y}\mid\bm{\alpha}_i,\bm{1}\right)\\
@@ -175,11 +160,11 @@ For the rest of this paper, let $i$ denote indexing over storm simulations (obse
         \end{aligned} 
     \end{equation}
     where $\eta$ and $\zeta$ are respectively the concentration and discount parameters
-    of the Pitman--Yor process.  Fitting this model for a moderate number of sites (up to 50)
-    can be accomplished in reasonable time via Markov-chain Monte Carlo methods.
-    We introduce a latent cluster assignment variable $\delta_i$ such that 
-    $\text{P}(\delta_i = j\mid\bm{y},\bm{\alpha}) = 
-        \text{P}(\bm{\alpha}_i = \bm{\alpha}_j\mid \bm{\alpha},\bm{y})$ as described in 
+    of the Pitman--Yor process.  Fitting this model can be accomplished via Markov-chain 
+    Monte Carlo methods. We can introduce a latent cluster assignment variable $\delta_i$ 
+    such that 
+    $\text{P}\left(\delta_i = j\mid\bm{y},\bm{\alpha}\right) = 
+        \text{P}\left(\bm{\alpha}_i = \bm{\alpha}_j\mid \bm{y},\bm{\alpha}\right)$ as described in 
         Equation~\eqref{eqn:stickbreak}.
     Then the full conditional distribution of $\delta_i$ is
     \begin{equation}
@@ -187,64 +172,32 @@ For the rest of this paper, let $i$ denote indexing over storm simulations (obse
         \text{P}\left(\delta_i = j\mid \bm{y},\bm{\alpha},\bm{\nu}\right) = 
             \frac{p_j\mathcal{PY}(\bm{y}_i\mid\bm{\alpha}_j)}{
                 \sum_{k = 1}^J p_k\mathcal{PY}(\bm{y}_i\mid\bm{\alpha}_j)}
-                \;\hspace{1cm}\;
-            \nu_j\mid\bm{\delta} \sim \mathcal{B}\left(1 + n_j - d, \sum_{k = j+1}^J n_k + \eta + jd\right)
+                \;\hspace{0.5cm}\;
+            \nu_j\mid\bm{\delta} \sim \mathcal{B}\left(1 + n_j - d,\; 
+                            {\textstyle \sum}_{k = j+1}^J n_k + \eta + jd\right)
     \end{equation}
     where $p_j = \nu_j\prod_{k=1}^{j-1}(1 - \nu_k)$,  as described in in 
-    Equation~\eqref{eqn:stickbreak}, and $n_j = \sum_{i = 1}^n\bm{1}_{\delta_i = j}$.  Posterior 
-    updates for $\bm{\alpha}$ and hyperprior parameters follow through their familiar gamma-gamma 
-    form.
+    Equation~\eqref{eqn:stickbreak}, and $n_j = \sum_{i = 1}^n\bm{1}_{\delta_i = j}$.
+    We can further introduce a latent $r_i\mid \bm{y}, \delta_i,\bm{\alpha} \sim 
+        \mathcal{G}\left(r\mid \sum_s \alpha{\delta_is},\sum_s y_{is}\right)$ such that the
+    likelihood of $\bm{\alpha}_j$ becomes separable by dimension.  Posterior updates 
+    for $\bm{\alpha}$, and $\bm{\xi}$ can be accomplished via Metropolis-within-Gibbs steps,
+    and the full conditional of $\tau_s$ has a known form as a Gamma distribution.
 
-Such a fitting scheme works well for a moderately sized inference problem.  In \cite{trubey:pg},
-    they report taking approximately \num{20} minutes to run the sampler for \num{40000} iterations 
+Such a fitting scheme can work well for a moderately sized inference problem.  In \cite{trubey:pg},
+    they report requiring approximately \num{20} minutes to run the sampler for \num{40000} iterations, 
     on an inference task of \num{532} observations $\times$ \num{47} sites.  If we want to conduct
-    MCMC inference for more sites, and more observations, the sampler would need more iterations to
-    reach convergence, and each iteration would take comparatively longer.  We must consider an
-    alternative method of model fitting.
+    MCMC inference for more sites, and more observations, the sampler may need more iterations to
+    reach convergence, each iteration will require more cpu time, and the sampler require more 
+    memory resources to hold the sampling history.  We must consider an alternative method of 
+    model fitting.
 
 \subsection{Variational Inference - A Brief Overview}
-\makenote{These 2 paragraphs are intended to introduce the justification for 
-    VarBayes. I like the wordsmithing at the end of the second paragraph, but 
-    given the current position of this intro, they're unnecessary.  REVISE.}
-Let $\bm{x}$ be the observed data, and $\bm{\theta}$ be an unobserved set of 
-    parameters governing the distribution of the observed data.  We term 
-    $f(\bm{x}\mid\bm{\theta})$ the likelihood.  The goal of inference in 
-    general is to obtain information about $\theta$, using information 
-    obtained from $\bm{x}$. Bayesian inference in particular places a prior
-    distribution on $\theta$, $f(\bm{\theta})$, and from this we can obtain a
-    posterior distribution on $\bm{\theta}$ that incorporates both information
-    from the likelihood as well as the prior.  That is,
-    \[
-        f(\bm{\theta}\mid\bm{x}) = 
-            \frac{f(\bm{x}\mid\bm{\theta})f(\bm{\theta})}{f(\bm{x})},
-    \]
-    where the demoninator $f(\bm{x})$ is obtained as
-    \[
-        f(\bm{x}) = \int_{\Omega_{\bm{\theta}}}f(\bm{x}\mid\bm{\theta})f(\bm{\theta})d\bm{\theta}
-    \]
-    where $\Omega_{\bm{\theta}}$ denotes the support of $\bm{\theta}$.
-
-When a given model is sufficiently complex that the above integration is no
-    longer feasible analytically, or if the posterior cannot be described in
-    closed form\makenote{when the posterior is not tractible...}, we frequently 
-    turn to sampling--based classes of methods, such as 
-    \emph{Markov chain Monte Carlo} (MCMC)\needcite. There are myriad approaches, 
-    \makenote{expand?}, but central to all sampling--based 
-    methods is the stochastic nature of model fitting, and the 
-    necessity of samples for posterior inference.  Sampling methods can be 
-    tempermental, requiring many numbers of iterations to reach convergence.
-    Samples take time to draw, and memory to store; but for sufficiently large 
-    problems, both can be in short supply.
-
-One class of methods that shows promise in avoiding the computational and 
-    storage burdens of sampling methods is variational inference.\needcite 
-    Based on variational calculus, this approach attempts to approximate the 
-    true posterior distribution
-    $f(\bm{\theta}\mid\bm{x})$ using a tractible \emph{surrogate posterior} 
-    $q(\bm{\theta})$.  Model fitting under this class involves specification of 
-    the family of surrogate densities $\mathcal{Q}$, then selecting that density 
-    $q^*$ which minimizes the \emph{Kullbeck-Liebler} (KL) divergence between 
-    the surrogate and true posterior.  That is,
+Variational inference, or Variational Bayesian statistics, is an alternative method of 
+    model-fitting that proposes, if the target distribution is analytically intractable,
+    to fit a tractable candidate distribution as \emph{close} to the target distribution
+    as possible.  That is, for data $\bm{x}$ and some distributional parameter set $\bm{\theta}$,
+    where $f(\bm{\theta}\mid \bm{x})$ is not available in closed form, then we select
     \begin{equation}
         \label{eqn:optimalq}
         q^*(\bm{\theta}) = \argmin_{q\in\mathcal{Q}}\left\lbrace
@@ -255,7 +208,21 @@ One class of methods that shows promise in avoiding the computational and
         \right)\right]
         \right\rbrace.
     \end{equation}
-    Using KL divergence as an analogue to distance, we are attempting to find
+    There are myriad flavors of variational approaches, differentiating by
+    the type and degree of structure, or dependence, they allow between the parameters in
+    the variational distribution, or in the specific method they use to fit the variational
+    distribution.  Of particular note here is \emph{mean field} variational Bayes, which 
+    holds each parameter's variational distribution as independent from all other parameters 
+    in the model.  That is,
+    \[
+        q_{\bm{\theta}} = \prod_{\ell \in L}q_{\theta_{\ell}}(\theta_{\ell}\mid
+    \]
+    If we hold each $q_{\theta_{\ell}}$ to be an appropriate transformation of a normal
+    distribution, then each $q_{\theta_{\ell}}$ can be specified by a mean and variance 
+    parameter. Some \needcite more complicated flavors of variational Bayes will relax 
+    this independence restriction.
+
+Using KL divergence as an analogue to distance, we are attempting to find
     the \emph{closest} tractable surrogate posterior $q$ within the family 
     $\mathcal{Q}$ to the true posterior.  
     As has been explained however, we do not necessarily have 
@@ -292,7 +259,7 @@ One class of methods that shows promise in avoiding the computational and
                 + \mathcal{L}(\bm{\theta})
         \end{aligned}
     \]
-    Thus maximizing $\mathcal{L}(\bm{\theta})$ is equvivalent to minimizing the 
+    Thus maximizing $\mathcal{L}(\bm{\theta})$ is equivalent to minimizing the 
     KL divergence. In this form, as KL divergence is a positive quantity, it is
     readily apparent that $\mathcal{L}(\bm{\theta})$ establishes a lower bound
     on the evidence.  As such, the variational literature has christened it the
@@ -305,7 +272,17 @@ One class of methods that shows promise in avoiding the computational and
     $\bm{\psi}$, such that choosing the optimal $\bm{q}$ means in effect choosing
     the optimal $\bm{\psi}$.  
 
-Optimization of the ELBO with respect to $\bm{\psi}$ can be a daunting task.
+Optimization of the ELBO with respect to $\bm{\psi}$ can be a daunting task. If
+    $\text{E}[\log f(\bm{x},\bm{\theta})$ can not be analytically calculated, then
+    one approach we can consider is the so-called \emph{reparameterization trick}.
+    If $q$ is specified in such a way that samples of $\bm{\theta}$ can be generated
+    as an invertible function of $\bm{\psi}$ and some independent random variable 
+    $\epsilon$, then
+
+
+
+
+
     If $q$ is specified in such a way that samples of $\bm{\theta}$ can be 
     generated as a function of $\bm{\psi}$ and some independent random variable 
     $\epsilon$ such as $\psi_0\epsilon + \psi_1$ as in the case of a normal
@@ -316,13 +293,15 @@ Optimization of the ELBO with respect to $\bm{\psi}$ can be a daunting task.
 
 That said, a path-based optimization is highly dependent upon the starting position,
     and if multiple local optima exist, there is no guarantee we will reach the
-    true optimal value.  There are many approaches that seek to solve this issue,
-    such as stochastic gradient descent, simulated annealing, \makenote{add additional algorithms}
-    but the problem remains.  Even in our testing, using what is well regarded as
-    one of the best optimization algorithms available, our results are still
-    highly dependent upon starting position, both in terms of model fidelity, and
-    in terms of the resulting number of extant mixture components.  That said, 
-    another approach we can consider is finding a better starting position.
+    true optimal value.  There are many approaches that seek to ameliorate this issue,
+    such as stochastic gradient descent, simulated annealing,
+    
+    
+    \makenote{add additional algorithms}
+    In our analysis, we use the well-regarded Adam optimizer \citep{kingma2017}, 
+    but results are still highly dependent upon starting position, both in terms of 
+    model fidelity, and resulting number of extant mixture components.  One potential
+    solution would be to consider a better starting position for the optimizer.
 
 \subsection{Optimal starting position}
 
@@ -330,60 +309,64 @@ As we are considering a mixture model where potentially there exists a label swi
     issue, if the initializing distribution of mixture component parameters provides
     \emph{decent} coverage of the distribution of optimal parameters, then the most 
     important part of the initialization is the distribution of mixture \emph{weights}.  
-    Here we consider three strategies.  First is, of course, random initialization.  
-    Second is uniform initialization---initializing the variational parameters such that, 
-    after transformation via stick-breaking, the expected probability of cluster assignment 
-    is uniform among all clusters up to the truncation point. That is, for truncation 
-    point $J$,
+    Here we consider three strategies.  First is, of course, random initialization 
+    (\emph{VB Random}).  Second is uniform initialization---initializing the variational 
+    parameters such that, after transformation via stick-breaking, the expected probability 
+    of cluster assignment is uniform among all clusters up to the truncation point. That 
+    is, for truncation point $J$,
     \[
     \text{E}[\bm{\nu}] = \left(\frac{1}{J},\frac{1}{J-1},\ldots,\frac{1}{3},\frac{1}{2}\right)
     \]
-    Finally, we can declare a rather optimistically named \emph{optimal} starting point 
-    as a result of using an abridged MCMC sampler solely for cluster assignments, then after
-    some number of iterations, declaring the full conditional distribution of the resultant 
-    mixture weights and associated parameters as the starting point for the VB algorithm.  
-    Recall Equation~\eqref{eqn:pdelta}. 
-    In the variational distribution $q$, we approximate the posterior distribution of $\nu$ 
-    using a $\text{Logit}\mathcal{N}(\mu,\sigma^2)$ density.  Following \cite{aitchison1980}, 
-    the \emph{best} approximation to $\mathcal{B}(\alpha_1,\alpha_2)$ as measured by minimum 
-    KL divergence is achieved by letting $\mu = \psi(\alpha_1) - \psi(\alpha_2)$, and 
+    leading to $\text{E}[p_j] = \frac{1}{J}$ for all $j = 1,\ldots,J$.
+    Finally, we consider two variations of \emph{pregaming} 
+    \makenote{I \emph{really} need a better name for this} 
+    the variational algorithm, by
+    setting the starting position using the results of an abridged MCMC sampler.  
+    Recall Equation~\eqref{eqn:pdelta}. In the variational distribution $q$, we approximate the 
+    posterior distribution of $\nu$ using a $\text{Logit}\mathcal{N}(\mu,\sigma^2)$ density.  
+    Following \cite{aitchison1980}, the \emph{best} approximation to 
+    $\mathcal{B}(\alpha_1,\alpha_2)$ as measured by minimum KL divergence is achieved by 
+    letting $\mu = \psi(\alpha_1) - \psi(\alpha_2)$, and 
     $\sigma^2 = \psi^{\prime}(\alpha_1) + \psi^{\prime}(\alpha_2)$, where 
     $\psi(\cdot)$ and $\psi^{\prime}(\cdot)$ represent the digamma and trigamma functions 
-    respectively.  We take these values $\bm{\mu}$, $\bm{\sigma}$ as a starting position for
-    the variational approximation.
+    respectively.  We take these values $\bm{\mu}$, $\bm{\sigma^2}$ as the starting position for
+    the variational approximation. In the first method, \emph{VB Pregamed 1}, 
+    we update $\bm{\nu}$, sampling new $\bm{\alpha}_j$'s using the initial setting
+    for the centering distribution.  In the second (\emph{VB Pregamed 2}), we update the
+    the parameters for the centering distribution as well.      
 
 \begin{figure}[htb]
     \caption{Rise in energy score over baseline by number of dimensions, on simulated data 
-    for various model fitting strategies. The faceting denotes the number of mixture components 
+    for various model fitting strategies. Faceting denotes the number of mixture components 
     in the generating distribution. \label{fig:energyscore}}
     \includegraphics[width=\linewidth]{plots/energy_score}
 \end{figure}
 
 Figure~\ref{fig:energyscore} displays the results of our foray looking into this 
-    optimal starting position, by examining the rise in energy score calculated from a
-    posterior predictive sample over a baseline energy score calculated from
-    another random sample from the same generating distribution.  We see that a pure 
-    MCMC approach performs best, but using an abridged MCMC sampler to set a 
-    starting position for the variational algorithm performs nearly as well.  It is
-    also much faster \makenote{this needs to be quantified}.
-    
-
-
-
-
-
-
-
+    notion of an optimal starting position, by examining the rise in energy score 
+    calculated from a posterior predictive sample from the fitted model against the target 
+    sample, over a baseline energy score calculated using another random sample from the same 
+    generating distribution.  The \emph{closer} the curve is to 0, the better.  We see that 
+    a pure MCMC approach achieves the best model fidelity, but \emph{VB Pregamed 2}, using 
+    the abridged MCMC sampler to set a starting value for both the centering distribution 
+    and cluster weights, achieves a model fidelity in terms of energy score that is very
+    nearly indistinguishable from the MCMC model, at least in the scale for which we can test.
+    As the dimensionality of the problem grows, energy score becomes less able to assess model
+    fidelity, as the distance between each observation or replication will approach a constant
+    value.\makenote{(needs citation--this is a result from high-dimensional knn)}.
 
 \subsection{SLOSH}
 \begin{comment}
+    A more in-depth discussion of the dataset.
     \begin{itemize}
-        \item More in-depth discussion of dataset
-        \begin{itemize}
-            \item Break dataset down into 3 levels of analysis; t90, all--but--road--features, airports.
-            \item Descriptive statistics thereof
-            \item Pitfalls in analysis?
-        \end{itemize}
+        \item Break SLOSH down into levels of analysis based on intended goals.
+        \begin{enumerate}
+            \item Clustering Model
+            \item Regression model
+        \end{enumerate}
+        \item Break dataset down into 3 levels of analysis; t90, all--but--road--features, airports.
+        \item Descriptive statistics thereof
+        \item Pitfalls in analysis?
     \end{itemize}
 \end{comment}
 
@@ -409,10 +392,10 @@ The projected gamma based model is not an inherently spatial model.
     Additionally, we select locations, or grid cells, that have experienced at
     at least some inundation in some $q$ proportion of storm simulations.  That is,
     such that $b_{qs} > 0$, for all $s$ of interest.  This restriction arises
-    as a consequence of fitting the parameters for the marginal generalized Paretos:
-    if the threshold for excesses $b$ is not set above $0$, the likelihood can diverge, 
-    and MLE estimation of the parameters suffers. Here we experience another
-    tradeoff, the implications of which are explored in 
+    as a consequence of fitting the parameters for the marginal generalized Pareto
+    distributions: if the threshold for excesses $b$ is not set above $0$, the 
+    likelihood can diverge, and MLE estimation of the parameters suffers. Here 
+    we experience another tradeoff, the implications of which are explored in 
     Figure~\ref{fig:thresholdselection}.  Setting a higher threshold allows more 
     sites to be included in the analysis, but in turn reduces the number of storm 
     simulations which exceed the threshold in at least one dimension.  This in turn 
@@ -424,7 +407,7 @@ The projected gamma based model is not an inherently spatial model.
     \centering
     \caption{Trade-offs in threshold specification:
     (Left) Proportion of sites with threshold $b_{qs} > 0$ versus $(1 - q)$; 
-    (Right) Proportion of storms $\bm{W}_i \not< \bm{b}_q$ versus $(1-q)$.
+    (Right) Proportion of storms $\bm{W}_i \not< \bm{b}_q$ versus $(1 - q)$.
     \label{fig:thresholdselection}}
     \includegraphics[width=0.9\linewidth]{plots/explore_threshold}
 \end{figure}
@@ -453,7 +436,7 @@ At this point, we consider the analysis of the SLOSH data in 3 parts.  First, we
     expensive, so for that reason we consider a variational approach.
     Finally, \makenote{briefly describe regression goals and why specific datasets.}
 
-\begin{figure}[b]
+\begin{figure}[htb]
     \centering 
     \caption{Histograms of characteristics for simulations 
         that survived thresholding in \emph{Threshold.9}.\label{fig:thetahistogram}}

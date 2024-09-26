@@ -26,6 +26,7 @@
                 \item \url{https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/wrcr.20204}
                 \item \url{https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2009WR009040}
                 \item \url{https://hess.copernicus.org/articles/17/1281/2013/}
+                \item \url{https://nhess.copernicus.org/articles/12/2699/2012/}
                 
                 \item need to make a statement harkening back to the fact this is a simulation of
                     storm parameters sampled via latin hypercube, so the definition of 'return period'
@@ -42,18 +43,78 @@
     \end{itemize}
 \end{comment}
 
-Following the example of \cite{trubey:pg}, we 
+\subsection{Applications of Extremal Dependence}
+Following the example of \cite{trubey:pg}, we can use the dependence structure we infer the dependence
+    by fitting the model in Equation~\eqref{eqn:pypg}.  Then, conditional on
 
 
 
-\begin{equation}
-    \text{Pr}\left[\bigcap_{s\in\alpha}Z_s > z_s\;\middle|\;\bigcap_{s\not\in\alpha}Z_s > z_s\right] =
-    \frac{
-        \text{E}\left[\bigwedge_{s=1}^S 1\wedge \frac{V_s}{z_s}\right]
-    }{
-        \text{E}\left[\bigwedge_{s\not\in\alpha} 1\wedge \frac{V_s}{z_s}\right]
-    }    
-\end{equation}
+The standard Pareto distribution exhibits a multiplicative memory-less property such that
+\[
+\text{P}(Z > st \mid Z > s) = P(Z > t)\text{ for }s,t \geq 1
+\]
+
+\subsection{Multi-site Return Periods}
+Statistical inference of extreme values tends to focus on the \emph{return period} as a deliverable
+    metric.  In a univariate case, this is relatively easy to define: for event $z$, the return period
+    is the average \emph{time} it would take to observe a new event $Z$ as extreme or more extreme than $z$.
+    that is,
+    \[
+    T(z) = \frac{\mu}{1 - F_z(z)}
+    \]
+    where $\mu$ is the average inter-arrival time in a series of events. Conceptual problems begin to arise
+    in interpretation when we consider a multivariate $F$. 
+    \makenote{extreme analysis book makes succinct argument; quote.}
+    \cite{cho2023} avoids this issue of interpretation by estimating univariate return periods for each
+    indexed location within a spatial field, along with low-dimensional multivariate extreme analysis 
+    on different summary statistics, assessed over the aggregate spatial field: flood volume, 
+    peak discharge, total rainfall depth, and maximum wind speed.
+    A more analogous approach to ours, in that they consider the dependence structure of extreme values of 
+    the same summary statistic, between different points in space may be found in \cite{salvadori2010}.  They
+    consider yearly maximum observed flow rates between 4 of 17 available flow meters on a river catchment
+    in Britain. \makenote{
+        Inference task size: 4 locations $\times$ 37 years available.  I suspect the problem,
+        or why they're not more ambitious in terms of scale, is one of interpretation: more than 4 dimensions 
+        makes presenting results difficult.  Also, lack of data (\# of years).
+        }
+    Beyond the conceptual issue of interpreting a multivariate $F$, there arises a practical issue in presenting
+    complete results of a higher dimensional process.
+       
+\subsection{Conditional Survival}
+One of the more compelling applications of modelling the dependence structure between locations in 
+    storm surge lies in the reality that a storm surge occurs over a period of time, and the 
+    maximum observed values in storm surge at different sites occur asynchronously.  A decision maker,
+    interested in the storm surge at a smaller group of locations, can observe storm surge at other
+    locations, and make an inference about the probability of catastrophic flooding at their locations
+    of interest and make an informed decision.
+    Equation~\eqref{eqn:condsurv}, from Proposition~2 of \cite{trubey:pg} offers us a means by which 
+    this can be accomplished.
+    \begin{equation}
+        \label{eqn:condsurv}
+        \text{Pr}\left[\bigcap_{s\in\alpha}Z_s \geq z_s\;\middle|\;\bigcap_{s\not\in\alpha}Z_s \geq z_s\right] =
+        \frac{
+            \text{E}\left[\bigwedge_{s=1}^S 1\wedge \frac{V_s}{z_s}\right]
+        }{
+            \text{E}\left[\bigwedge_{s\not\in\alpha} 1\wedge \frac{V_s}{z_s}\right]
+        }
+    \end{equation}
+    Letting Set $\alpha$ be a group of locations of interest, we can establish the probability of
+    entering a failure region, conditional on the current state and potential future state of the inundation 
+    field.  Say, given current storm flooding near the mouth of the Delaware Bay, will the Philadelphia 
+    International Airport, situated on the Delaware river, experience catastrophic flooding?  If one can 
+    describe the dependence structure of extremes in inundation, Equation~\ref{eqn:condsurv} offers a 
+    practical, actionable metric.
+
+    \makenote{Select a few locations of interest in each inference task; establish conditional survival 
+    probabilities for each given a few }
+    
+    The framework of multivariate EVT does not allow for the concept of negative dependence.  In fact, 
+    a peaks-over-threshold approach using the projected gamma to model the dependence structure can not 
+    encompass even complete independence: the closest we can envision is a weak positive dependence.
+    As such, it is difficult to accurately model phenomena that 
+    Never the less, \makenote{making a statement about the probability of simultaneous flooding in new york and virginia.}
+
+    
 
 
 
