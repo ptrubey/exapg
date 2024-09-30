@@ -93,9 +93,15 @@ One thing we can do is evaluate recovery of marginal empirical CDF's, using marg
         W_s^* = a_s\left(\frac{(Z_s^*)^{\xi_s} - 1}{\xi_s}\right) + b_s
     \end{equation*}
     where $\bm{\xi}$, $\bm{a}$, and $\bm{b}$ were previously calculated.  
-    
-    
-    
+
+    For consistency with regard to the originating data, we truncate replicates 
+    from the posterior predictive distribution, $W_{s}^* \geq 0$.  It can occur 
+    that the chosen marginal GP parameters are sub-optimal, as the thresholding
+    point $b_{ts}$ may be ill-chosen.  This is a potential weakness of choosing
+    the threshold via the empirical quantile function.  There is an inherent 
+    tradeoff---not using the empirical quantile function would mean non-uniform 
+    marginal probabilities of threshold exceedence, the assumption of which some 
+    other aspects of our analysis are based.
     
     We observe here that 
     the recovery of the marginal CDF is somewhat problematic for the Variational Bayes
