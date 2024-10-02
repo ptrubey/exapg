@@ -83,61 +83,53 @@ One difficulty with a high-dimensional model is evaluating its fidelity.  As we 
     distance between the nearest replicate, and farthest replicate in a sample will tend to approach 1.
     So distance as a measure is fundamentally flawed in a high-dimensional setting.
 
-One thing we can do is evaluate recovery of marginal empirical CDF's, using marginal
-    predictive CDF's.  In Figure~\ref{plot:marginal_doverafb}, we plot the marginal
-    empirical CDF relative to the posterior predictive CDF under \num{4} models.  
+One thing we can do is evaluate recovery of marginal empirical CDF, using marginal
+    posterior predictive CDF's under various modelling approaches.
     Having sampled $\bm{V}^{*}$ from its posterior predictive density, we can get a sample of $W_s^*$
-    by inverting Equation~\eqref{eqn:standardization}---accepting the inevitable truncation.  Thus
-    for $R^*\sim\text{Pareto}(1)$, $Z^* = R^*\bm{V}^*$,
+    by inverting Equation~\eqref{eqn:standardization}.  Thus, for for $R^*\sim\text{Pareto}(1)$, 
+    $Z^* = R^*\bm{V}^*$,
     \begin{equation*}
         W_s^* = a_s\left(\frac{(Z_s^*)^{\xi_s} - 1}{\xi_s}\right) + b_s
     \end{equation*}
     where $\bm{\xi}$, $\bm{a}$, and $\bm{b}$ were previously calculated.  
-
     For consistency with regard to the originating data, we truncate replicates 
-    from the posterior predictive distribution, $W_{s}^* \geq 0$.  It can occur 
-    that the chosen marginal GP parameters are sub-optimal, as the thresholding
-    point $b_{ts}$ may be ill-chosen.  This is a potential weakness of choosing
-    the threshold via the empirical quantile function.  There is an inherent 
-    tradeoff---not using the empirical quantile function would mean non-uniform 
-    marginal probabilities of threshold exceedence, the assumption of which some 
-    other aspects of our analysis are based.
-    
-    We observe here that 
-    the recovery of the marginal CDF is somewhat problematic for the Variational Bayes
-    approach. 
+    from the posterior predictive distribution $W_{s}^* \geq 0$.  
+    \makenote{rest of paragraph may be unnecessary}
+    It can occur that the chosen marginal GP parameters are sub-optimal, as the threshold
+    $b_{ts}$ may be ill-chosen.  This is an inherent weakness of choosing
+    the threshold via the empirical quantile function, which creates a 
+    tradeoff---to not use the empirical quantile function would necessarily imply 
+    non-uniform marginal probabilities of threshold exceedence, the assumption of 
+    which some other aspects of our analysis are based.
 
-
-To evaluate the efficacy of our models in a moderately high-dimensional setting,
-    we evaluate their recovery of their marginal distributions.  In 
-    Figures~\ref{plot:marginal_doverafb},\ref{plot:marginal_pia} we observe the marginal 
-    cumulative distribution functions for $\bm{V}$ and $\bm{Z}$ at Dover AFB and PIA,
-    as calculated from from the posterior predictive distribution.  Note, in particular,
-    that the variational model experiences significant difficulty in recovering the
-    CDF from the original data.  Fitting via MCMC comes closest to the target.
-    
 \begin{figure}[ht]
-    \caption{Recovery of marginal $\bm{v}$ (left) and $\bm{z}$ (right) for 
-        Dover Air Force Base.\makenote{Change Z to W, to reflect reality.}
-        \label{plot:marginal_doverafb}}
+    \caption{Cumulative Distribution Functions for marginal $V_{\text{PIA}}$ (Left) and 
+    $W_{\text{PIA}}$ (Right), Empirical, or posterior predictive under various modelling
+    considerations.\label{Plot:marginal_doverafb}\makenote{relabel 'raw' to 'empirical'}}
     \centering
-    \includegraphics[width=\textwidth]{./plots/delaware_marginal_dover_afb}
+    \includegraphics[width=\textwidth]{./plots/delaware_marginal_phil_ia.png}
 \end{figure}
-
-
-
-
-
-
-
-
+    
 
 
 \begin{figure}[ht]
-    \caption{Recovery of marginal $\bm{v}$ (left) and $\bm{z}$ (right) for 
-        Philadelphia International Airport.\makenote{Change Z to W, to reflect reality.}
-        \label{plot:marginal_pia}}
+    \caption{Cumulative Distribution Functions for marginal $V_{\text{Dover AFB}}$ (Left) and $W_{\text{Dover AFB}}$ (Right), Empirical, or posterior predictive under various modelling
+    considerations.\label{Plot:marginal_doverafb}\makenote{relabel 'raw' to 'empirical'}}
     \centering
-    \includegraphics[width=\textwidth]{./plots/delaware_marginal_phil_ia}
+    \includegraphics[width=\textwidth]{./plots/delaware_marginal_dover_afb.png}
 \end{figure}
+
+In Figure~\ref{plot:marginal_doverafb}, we observe said marginal empirical and posterior-predictive
+    CDF's for storm surge at Dover Air Force Base.  As previously mentioned, this location is adjacent
+    Delaware Bay, approximately 2 miles inland, with a direct line of sight out the mouth of the bay towards the open ocean.  Take note in particular, that the empirical CDF of $\bm{w}_s$ shows
+    that storm surge does not reach Dover AFB in approximately \num{44} percent of storms, 
+    post-thresholding.  The fit resulting from the variational approach
+
+
+
+
+
+
+
+
 % EOF
