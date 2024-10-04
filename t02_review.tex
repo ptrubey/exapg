@@ -189,11 +189,10 @@ Such a fitting scheme can work well for a moderately sized inference problem.  I
     on an inference task of \num{532} observations $\times$ \num{47} sites.  If we want to conduct
     MCMC inference for more sites, and more observations, the sampler may need more iterations to
     reach convergence, each iteration will require more cpu time, and the sampler require more 
-    memory resources to hold the sampling history.  We must consider an alternative method of 
-    model fitting.
+    memory resources to hold the sampling history.  We consider an alternative method of model fitting.
 
 \subsection{Variational Inference - A Brief Overview}
-Variational inference, or Variational Bayesian statistics, is an alternative method of 
+Variational inference, or variational Bayesian statistics, is an alternative method of 
     model-fitting that proposes, if the target distribution is analytically intractable,
     to fit a tractable candidate distribution as \emph{close} to the target distribution
     as possible.  That is, for data $\bm{x}$ and some distributional parameter set $\bm{\theta}$,
@@ -212,8 +211,8 @@ Variational inference, or Variational Bayesian statistics, is an alternative met
     the type and degree of structure, or dependence, they allow between the parameters in
     the variational distribution, or in the specific method they use to fit the variational
     distribution.  Of particular note here is \emph{mean field} variational Bayes, which 
-    holds each parameter's variational distribution as independent from all other parameters 
-    in the model.  That is,
+    holds each parameter's variational distribution as independent of that from all other 
+    parameters in the model.  That is,
     \[
         q_{\bm{\theta}} = \prod_{\ell \in L}q_{\theta_{\ell}}(\theta_{\ell}\mid
     \]
@@ -222,8 +221,8 @@ Variational inference, or Variational Bayesian statistics, is an alternative met
     parameter. Some \needcite more complicated flavors of variational Bayes will relax 
     this independence restriction.
 
-Using KL divergence as an analogue to distance, we are attempting to find
-    the \emph{closest} tractable surrogate posterior $q$ within the family 
+To expand, using KL divergence as an analogue to distance, variational inference attempting 
+    to find the \emph{closest} tractable surrogate posterior $q$ within the family 
     $\mathcal{Q}$ to the true posterior.  
     As has been explained however, we do not necessarily have 
     $f(\bm{\theta}\mid\bm{y})$ directly.  Let 
@@ -262,7 +261,8 @@ Using KL divergence as an analogue to distance, we are attempting to find
     Thus maximizing $\mathcal{L}(\bm{\theta})$ is equivalent to minimizing the 
     KL divergence. In this form, as KL divergence is a positive quantity, it is
     readily apparent that $\mathcal{L}(\bm{\theta})$ establishes a lower bound
-    on the evidence.  As such, the variational literature has christened it the
+    on the evidence, and maximizing said lower bound is equivalent to minimizing
+    the KL divergence.  Thus the variational literature has christened it the
     \emph{evidence lower bound}, often abbreviated to \emph{ELBO}.  As such,
     we can rewrite Equation~\eqref{eqn:optimalq} to
     \[
@@ -272,33 +272,39 @@ Using KL divergence as an analogue to distance, we are attempting to find
     $\bm{\psi}$, such that choosing the optimal $\bm{q}$ means in effect choosing
     the optimal $\bm{\psi}$.  
 
-Optimization of the ELBO with respect to $\bm{\psi}$ can be a daunting task. If
-    $\text{E}[\log f(\bm{x},\bm{\theta})$ can not be analytically calculated, then
+Optimization of the ELBO with respect to $\bm{\psi}$ can be accomplished by
+    analytically computing the gradient,
+    \begin{equation}
+        \label{eqn:gradient}
+        \Delta_{\bm{\psi}} = \frac{\partial}{\partial \psi_{\ell}}
+            \left\lbrace\text{E}_{q}\left[\log f(\bm{y}\mid\bm{\theta})\right] 
+                - H(\bm{\psi})\right\rbrace
+            \;\;\text{ for }\ell = 1,\ldots,d,
+    \end{equation}
+    where $H(\bm{\psi})$ is the entropy of $q$, and subject to some conditions\makenote{rephrase},
+    locating the optimal point where $\Delta_{\bm{psi}} = \bm{0}$.  However, when 
+    $\text{E}[\log f(\bm{x},\bm{\theta})]$ can not be analytically calculated, then
     one approach we can consider is the so-called \emph{reparameterization trick}.
     If $q$ is specified in such a way that samples of $\bm{\theta}$ can be generated
-    as an invertible function of $\bm{\psi}$ and some independent random variable 
-    $\epsilon$, then
-
-
-
-
-
-    If $q$ is specified in such a way that samples of $\bm{\theta}$ can be 
-    generated as a function of $\bm{\psi}$ and some independent random variable 
-    $\epsilon$ such as $\psi_0\epsilon + \psi_1$ as in the case of a normal
-    random variable, then given samples of $\bm{\theta}$ we can differentiate 
-    the ELBO with respect to $\bm{\psi}$ to calculate the gradient of $\bm{\psi}$
-    at the current value.  Using this gradient, we can iteratively move towards
-    a better position---a more optimal $\bm{\psi}$.
+    as an invertible function $T$ of $\bm{\psi}$ and some independent random variable 
+    $\epsilon$, then the differentiation in Equation~\ref{eqn:gradient} can be 
+    moved inside the expectation,
+    \begin{equation}
+        \label{eqn:reparameterization}
+        \Delta_{\bm{\psi}} = \text{E}\left[\frac{\partial}{\partial \psi_\ell}
+            \log f\left(\bm{y},T(\bm{\epsilon},\bm{\psi})\right) -
+            q(\theta\mid\psi)\right].
+    \end{equation}
+    This expectation can be evaluated numerically, to find the gradient at the current
+    location. we can then iteratively move towards a better position---a more optimal 
+    $\bm{\psi}$.
 
 That said, a path-based optimization is highly dependent upon the starting position,
     and if multiple local optima exist, there is no guarantee we will reach the
     true optimal value.  There are many approaches that seek to ameliorate this issue,
-    such as stochastic gradient descent, simulated annealing,
-    
-    
-    \makenote{add additional algorithms}
+    such as stochastic gradient descent, simulated annealing, \makenote{add additional algorithms}
     In our analysis, we use the well-regarded Adam optimizer \citep{kingma2017}, 
+    but in our analysis results are highly dependent upon starting position.
     but results are still highly dependent upon starting position, both in terms of 
     model fidelity, and resulting number of extant mixture components.  One potential
     solution would be to consider a better starting position for the optimizer.

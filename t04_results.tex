@@ -94,7 +94,7 @@ One thing we can do is evaluate recovery of marginal empirical CDF, using margin
     where $\bm{\xi}$, $\bm{a}$, and $\bm{b}$ were previously calculated.  
     For consistency with regard to the originating data, we truncate replicates 
     from the posterior predictive distribution $W_{s}^* \geq 0$.  
-    \makenote{rest of paragraph may be unnecessary}
+    \makenote{rest of paragraph potentially unnecessary}
     It can occur that the chosen marginal GP parameters are sub-optimal, as the threshold
     $b_{ts}$ may be ill-chosen.  This is an inherent weakness of choosing
     the threshold via the empirical quantile function, which creates a 
@@ -103,18 +103,9 @@ One thing we can do is evaluate recovery of marginal empirical CDF, using margin
     which some other aspects of our analysis are based.
 
 \begin{figure}[ht]
-    \caption{Cumulative Distribution Functions for marginal $V_{\text{PIA}}$ (Left) and 
-    $W_{\text{PIA}}$ (Right), Empirical, or posterior predictive under various modelling
-    considerations.\label{Plot:marginal_doverafb}\makenote{relabel 'raw' to 'empirical'}}
-    \centering
-    \includegraphics[width=\textwidth]{./plots/delaware_marginal_phil_ia.png}
-\end{figure}
-    
-
-
-\begin{figure}[ht]
-    \caption{Cumulative Distribution Functions for marginal $V_{\text{Dover AFB}}$ (Left) and $W_{\text{Dover AFB}}$ (Right), Empirical, or posterior predictive under various modelling
-    considerations.\label{Plot:marginal_doverafb}\makenote{relabel 'raw' to 'empirical'}}
+    \caption{Empirical, and posterior predictive cumulative distribution functions for marginal 
+    $v$, $V^*$ (Left) and $w$, $W^*$ (Right), at Dover Air Force Base, under various modelling
+    considerations.\label{plot:marginal_doverafb}\makenote{remove legend name}}
     \centering
     \includegraphics[width=\textwidth]{./plots/delaware_marginal_dover_afb.png}
 \end{figure}
@@ -123,11 +114,31 @@ In Figure~\ref{plot:marginal_doverafb}, we observe said marginal empirical and p
     CDF's for storm surge at Dover Air Force Base.  As previously mentioned, this location is adjacent
     Delaware Bay, approximately 2 miles inland, with a direct line of sight out the mouth of the bay towards the open ocean.  Take note in particular, that the empirical CDF of $\bm{w}_s$ shows
     that storm surge does not reach Dover AFB in approximately \num{44} percent of storms, 
-    post-thresholding.  The fit resulting from the variational approach
+    post-thresholding.
+
+\begin{figure}[ht]
+    \caption{Empirical, and posterior predictive cumulative distribution functions for marginal 
+    $v$, $V^*$ (Left) and $w$, $W^*$ (Right), at Philadelphia International Airport, under 
+    various modelling considerations.\label{Plot:marginal_pia}\makenote{remove legend name}}
+    \centering
+    \includegraphics[width=\textwidth]{./plots/delaware_marginal_phil_ia.png}
+\end{figure}
+
+Figure~\ref{plot:marginal_pia}, we see the same marginal CDF's, for the Philadelphia International
+    Airport.  Recall, this airport is situated along the banks of the Delaware River; storm surge has much further to travel to reach this point, and yet it experiences inundation much more frequently.
+
+Looking at equivalent marginal plots for all locations, most preserve roughly the
+    same ordering, from top-left to bottom-right: first the Variational Bayes fit of PYPG, then the 
+    Monte Carlo fit of the same model, then the regression models.  This permits us some insight 
+    to comment what effect granularity, or the number of extant clusters, has in model fidelity.
+    For a data analysis of this size, the mean field variational approach consistently yields the 
+    least number of extant clusters, and thus lowest granularity.
+\makenote{table of average $\text{E}[\alpha_s]$ under each model, as well as 
+    $\text{E}\left[\frac{\alpha_s}{\lVert\bm{\alpha}\rVert_{\infty}}\right]$}
 
 
-
-
+    
+    
 
 
 
