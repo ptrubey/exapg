@@ -31,17 +31,17 @@ Sea, Lake, and Overland Surges from Hurricanes \citep{jelesnianski1992} is a
     and surge management devices such as levees, to generate a spatial field of 
     inundation---the maximum observed height of water above ground level 
     (or above normal water level for a data point in a body of water) over the 
-    duration of the storm at a location.   These storm characteristics include 
+    duration of the storm at a location.   These storm characteristics are
     data pertaining to the eye of the storm when it made landfall---bearing, 
     velocity, latitude, minimum atmospheric pressure of the storm when it 
     made landfall, and projections of sea level rise over time.  A 
     \emph{simulation} from the model, for the basin we are analyzing, is a grid 
-    containing \num{23119800} elements with a spatial resolution of 
+    containing some \num{23119800} elements, with a spatial resolution of 
     \num{0.001} degrees, or approximately 90 meters, covering an area extending 
     from Virginia Beach, Virginia, to Long Island, New York.  We should note
     that the latitude at which the storms are simulated to make landfall are all
     between \num{38.3} and \num{39.3} degrees, roughly the area around the entrance of
-    Delaware Bay.
+    Delaware Bay.\makenote{rephrase}
     We have \num{4000} such simulations, produced by SLOSH from a sample of 
     storm characteristics. 
 
@@ -52,7 +52,8 @@ Sea, Lake, and Overland Surges from Hurricanes \citep{jelesnianski1992} is a
         \includegraphics[width=0.99\linewidth]{./plots/slosh1run_loghist}
         \caption{Grid output from one storm simulation in SLOSH, with a marginal
             histogram (with log-scale counts) of surge levels in that storm 
-            (truncated at 9 feet).\label{fig:slosh1run}}
+            (truncated at 9 feet).\label{fig:slosh1run}\makenote{add boundaries to indicate
+            range of directions and latitudes at which storm makes landfall.}}
     \end{subfigure}%
     ~ 
     \begin{subfigure}[t]{0.48\textwidth}

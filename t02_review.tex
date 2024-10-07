@@ -304,8 +304,7 @@ That said, a path-based optimization is highly dependent upon the starting posit
     true optimal value.  There are many approaches that seek to ameliorate this issue,
     such as stochastic gradient descent, simulated annealing, \makenote{add additional algorithms}
     In our analysis, we use the well-regarded Adam optimizer \citep{kingma2017}, 
-    but in our analysis results are highly dependent upon starting position.
-    but results are still highly dependent upon starting position, both in terms of 
+    but in our analysis results are highly dependent upon starting position, both in terms of 
     model fidelity, and resulting number of extant mixture components.  One potential
     solution would be to consider a better starting position for the optimizer.
 
@@ -365,14 +364,14 @@ Figure~\ref{fig:energyscore} displays the results of our foray looking into this
 \begin{comment}
     A more in-depth discussion of the dataset.
     \begin{itemize}
-        \item Break SLOSH down into levels of analysis based on intended goals.
+        \item Break SLOSH down into levels of analysis:
         \begin{enumerate}
-            \item Clustering Model
-            \item Regression model
+            \item T90
+            \item Delaware Bay
+            \item Delaware Bay (restricted)
+            \item Delaware Bay (critical)
         \end{enumerate}
-        \item Break dataset down into 3 levels of analysis; t90, all--but--road--features, airports.
         \item Descriptive statistics thereof
-        \item Pitfalls in analysis?
     \end{itemize}
 \end{comment}
 
@@ -399,12 +398,12 @@ The projected gamma based model is not an inherently spatial model.
     at least some inundation in some $q$ proportion of storm simulations.  That is,
     such that $b_{qs} > 0$, for all $s$ of interest.  This restriction arises
     as a consequence of fitting the parameters for the marginal generalized Pareto
-    distributions: if the threshold for excesses $b$ is not set above $0$, the 
-    likelihood can diverge, and MLE estimation of the parameters suffers. Here 
-    we experience another tradeoff, the implications of which are explored in 
+    distributions: if the threshold for excesses $b$ is not set above the minimum observed
+    value in the dataset, MLE estimation of the other marginal GP parameters will suffer.
+    Here we suffer another tradeoff, the implications of which are explored in 
     Figure~\ref{fig:thresholdselection}.  Setting a higher threshold allows more 
     sites to be included in the analysis, but in turn reduces the number of storm 
-    simulations which exceed the threshold in at least one dimension.  This in turn 
+    simulations which exceed the threshold in at least one dimension, which in turn 
     reduces the amount of information available by which we can estimate the 
     dependence structure.  We create several \emph{slices} of the SLOSH data,
     summarized in Table~\ref{tab:datasets}.
@@ -420,11 +419,17 @@ The projected gamma based model is not an inherently spatial model.
 
 \begin{table}[htb]
     \centering
-    \caption{Slices of SLOSH.  The quantile columns list quantiles \emph{of the threshold}. \makenote{quantiles unnecessary... excise?}\label{tab:datasets}}
+    \caption{Slices of SLOSH.  The quantile columns list quantiles \emph{of the threshold}. 
+    \makenote{quantiles unnecessary... excise?  Rewrite to\}\label{tab:datasets}}
     \include{./tables/datadesc}
 \end{table}
 
-At this point, we consider the analysis of the SLOSH data in 3 parts.  First, we
+We consider the analysis
+At this point, we consider the analysis of the SLOSH data in 4 parts.  First, examining
+
+
+
+First, we
     look at locations pertaining to critical services, or infrastructure, which if 
     rendered unable to operate could drastically increase the negative effects, or 
     loss of life, due to the storm.
@@ -466,5 +471,10 @@ Figure~\ref{fig:thetahistogram} shows the marginal histograms of storm parameter
     beyond 360 degrees indicate the storm is heading slightly northeast. As these approaches are
     on the eastern seaboard, this means a shallower approach angle relative to the
     land---perhaps offering a given storm more time to inundate larger swaths of land.
+
+
+
+
+
 
 % EOF 

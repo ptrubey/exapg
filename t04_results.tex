@@ -112,7 +112,8 @@ One thing we can do is evaluate recovery of marginal empirical CDF, using margin
 
 In Figure~\ref{plot:marginal_doverafb}, we observe said marginal empirical and posterior-predictive
     CDF's for storm surge at Dover Air Force Base.  As previously mentioned, this location is adjacent
-    Delaware Bay, approximately 2 miles inland, with a direct line of sight out the mouth of the bay towards the open ocean.  Take note in particular, that the empirical CDF of $\bm{w}_s$ shows
+    to Delaware Bay, approximately 2 miles inland, with a direct line of sight out the mouth of the
+    bay towards the open ocean.  Take note in particular, that the empirical CDF of $\bm{w}_s$ shows
     that storm surge does not reach Dover AFB in approximately \num{44} percent of storms, 
     post-thresholding.
 
@@ -124,20 +125,28 @@ In Figure~\ref{plot:marginal_doverafb}, we observe said marginal empirical and p
     \includegraphics[width=\textwidth]{./plots/delaware_marginal_phil_ia.png}
 \end{figure}
 
-Figure~\ref{plot:marginal_pia}, we see the same marginal CDF's, for the Philadelphia International
-    Airport.  Recall, this airport is situated along the banks of the Delaware River; storm surge has much further to travel to reach this point, and yet it experiences inundation much more frequently.
+In Figure~\ref{plot:marginal_pia}, we see the same marginal CDF's, for the Philadelphia International
+    Airport.  Recall, this airport is situated along the banks of the Delaware River; storm surge
+    has much further to travel to reach this point, and yet it experiences inundation much more 
+    frequently.
+
+\include{tables/cluster_concentration}
 
 Looking at equivalent marginal plots for all locations, most preserve roughly the
     same ordering, from top-left to bottom-right: first the Variational Bayes fit of PYPG, then the 
     Monte Carlo fit of the same model, then the regression models.  This permits us some insight 
     to comment what effect granularity, or the number of extant clusters, has in model fidelity.
-    For a data analysis of this size, the mean field variational approach consistently yields the 
-    least number of extant clusters, and thus lowest granularity.
-\makenote{table of average $\text{E}[\alpha_s]$ under each model, as well as 
+    In Table~\ref{tab:cluster_concentration}, we see detail the number of clusters, or Pitman-Yor
+    process mixture components, identified in the dataset under the specified model and fitting 
+    method.  Observe the significant difference between the MCMC fitting method and the VB fitting
+    method.  For a data analysis of this size, 
+    \makenote{table of average $\text{E}[\alpha_s]$ under each model, as well as 
     $\text{E}\left[\frac{\alpha_s}{\lVert\bm{\alpha}\rVert_{\infty}}\right]$}
 
 
-    
+
+
+
     
 
 
