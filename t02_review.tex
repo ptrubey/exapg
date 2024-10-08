@@ -420,32 +420,31 @@ The projected gamma based model is not an inherently spatial model.
 \begin{table}[htb]
     \centering
     \caption{Slices of SLOSH.  The quantile columns list quantiles \emph{of the threshold}. 
-    \makenote{quantiles unnecessary... excise?  Rewrite to\}\label{tab:datasets}}
+    \makenote{quantiles unnecessary... excise?  TAble needs to be rewritten to cover new
+    analysis datasets}\label{tab:datasets}}
     \include{./tables/datadesc}
 \end{table}
 
-We consider the analysis
-At this point, we consider the analysis of the SLOSH data in 4 parts.  First, examining
+\begin{figure}[htb]
+    \centering
+    \caption{Bounds of storm approach angles.\label{fig:slosh_bounds}}
+    \includegraphics{plots/slosh_bounds}
+\end{figure}
 
-
-
-First, we
-    look at locations pertaining to critical services, or infrastructure, which if 
-    rendered unable to operate could drastically increase the negative effects, or 
-    loss of life, due to the storm.
-    In this context, we are interested in the probability of simultaneous failure.
-    For this reason, we look at the transportation and emergency services slices
-    of the SLOSH data.
-    Second, we look at the overall shape of the inundation field in oder to use
-    the clustering action of the Pitman-Yor process to find \emph{emergent} clusters
-    of storm characteristics.  That is, we look for groupings of storm characteristics 
-    for storms that presented similarly.  For this purpose, we are interested in a large
-    sample size, with a large number of locations.  We will be comparing the clustering
-    that results from the Threshold.9 and Limited datasets. \makenote{add locality grouping?
-    it has better justification than "limited".}
-    Realistically, using MCMC methods for model fitting at this scale would be prohibitively 
-    expensive, so for that reason we consider a variational approach.
-    Finally, \makenote{briefly describe regression goals and why specific datasets.}
+As previously stated, we require the marginal threshold for excesses to be above 0.  We choose
+    to implement this restriction at the 90th percentile, which defines the \emph{Threshold} slice.
+    \makenote{insert data descriptions}.  Figure~\ref{fig:slosh_bounds} shows the boundaries of 
+    storm approach angles in the SLOSH data---observe that this rather restricted region, 
+    in comparision to the extent of the data displayed in Figure~\ref{fig:slosh1run},
+    somewhat limits the applicability of our methods of analysis in regions outside
+    of Delaware bay and its surrounding area.  For this reason, we restrict our analysis
+    to this reason, creating the \emph{Delaware Bay} slice.  Refining analysis to locations 
+    of particular interest, we use the feature class codes of the locations to isolate location types
+    of interest.  These form the \emph{Restricted} slice.
+    Finally, we isolate the data to locations of critical interest, as well as a selection of
+    locations around the bay to inform conditional analysis.  These form the \emph{Critical} slice.
+    The relative sizes of these inferential tasks is detailed in Table~\ref{tab:datasets}.  Having
+    a variety gives us the opportunity to discuss relative strengths of particular types of analysis.
 
 \begin{figure}[htb]
     \centering 
@@ -455,26 +454,21 @@ First, we
 \end{figure}
 
 Figure~\ref{fig:thetahistogram} shows the marginal histograms of storm parameters, for 
-    storms which survived thresholding in the \emph{Threshold.9} slice.  Storm parameters in 
-    the originating dataset were sampled via Latin hypercube, so would appear marginally
+    storms which exhibited extreme behavior in the \emph{Threshold} slice.  Storm parameters 
+    in the originating data were sampled via Latin hypercube, so would appear marginally
     uniform.  The difference between marginal uniform, and the observed densities provides
     some indication of what characteristics are necessary for a storm to exceed the threshold.
     In the first case, for sea level rise, it is readily apparent that a higher sea level will
     make it easier for a storm to inundate larger swaths of land, or inundate locations to a
     greater degree.  So we expect to, and in fact do, see a higher probability of a storm exceeding
     the threshold, for a higher sea level rise.  Similarly, a lower minimum pressure in the storm's
-    eye corresponds to a more intense storm.  This bears out in a lower minimum pressure having
-    a higher percentage of exceeding the threshold.  The relationship to approach speed is 
-    interesting in that it's almost linear.  Perhaps, the mechanism there lies in that a higher
+    eye corresponds to a more powerful storm.  This bears out, as a lower minimum pressure has
+    a higher probability of exceeding the threshold.  The relationship to approach speed is 
+    interesting in that it is nearly linear.  Perhaps, the mechanism there lies in that a higher
     approach speed indicates more power behind the storm.  The spike in approach angle past 360
     degrees is interesting as well. 360 degrees indicates due North, thus approach angles 
     beyond 360 degrees indicate the storm is heading slightly northeast. As these approaches are
     on the eastern seaboard, this means a shallower approach angle relative to the
     land---perhaps offering a given storm more time to inundate larger swaths of land.
-
-
-
-
-
 
 % EOF 
