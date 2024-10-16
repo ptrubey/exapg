@@ -295,38 +295,48 @@ Optimization of the ELBO with respect to $\bm{\psi}$ can be accomplished by
             \log f\left(\bm{y},T(\bm{\epsilon},\bm{\psi})\right) -
             q(\theta\mid\psi)\right].
     \end{equation}
-    This expectation can be evaluated numerically, to find the gradient at the current
+    This expectation is evaluated numerically, yielding the gradient at the current
     location. we can then iteratively move towards a better position---a more optimal 
-    $\bm{\psi}$.
+    $\bm{\psi}$.  The variational literature is emphatic that for each optimization step,
+    a single sample of $\bm{\epsilon}$ in Equation~\ref{eqn:reparameterization} is sufficient
+    to provide convergence towards optimality.\makenote{[Citation needed]}
 
-That said, a path-based optimization is highly dependent upon the starting position,
-    and if multiple local optima exist, there is no guarantee we will reach the
+That said, a path-based optimization approach will be dependent upon the starting position,
+    and if multiple local optima exist, there is no guarantee of reaching the
     true optimal value.  There are many approaches that seek to ameliorate this issue,
     such as stochastic gradient descent, simulated annealing, \makenote{add additional algorithms}
-    In our analysis, we use the well-regarded Adam optimizer \citep{kingma2017}, 
+    In our analysis, we use the well-regarded \emph{Adam} optimizer \citep{kingma2017}, a combination of
+    \emph{ADAGRAD} \citep{duchi2011} and \emph{RMSProp} \citep
     but in our analysis results are highly dependent upon starting position, both in terms of 
     model fidelity, and resulting number of extant mixture components.  One potential
     solution would be to consider a better starting position for the optimizer.
 
 \subsection{Optimal starting position}
 
+\makenote{Having excised the overarching methodology section, I'm unsure of where to place this 
+    whole discussion. There's nothing really \emph{novel} in it; it only serves to inform the
+    particular method we use for \emph{how} we do the variational Bayes model.  That said, I 
+    don't know if it belongs in a "background and review" section.
+    }
+
 As we are considering a mixture model where potentially there exists a label switching
     issue, if the initializing distribution of mixture component parameters provides
     \emph{decent} coverage of the distribution of optimal parameters, then the most 
     important part of the initialization is the distribution of mixture \emph{weights}.  
-    Here we consider three strategies.  First is, of course, random initialization 
+    Here we consider three strategies.  First is random initialization, 
+    \makenote{checking now if initialization at prior parameters will yield better result}.
     (\emph{VB Random}).  Second is uniform initialization---initializing the variational 
     parameters such that, after transformation via stick-breaking, the expected probability 
     of cluster assignment is uniform among all clusters up to the truncation point. That 
     is, for truncation point $J$,
     \[
-    \text{E}[\bm{\nu}] = \left(\frac{1}{J},\frac{1}{J-1},\ldots,\frac{1}{3},\frac{1}{2}\right)
+        \text{E}[\bm{\nu}] = \left(\frac{1}{J},\frac{1}{J-1},\ldots,\frac{1}{3},\frac{1}{2}\right)
     \]
     leading to $\text{E}[p_j] = \frac{1}{J}$ for all $j = 1,\ldots,J$.
     Finally, we consider two variations of \emph{pregaming} 
     \makenote{I \emph{really} need a better name for this} 
-    the variational algorithm, by
-    setting the starting position using the results of an abridged MCMC sampler.  
+    the variational algorithm, by setting the starting position using the results of an 
+    abridged MCMC sampler.  
     Recall Equation~\eqref{eqn:pdelta}. In the variational distribution $q$, we approximate the 
     posterior distribution of $\nu$ using a $\text{Logit}\mathcal{N}(\mu,\sigma^2)$ density.  
     Following \cite{aitchison1980}, the \emph{best} approximation to 
@@ -338,7 +348,8 @@ As we are considering a mixture model where potentially there exists a label swi
     the variational approximation. In the first method, \emph{VB Pregamed 1}, 
     we update $\bm{\nu}$, sampling new $\bm{\alpha}_j$'s using the initial setting
     for the centering distribution.  In the second (\emph{VB Pregamed 2}), we update the
-    the parameters for the centering distribution as well.      
+    the parameters for the centering distribution as well. 
+    \makenote{I should probably remove the first approach?  It clutters results needlessly.}
 
 \begin{figure}[htb]
     \caption{Rise in energy score over baseline by number of dimensions, on simulated data 
@@ -347,49 +358,63 @@ As we are considering a mixture model where potentially there exists a label swi
     \includegraphics[width=\linewidth]{plots/energy_score}
 \end{figure}
 
+To validate the variational model, and investigate the effects of different classes of 
+    starting positions, we conduct a simulation study to evaluate various approaches for
+    the BNP mixture of projected gammas model.  The datasets are simulated from a finite
+    mixture of projected gammas, at varying levels of dimensionality and number of mixture
+    components.  For each number of mixture components and dimensionality, 10 sets of
+    parameters are generated, and then from for each parameter set, a training dataset and 
+    testing dataset, each of \num{1000} replicates, are generated.
+
+As the metric for our evaluation, we use the \emph{energy score} criterion \citep{gneiting2007}
+    which is a generalization of the \emph{continuous ranked probability score} to a multivariate
+    setting.  This energy score takes the form
+    \[
+      S_{\text{ES}}(P, \bm{x}) = \text{E}_p\left[g(\bm{X},\bm{x})\right] - 
+        \frac{1}{2}\text{E}_p\left[g(\bm{X},\bm{X}^{\prime})\right]
+    \]
+    where $g$ is a kernel function, $\bm{x}$ is an observed value, and 
+    $\bm{X},\bm{X}^{\prime}$ are posterior predictive replicates of $\bm{x}$.
+    When energy score is used with an appropriate negative definite kernel 
+    metric, it forms a \emph{proper} scoring rule. The specific negative 
+    definite kernel we use is described in Prop.~3 of \cite{trubey:pg}.  Though 
+    geodesic distance on $\mathbb{S}_{\infty}^{d-1}$ is computationally inefficient,
+    for points on two different faces of $\mathbb{S}_{\infty}^{d-1}$,
+    they find a computationally efficient upper bound on geodesic distance by 
+    remembering that all faces are pairwise adjacent, and rotating one face into the
+    same hyperplane as the other.  Then the kernel metric is the Euclidean distance
+    between the first point, and the rotated second point.
+    
 Figure~\ref{fig:energyscore} displays the results of our foray looking into this 
     notion of an optimal starting position, by examining the rise in energy score 
     calculated from a posterior predictive sample from the fitted model against the target 
     sample, over a baseline energy score calculated using another random sample from the same 
-    generating distribution.  The \emph{closer} the curve is to 0, the better.  We see that 
+    generating distribution.  We interpret this value as the \emph{closer} the curve is to 0, 
+    the higher the fidelity with which the model recovers the generating distribution.  
+    We investigate this recovery under a variety of conditions increasing the number of dimensions,
+    as well as the number of mixture components in the generating distribution. With this simulation
+    study, we see that
     a pure MCMC approach achieves the best model fidelity, but \emph{VB Pregamed 2}, using 
     the abridged MCMC sampler to set a starting value for both the centering distribution 
     and cluster weights, achieves a model fidelity in terms of energy score that is very
     nearly indistinguishable from the MCMC model, at least in the scale for which we can test.
-    As the dimensionality of the problem grows, energy score becomes less able to assess model
-    fidelity, as the distance between each observation or replication will approach a constant
-    value.\makenote{(needs citation--this is a result from high-dimensional knn)}.
+    Note, as the dimensionality of the problem grows, energy score becomes less able to assess 
+    model fidelity, as the distance between each observation or replication will approach a 
+    constant value.\makenote{(needs citation--this is a result from high-dimensional knn)}.
 
-\subsection{SLOSH}
-\begin{comment}
-    A more in-depth discussion of the dataset.
-    \begin{itemize}
-        \item Break SLOSH down into levels of analysis:
-        \begin{enumerate}
-            \item T90
-            \item Delaware Bay
-            \item Delaware Bay (restricted)
-            \item Delaware Bay (critical)
-        \end{enumerate}
-        \item Descriptive statistics thereof
-    \end{itemize}
-\end{comment}
-
-The projected gamma based model is not an inherently spatial model.  
-    \makenote{change reasoning such that we are interested in \emph{specific} locations
-    rather than change from grid to specific locations being due to computational
-    complexity.}
-    As such, rather than holding the entire grid in memory, it makes sense to consider 
-    data pertaining only to landmarks of interest.    If one is performing 
-    contingency planning in preparation for the storm season, it would be 
-    helpful to know the probability of such services being rendered inoperable 
-    simultaneously, precisely when they are needed most.  If one is seeking 
-    sites for a new service provider, it would be helpful understand the 
+\subsection{Sea, Lake, and Overland Surge from Hurricanes (SLOSH)}
+As a basis for our analysis of the extremal dependence structure, we use the aforementioned
+    SLOSH dataset, which simulates the storm surge resulting from hurricanes over a wide
+    grid.  Our interest is specifically in describing and exploiting the dependence structure 
+    of extremes between specific locations.  As such, rather than the entire grid, 
+    it makes sense to consider data pertaining specifically to those locations. 
+    If one is performing contingency planning in preparation for the storm season, 
+    it would be helpful to know the probability of such services being rendered 
+    inoperable simultaneously, precisely when they are needed most.  If one is 
+    seeking sites for a new service provider, it would be helpful understand the 
     likelihood of a proposed location being rendered inoperable in the same 
-    manner.  For these reasons, and considering the computational complexity of 
-    a 23 million dimensional model, rather than consider the entire grid of data 
-    pertaining to any particular storm, we subset the data to grid cells in the 
-    vicinity of such locations of interest.  These locations are gathered from 
+    manner.  For these reasons we subset the data to grid cells in the 
+    vicinity of such locations of interest.  We gather these locations are from 
     the 2023 US Census Bureau's \emph{TIGER} database \needcite and specifically 
     the point and landmark file.  If a grid cell falls within 70 meters of a location,
     then the grid cell is identified with the location.  If multiple grid cells
@@ -412,16 +437,17 @@ The projected gamma based model is not an inherently spatial model.
     \centering
     \caption{Trade-offs in threshold specification:
     (Left) Proportion of sites with threshold $b_{qs} > 0$ versus $(1 - q)$; 
-    (Right) Proportion of storms $\bm{W}_i \not< \bm{b}_q$ versus $(1 - q)$.
+    (Right) Proportion of storms surviving thresholding, $\text{P}(\bm{W}_i \not< \bm{b}_q)$ versus $(1 - q)$.
     \label{fig:thresholdselection}}
     \includegraphics[width=0.9\linewidth]{plots/explore_threshold}
 \end{figure}
 
 \begin{table}[htb]
     \centering
-    \caption{Slices of SLOSH.  The quantile columns list quantiles \emph{of the threshold}. 
-    \makenote{quantiles unnecessary... excise?  TAble needs to be rewritten to cover new
-    analysis datasets}\label{tab:datasets}}
+    \caption{Slices of SLOSH for analysis.  Storms specifies the number of storms that survive thresholding,
+    of the total \num{4000} storms in the sample.  The probability gives that value numerically. Sites 
+    identifies the number of locations included in the slice. Each subsequent slice is a subset of the  
+    preceding slice.\label{tab:datasets}}
     \include{./tables/datadesc}
 \end{table}
 
@@ -435,21 +461,23 @@ As previously stated, we require the marginal threshold for excesses to be above
     to implement this restriction at the 90th percentile, which defines the \emph{Threshold} slice.
     \makenote{insert data descriptions}.  Figure~\ref{fig:slosh_bounds} shows the boundaries of 
     storm approach angles in the SLOSH data---observe that this rather restricted region, 
-    in comparision to the extent of the data displayed in Figure~\ref{fig:slosh1run},
+    in comparison to the extent of the data displayed in Figure~\ref{fig:slosh1run},
     somewhat limits the applicability of our methods of analysis in regions outside
     of Delaware bay and its surrounding area.  For this reason, we restrict our analysis
-    to this reason, creating the \emph{Delaware Bay} slice.  Refining analysis to locations 
+    to this region, creating the \emph{Delaware Bay} slice.  Further refining analysis to locations 
     of particular interest, we use the feature class codes of the locations to isolate location types
-    of interest.  These form the \emph{Restricted} slice.
-    Finally, we isolate the data to locations of critical interest, as well as a selection of
+    \makenote{remove the most common feature classes} of interest.  These form the \emph{Restricted} slice.
+    Finally, we isolate the data to a few locations of critical interest, as well as a selection of
     locations around the bay to inform conditional analysis.  These form the \emph{Critical} slice.
     The relative sizes of these inferential tasks is detailed in Table~\ref{tab:datasets}.  Having
     a variety gives us the opportunity to discuss relative strengths of particular types of analysis.
 
 \begin{figure}[htb]
     \centering 
-    \caption{Histograms of characteristics for simulations 
-        that survived thresholding in \emph{Threshold.9}.\label{fig:thetahistogram}}
+    \caption{Histograms of characteristics for simulations that survived thresholding in \emph{Threshold}.
+        Sea level rise in mm, approach angle in degrees, approach speed in Kph, minimum pressure in mBar,
+        latitude in decimal degrees. \makenote{Make this a pairs plot?}
+        \label{fig:thetahistogram}}
     \includegraphics[width=0.9\linewidth]{plots/threshold_histogram}
 \end{figure}
 
@@ -458,9 +486,9 @@ Figure~\ref{fig:thetahistogram} shows the marginal histograms of storm parameter
     in the originating data were sampled via Latin hypercube, so would appear marginally
     uniform.  The difference between marginal uniform, and the observed densities provides
     some indication of what characteristics are necessary for a storm to exceed the threshold.
-    In the first case, for sea level rise, it is readily apparent that a higher sea level will
+    Imprimis, for sea level rise it is readily apparent that a higher sea level will
     make it easier for a storm to inundate larger swaths of land, or inundate locations to a
-    greater degree.  So we expect to, and in fact do, see a higher probability of a storm exceeding
+    greater degree.  So we expect and, in fact, see a higher proportion of storms exceeding
     the threshold, for a higher sea level rise.  Similarly, a lower minimum pressure in the storm's
     eye corresponds to a more powerful storm.  This bears out, as a lower minimum pressure has
     a higher probability of exceeding the threshold.  The relationship to approach speed is 

@@ -43,52 +43,67 @@
     \end{itemize}
 \end{comment}
 
-\subsection{Applications of Extremal Dependence}
 Following the example of \cite{trubey:pg}, we can use the dependence structure we infer
-    by fitting the model in Equation~\eqref{eqn:pypg}.  Then, conditional on
+    by fitting the model in Equation~\eqref{eqn:pypg}.  Then, conditional on the fitted model,
+    there are various inferences we can make.
 
+% The standard Pareto distribution exhibits a multiplicative memory-less property such that
+% \[
+% \text{P}(Z > st \mid Z > s) = P(Z > t)\text{ for }s,t \geq 1
+% \]
 
-
-The standard Pareto distribution exhibits a multiplicative memory-less property such that
-\[
-\text{P}(Z > st \mid Z > s) = P(Z > t)\text{ for }s,t \geq 1
-\]
-
-\subsection{Multi-site Return Periods}
+\subsection{Multi-site Return Periods}\makenote{the subsection title might not be necessary, as there's 
+    currently no deliverable, and it leads into the next subsection.}
 Statistical inference of extreme values tends to focus on the \emph{return period} as a deliverable
-    metric.  In a univariate case, this is relatively easy to define: for event $z$, the return period
+    metric.  In a univariate case, this is easy to define: for event $z$, the return period
     is the average \emph{time} it would take to observe a new event $Z$ as extreme or more extreme than $z$.
     that is,
     \[
     T(z) = \frac{\mu}{1 - F_z(z)}
     \]
     where $\mu$ is the average inter-arrival time in a series of events. Conceptual problems begin to arise
-    in interpretation when we consider a multivariate $F$. 
+    in interpretation when we consider a multivariate $F$.  Consider an $s$-dimensional threshold $\bm{z}$:
+    do we consider 
     \makenote{extreme analysis book makes succinct argument; quote.}
+    \cite{salvadori2010} considers a strict interpretation of the return period in a multivariate setting,
+    defining the return period in terms of a copula---a redefinition of the joint CDF, as a distribution
+    over marginal uniform densities, with the marginal CDF's for each site taking the place of the marginal 
+    uniforms.  We say strict interpretation in interpretation of the CDF: 
+    $F(\bm{z}) = \text{P}\left(\cap_{s \in S}Z_s\leq z_s\right)$, though it considers later a more general
+    \emph{critical region}.
+    \cite{Salvadori2013} inverts this, defining the return period in terms of the joint distribution of the
+    marginal survival functions, $T(\bm{z}) = \frac{\mu}{S(\bm{z})}$, where 
+    $S(\bm{z}) = \text{P}\left(\cap{s\in S}Z_s > z_s\right)$.
+    We observe there exists a vast difference in interpretation between these two extremes.  In generating a
+    meaningful deliverable metric of a return period, for a given event at how many sites
+    must the threshold be breached for us to interpret the event as over-topping the threshold?  For a CDF
+    based metric, one; for a survival function based metric, all.  But as the number of locations under 
+    consideration increases, the value of such a metric decreases.
     \cite{cho2023} avoids this issue of interpretation by estimating univariate return periods for each
     indexed location within a spatial field, along with low-dimensional multivariate extreme analysis 
     on different summary statistics, assessed over the aggregate spatial field: flood volume, 
-    peak discharge, total rainfall depth, and maximum wind speed.
-    A more analogous approach to ours, in that they consider the dependence structure of extreme values of 
-    the same summary statistic, between different points in space may be found in \cite{salvadori2010}.  They
-    consider yearly maximum observed flow rates between 4 of 17 available flow meters on a river catchment
-    in Britain. \makenote{
-        Inference task size: 4 locations $\times$ 37 years available.  I suspect the problem,
-        or why they're not more ambitious in terms of scale, is one of interpretation: more than 4 dimensions 
-        makes presenting results difficult.  Also, lack of data (\# of years).
-        }
+    peak discharge, total rainfall depth, and maximum wind speed.  \cite{graler2013} also follows the latter 
+    approach, establishing a multivariate return period using a copula over three dimensions of summary statistics.
+    \cite{salvadori2010} follows an approach more analogous to ours, in that they consider the dependence 
+    structure of extreme values of the same summary statistic between different points in space.  They
+    consider yearly maximum observed flow rates between 4 of the 17 available flow meters on the catchment 
+    of the river Spey, in Scotland. \makenote{As to why only 4 locations were considered, we suspect to be an issue of 
+    interpretation: the greater the number of sites considered, the greater the delta between a calculable 
+    result and the meaningfulness of the return period as a deliverable metric.} 
     Beyond the conceptual issue of interpreting a multivariate $F$, there arises a practical issue in presenting
     complete results of a higher dimensional process.
+    It is for these reasons that in practice, as a deliverable metric, the notion of a return period is
+    tailored to the application in question.
        
 \subsection{Conditional Survival}
 One of the more compelling applications of modelling the dependence structure between locations in 
     storm surge lies in the reality that a storm surge occurs over a period of time, and the 
     maximum observed values in storm surge at different sites occur asynchronously.  A decision maker,
     interested in the storm surge at a smaller group of locations, can observe storm surge at other
-    locations, and make an inference about the probability of catastrophic flooding at their locations
-    of interest and make an informed decision.
-    Equation~\eqref{eqn:condsurv}, from Proposition~2 of \cite{trubey:pg} offers us a means by which 
-    this can be accomplished.
+    locations, and make inference as to the probability of catastrophic flooding at their locations
+    to make an informed decision.
+    Equation~\eqref{eqn:condsurv}, from Proposition~2 of \cite{trubey:pg} offers us a practical means
+    by which this can be accomplished.
     \begin{equation}
         \label{eqn:condsurv}
         \text{Pr}\left[\bigcap_{s\in\alpha}Z_s \geq z_s\;\middle|\;\bigcap_{s\not\in\alpha}Z_s \geq z_s\right] =
@@ -98,13 +113,13 @@ One of the more compelling applications of modelling the dependence structure be
             \text{E}\left[\bigwedge_{s\not\in\alpha} 1\wedge \frac{V_s}{z_s}\right]
         }
     \end{equation}
-    Letting Set $\alpha$ be a group of locations of interest, we can establish the probability of
-    entering a failure region, conditional on the current state and potential future state of the inundation 
-    field.  Say, given current storm flooding near the mouth of the Delaware Bay, will the Philadelphia 
-    International Airport, situated on the Delaware river, experience catastrophic flooding?  If one can 
-    describe the dependence structure of extremes in inundation, Equation~\ref{eqn:condsurv} offers a 
-    practical, actionable metric.
-
+    Letting Set $\alpha$ be a group of locations of interest, we establish the probability of
+    entering a failure region, conditional on the current state and potential future state of the 
+    inundation field.  Say, given current storm flooding near the mouth of the Delaware Bay, will the 
+    Philadelphia International Airport, situated on the Delaware river, experience catastrophic flooding?  
+    If one can describe the dependence structure of extremes in inundation analytically or via samples,
+    Equation~\ref{eqn:condsurv} offers a practical, actionable metric.
+    
     \makenote{Select a few locations of interest in each inference task; establish conditional survival 
     probabilities for each given a few }
 
@@ -112,7 +127,8 @@ One of the more compelling applications of modelling the dependence structure be
     a peaks-over-threshold approach using the projected gamma to model the dependence structure can not 
     encompass even complete independence: the closest we can represent is weak positive dependence.
     As such, it is difficult to accurately model phenomena that 
-    Never the less, \makenote{making a statement about the probability of simultaneous flooding in new york and virginia.}
+    Never the less, \makenote{making a statement about the probability of simultaneous 
+    flooding in new york and virginia.}
 
     
 

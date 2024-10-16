@@ -20,21 +20,6 @@ To evaluate the fidelity of the variational implementation as compared to MCMC,
     we use a the \emph{energy score} criterion \citep{gneiting2007}, which is a
     generalization of the \emph{continuous ranked probability score} to a
     multivariate setting.  This energy score criterion takes the form
-    \[
-      S_{\text{ES}}(P, \bm{x}) = \text{E}_p\left[g(\bm{X},\bm{x})\right] - 
-        \frac{1}{2}\text{E}_p\left[g(\bm{X},\bm{X}^{\prime})\right]
-    \]
-    where $g$ is a kernel function, $\bm{x}$ is an observed value, and 
-    $\bm{X},\bm{X}^{\prime}$ are posterior predictive replicates of $\bm{x}$.
-    When energy score is used with an appropriate negative definite kernel 
-    metric, it forms a \emph{proper} scoring rule. The specific negative 
-    definite kernel we use is described in Prop.~3 of \cite{trubey:pg}.  Though 
-    geodesic distance on $\mathbb{S}_{\infty}^{d-1}$ is computationally inefficient,
-    for points on two different faces of $\mathbb{S}_{\infty}^{d-1}$,
-    they find a computationally efficient upper bound on geodesic distance by 
-    remembering that all faces are pairwise adjacent, and rotating one face into the
-    same hyperplane as the other.  Then the kernel metric is the Euclidean distance
-    between the first point, and the rotated second point.
     
     In Figure~\ref{fig:energyscore} we compare rise in energy score of the fitted
     model over a \emph{baseline} energy score.  This baseline energy score is so
