@@ -191,7 +191,7 @@ Such a fitting scheme can work well for a moderately sized inference problem.  I
     reach convergence, each iteration will require more cpu time, and the sampler require more 
     memory resources to hold the sampling history.  We consider an alternative method of model fitting.
 
-\subsection{Variational Inference - A Brief Overview}
+\subsection{Variational Inference - A Brief Overview\label{ref:varbayes}}
 Variational inference, or variational Bayesian statistics, is an alternative method of 
     model-fitting that proposes, if the target distribution is analytically intractable,
     to fit a tractable candidate distribution as \emph{close} to the target distribution
@@ -306,7 +306,7 @@ That said, a path-based optimization approach will be dependent upon the startin
     true optimal value.  There are many approaches that seek to ameliorate this issue,
     such as stochastic gradient descent, simulated annealing, \makenote{add additional algorithms}
     In our analysis, we use the well-regarded \emph{Adam} optimizer \citep{kingma2017}, a combination of
-    \emph{ADAGRAD} \citep{duchi2011} and \emph{RMSProp} \citep
+    \emph{ADAGRAD} \citep{duchi2011} and \emph{RMSProp} \citep{tieleman2012}
     but in our analysis results are highly dependent upon starting position, both in terms of 
     model fidelity, and resulting number of extant mixture components.  One potential
     solution would be to consider a better starting position for the optimizer.
