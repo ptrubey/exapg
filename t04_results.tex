@@ -33,7 +33,6 @@ To evaluate the fidelity of the variational implementation as compared to MCMC,
     said, the variational approximation is still quite good.
 
 \subsection{SLOSH}
-\subsubsection{Delaware Bay}
 
 \begin{figure}[ht]
     \caption{Locations of identified sites that experienced inundation in more than 
@@ -83,9 +82,9 @@ One thing we can do is evaluate recovery of marginal empirical CDF, using margin
     It can occur that the chosen marginal GP parameters are sub-optimal, as the threshold
     $b_{ts}$ may be ill-chosen.  This is an inherent weakness of choosing
     the threshold via the empirical quantile function, which creates a 
-    tradeoff---to not use the empirical quantile function would necessarily imply 
-    non-uniform marginal probabilities of threshold exceedence, the assumption of 
-    which some other aspects of our analysis are based.
+    tradeoff---to use some other method than the empirical quantile function would necessarily imply 
+    non-uniform marginal probabilities of threshold exceedence, upon the assumption of which some other 
+    aspects of our analysis are based. \makenote{[are they?]}
 
 \begin{figure}[ht]
     \caption{Empirical, and posterior predictive cumulative distribution functions for marginal 
@@ -113,22 +112,27 @@ In Figure~\ref{plot:marginal_doverafb}, we observe said marginal empirical and p
 In Figure~\ref{plot:marginal_pia}, we see the same marginal CDF's, for the Philadelphia International
     Airport.  Recall, this airport is situated along the banks of the Delaware River; storm surge
     has much further to travel to reach this point, and yet it experiences inundation much more 
-    frequently.
+    frequently, owing to that its elevation is only 4 feet above sea level, rather than the 9 feet
+    of Dover AFB \makenote{[confirm]}.
 
 \include{tables/cluster_concentration}
 
-Looking at equivalent marginal plots for all locations, most preserve roughly the
+Looking at equivalent marginal plots for all locations, nearly all preserve the
     same ordering, from top-left to bottom-right: first the Variational Bayes fit of PYPG, then the 
-    Monte Carlo fit of the same model, then the regression models.  This permits us some insight 
+    Monte Carlo fit of the same model, then the regression models---though the specific ordering of
+    the regression models changes.  The marginal empirical CDFs tends to bounce\makenote{[rephrase]}
+    between the MCMC model, and the regression models.  This means that the variational fit
+    tends to consistently predict lower values than is appropriate. This permits us some insight 
     to comment what effect granularity, or the number of extant clusters, has in model fidelity.
     In Table~\ref{tab:cluster_concentration}, we see detail the number of clusters, or Pitman-Yor
     process mixture components, identified in the dataset under the specified model and fitting 
-    method.  Observe the significant difference between the MCMC fitting method and the VB fitting
-    method.  For a data analysis of this size, 
+    method.  Observe the large difference between the MCMC fitting method and the VB fitting
+    method. 
     \makenote{table of average $\text{E}[\alpha_s]$ under each model, as well as 
     $\text{E}\left[\frac{\alpha_s}{\lVert\bm{\alpha}\rVert_{\infty}}\right]$}
 
 \include{tables/extant_clusters}
+
 
 
 
