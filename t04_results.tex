@@ -5,33 +5,6 @@
     \end{itemize}
 \end{comment}
 
-\subsection{Simulation Study}
-To validate the variational model, we conduct a simulation study.
-    As the problem of multivariate extremes is the estimation of the dependence
-    structure of the extremes, we focus the simulation study on on estimation of
-    the angular distribution.  The simulated data is generated from a finite
-    mixture of projected gammas, at varying levels of dimensionality and number
-    of mixture components.  For each simulation, for a \emph{training} dataset,
-    \num{1000} replicates are sampled.  For each simulation, for a 
-    \emph{testing} dataset, another \num{1000} replicates are sampled using
-    the same distributional parameters.
-
-To evaluate the fidelity of the variational implementation as compared to MCMC, 
-    we use a the \emph{energy score} criterion \citep{gneiting2007}, which is a
-    generalization of the \emph{continuous ranked probability score} to a
-    multivariate setting.  This energy score criterion takes the form
-    
-    In Figure~\ref{fig:energyscore} we compare rise in energy score of the fitted
-    model over a \emph{baseline} energy score.  This baseline energy score is so
-    named because it is the energy score between a target dataset and another
-    dataset from the same generating distribution.  A value of 0 is optimal.
-    \makenote{add additional model for comparison}  Note displayed scores are 
-    averaged over 10 iterations \makenote{rewrite}.
-    
-    We see some minor loss in fidelity for the variational model as compared to 
-    the MCMC model as is expected from the variational approximation.  With that
-    said, the variational approximation is still quite good.
-
 \subsection{SLOSH}
 
 \begin{figure}[ht]
@@ -39,7 +12,7 @@ To evaluate the fidelity of the variational implementation as compared to MCMC,
         $5$ percent of storms.  Specifically identified are two locations of 
         interest. \makenote{Change Label to PIA} \label{map:delawarebay}}
     \centering
-    \includegraphics[height=4in]{./plots/delaware}
+    \includegraphics[height=3in]{./plots/delaware}
 \end{figure}
 
 The range of latitudes at which storms make landfall in the simulation cover a region of
@@ -65,10 +38,10 @@ One difficulty with a high-dimensional model is evaluating its fidelity.  As we 
     dimensionality increases.  This is related to the curse of dimensionality in applications like
     $k$-nearest neighbor algorithms: as the number of dimensions increases, the ratio in average
     distance between the nearest replicate, and farthest replicate in a sample will tend to approach 1.
-    So distance as a measure is fundamentally flawed in a high-dimensional setting.
+    So distance as a measure is fundamentally flawed in a high-dimensional setting.\makenote{[Citation needed!]}
 
-One thing we can do is evaluate recovery of marginal empirical CDF, using marginal
-    posterior predictive CDF's under various modelling approaches.
+We can subjectively assess recovery of marginal empirical CDF, using marginal
+    posterior predictive CDF's under our various modelling approaches.
     Having sampled $\bm{V}^{*}$ from its posterior predictive density, we can get a sample of $W_s^*$
     by inverting Equation~\eqref{eqn:standardization}.  Thus, for for $R^*\sim\text{Pareto}(1)$, 
     $Z^* = R^*\bm{V}^*$,
