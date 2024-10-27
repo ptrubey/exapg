@@ -1,20 +1,14 @@
-\begin{comment}
-    \begin{itemize}
-        \item Unified discussion of results
-        \item How they reinforce or contrast eachother
-    \end{itemize}
-\end{comment}
-
 \subsection{SLOSH}
-
 \begin{figure}[ht]
     \caption{Locations of identified sites that experienced inundation in more than 
         $5$ percent of storms.  Specifically identified are two locations of 
-        interest. \makenote{Change Label to PIA} \label{map:delawarebay}}
+        interest. \makenote{Change Label to PIA, add packer terminal, make plot 
+        in-line to limit lost page space?} \label{map:delawarebay}}
     \centering
     \includegraphics[height=3in]{./plots/delaware}
 \end{figure}
 
+\makenote{rewrite paragraph}
 The range of latitudes at which storms make landfall in the simulation cover a region of
     coastline surrounding the entrance of Delaware Bay \makenote{rephrase more accurate given
     data}.  Given that focus inherent in the original data, we focus our primary analysis there.
@@ -37,8 +31,9 @@ One difficulty with a high-dimensional model is evaluating its fidelity.  As we 
     study, the relative rise in energy score between a bad model and a good model shrinks as
     dimensionality increases.  This is related to the curse of dimensionality in applications like
     $k$-nearest neighbor algorithms: as the number of dimensions increases, the ratio in average
-    distance between the nearest replicate, and farthest replicate in a sample will tend to approach 1.
-    So distance as a measure is fundamentally flawed in a high-dimensional setting.\makenote{[Citation needed!]}
+    distance between the nearest replicate, and farthest replicate in a sample will tend to approach
+    1.  In this regard, distance, and metrics based on distance are fundamentally flawed in a 
+    high-dimensional setting.\makenote{[Citation needed!]}
 
 We can subjectively assess recovery of marginal empirical CDF, using marginal
     posterior predictive CDF's under our various modelling approaches.
@@ -60,11 +55,20 @@ We can subjectively assess recovery of marginal empirical CDF, using marginal
     aspects of our analysis are based. \makenote{[are they?]}
 
 \begin{figure}[ht]
-    \caption{Empirical, and posterior predictive cumulative distribution functions for marginal 
-    $v$, $V^*$ (Left) and $w$, $W^*$ (Right), at Dover Air Force Base, under various modelling
-    considerations.\label{plot:marginal_doverafb}\makenote{remove legend name}}
     \centering
-    \includegraphics[width=\textwidth]{./plots/delaware_marginal_dover_afb.png}
+    \begin{subfigure}{0.8\textwidth}
+        \caption{Dover Air Force Base\label{plot:marginal_doverafb}}
+        \includegraphics[width=\textwidth]{./plots/delaware_marginal_dover_afb.png}
+    \end{subfigure}
+    \\\vspace{1cm}~\\
+    \begin{subfigure}{0.8\textwidth}
+        \caption{Philadelphia International Airport\label{plot:marginal_pia}}
+        \includegraphics[width=\textwidth]{./plots/delaware_marginal_phil_ia.png}    
+    \end{subfigure}
+    \caption{Empirical, and posterior predictive cumulative distribution functions for marginal 
+    $v$, $V^*$ (Left) and $w$, $W^*$ (Right), at denoted locations, under various modeling
+    considerations.\makenote{remove legend name, compress into single faceted plot per location. 
+    make plot for packer terminal?}}
 \end{figure}
 
 In Figure~\ref{plot:marginal_doverafb}, we observe said marginal empirical and posterior-predictive
@@ -74,21 +78,20 @@ In Figure~\ref{plot:marginal_doverafb}, we observe said marginal empirical and p
     that storm surge does not reach Dover AFB in approximately \num{44} percent of storms, 
     post-thresholding.
 
-\begin{figure}[ht]
-    \caption{Empirical, and posterior predictive cumulative distribution functions for marginal 
-    $v$, $V^*$ (Left) and $w$, $W^*$ (Right), at Philadelphia International Airport, under 
-    various modelling considerations.\label{plot:marginal_pia}\makenote{remove legend name}}
-    \centering
-    \includegraphics[width=\textwidth]{./plots/delaware_marginal_phil_ia.png}
-\end{figure}
-
 In Figure~\ref{plot:marginal_pia}, we see the same marginal CDF's, for the Philadelphia International
     Airport.  Recall, this airport is situated along the banks of the Delaware River; storm surge
     has much further to travel to reach this point, and yet it experiences inundation much more 
     frequently, owing to that its elevation is only 4 feet above sea level, rather than the 9 feet
     of Dover AFB \makenote{[confirm]}.
 
-\include{tables/cluster_concentration}
+\begin{table}[ht]
+\centering
+\input{./tables/cluster_concentration}
+\caption{Cluster concentration for identified models and fitting 
+        methods, on the \emph{Restricted} Slice: columns specify quantiles 
+        detailing the proportion of data contained within the table cells 
+        indicated number of clusters.\label{tab:cluster_concentration}} 
+\end{table}
 
 Looking at equivalent marginal plots for all locations, nearly all preserve the
     same ordering, from top-left to bottom-right: first the Variational Bayes fit of PYPG, then the 
@@ -104,15 +107,113 @@ Looking at equivalent marginal plots for all locations, nearly all preserve the
     \makenote{table of average $\text{E}[\alpha_s]$ under each model, as well as 
     $\text{E}\left[\frac{\alpha_s}{\lVert\bm{\alpha}\rVert_{\infty}}\right]$}
 
-\include{tables/extant_clusters}
+\begin{table}[ht]
+\centering 
+\input{./tables/extant_clusters}
+\caption{Number of emergent clusters identified via posterior sampling.\label{tab:extant_clusters}}
+\end{table}
 
+We previously discussed Equation~\ref{eqn:condsurv}, which establishes the conditional probability of
+    exceeding a specified threshold for some set of dimensions given other dimensions exceed their specified 
+    threshold. Using the \emph{Critical} slice with a model fitted via MCMC, we use this equation to establish 
+    conditional survival curves 
+    for three locations: Dover Air Force Base, Philadelphia International Airport, as well as the Packer Avenue
+    Marine Terminal, a major shipping hub.  Packer Avenue Terminal is only a few miles up the Delaware River from
+    PIA, so we may expect a strong association in extreme behavior between those two locations.
+    In keeping with our goal of a practical actionable metric, we 
+    consider three scenarios where we observe extreme behavior further out in the bay than the positions of
+    interest.  In the \emph{Lower Bay} scenario, we observe extreme behavior at sites on the south side of the 
+    bay towards the entrance of the bay.  That is, a scenario in which sites 1,2, and 7 (Beebe Hospital, 
+    Henlopen Memorial Park, and Smyrna Airport respectively) experienced storm surge at or above their
+    respective 90th percentiles.  In the \emph{Upper Bay} scenario, we observe extreme behavior at sites 6,
+    and 8 (Bay Island Fish and Wildlife Refuge, and Salem Airfield respectively), sites situated along the
+    northern edge of Delaware Bay.  In the \emph{Mouth} scenario, we observe extreme behavior at all sites near
+    the mouth of the bay.  This includes sites 1, 2, 3, and 4 (Beebe Hospital, Henlopen Memorial Park, 
+    Paramount Airport, and the Cape Regional Medical Center). 
 
+\subsection{Conditional Survival Curves}
+\begin{figure}[htb]
+    \begin{subfigure}[t]{0.31\textwidth}
+        \centering
+        \includegraphics[width=0.99\linewidth]{./plots/condsurv/doverafb}
+        \caption{Dover Air Force Base\label{fig:condsurv1d:doverafb}}
+    \end{subfigure}%
+    ~ 
+    \begin{subfigure}[t]{0.31\textwidth}
+        \centering
+        \includegraphics[width=0.99\linewidth]{./plots/condsurv/pia}
+        \caption{Philadelphia International Airport\label{fig:condsurv1d:pia}}
+    \end{subfigure}%
+    ~
+    \begin{subfigure}[t]{0.31\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{./plots/condsurv/packerave}
+        \caption{Packer Avenue Marine Terminal\label{fig:condsurv1d:packerave}}
+    \end{subfigure}
+    \caption{Conditional survival curves for the labelled locations, under three scenarios of the observed \label{fig:condsurv1d}}
+\end{figure}
 
+Figure~\ref{fig:condsurv1d} shows the one-dimensional survival curves for these three locations, under 
+    these three scenarios.  Note, the survival curve indicates $P(Z_s > z_s)$ given the stated scenario.
+    Additionally, a $\bm{z}$ score greater than 1 indicates storm surge above the 90th percentile.
+    Perhaps unsurprisingly in interpreting these results, as Dover AFB is on the south side of the bay, 
+    we see the survival curve for the Upper Bay scenario dip below that of both Lower Bay and Mouth scenarios.  
+    What is interesting, however, is that that ordering is not uniform; we see the ordering change to that
+    behavior around $z = 4$.  The Mouth scenario indicates a storm that has inundated both the lower and
+    upper portions of the Delaware Bay entrance, indicating an extremely powerful storm that is well positioned
+    to enter the Bay.  As such, it is no surprise that the survival curve associated with that scenario
+    indicates the highest probability of extreme surge throughout the entire curve.  What is interesting is that
+    we observe the same crossing behavior and the same ordering on all three curves, though their exact shape
+    and the exact point at which that cross occurs differ.  It is apparent that relative to the other
+    scenarios, extreme surge on the Upper Bay sites does not strongly indicate increased surge at the other 
+    sites.  It may be the case that a hurricane optimally aligned towards inundating the North bank is 
+    sub-optimally aligned towards inundating the rest of the bay.
 
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.3\linewidth]{./plots/condsurv/doverafb_pia}
+    \caption{Conditional Survival Curve (Contour Plot) of flooding at Dover AFB (X) vs Philadelphia International 
+        Airport (Y).\label{fig:condsurv2d:doverpia}
+        \makenote{Add plot in real units}}
+\end{figure}
 
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.3\linewidth]{./plots/condsurv/doverafb_packer}
+    \caption{Conditional Survival Curve (Contour Plot) of flooding at Dover AFB (X) vs Packer Avenue Terminal (Y).
+        \label{fig:condsurv2d:doverpacker}
+        \makenote{Add plot in real units}
+        }
+\end{figure}
+
+Figure~\ref{fig:condsurv2d:doverpia} provides a contour plot of a two-dimensional survival surface, between
+    flooding at Dover AFB and flooding at PIA, conditional on the listed scenarios.  Recalling that Dover AFB 
+    is on the south edge of the bay, while PIA is far up the Delaware River, we may not expect to see a strong
+    association between the two locations.  Indeed, on the contour plot we observe the survival surface is nearly 
+    flat on the transition between Dover AFB and PIA. \makenote{This phrasing is terrible.}  This shape indicates
+    an only moderate dependence between the locations, under these scenarios.  But we must call 
+    attention to the ordering of the contours of the survival surface.  Here, the Lower Bay scenario crosses 
+    even the Mouth scenario.  In contrast, in Figure~\ref{fig:condsurv2d:doverpacker}, we see that survival
+    surface is actually concave, which indicates an extremely weak dependence between the two 
+    locations.  This is understandable, as Packer Avenue Terminal is around 4 miles upstream of PIA,
+    even further away from Dover AFB.    
     
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.3\linewidth]{./plots/condsurv/pia_packer}
+    \caption{Conditional Survival Curve (Contour Plot) of flooding at Dover AFB (X) vs Packer Avenue Terminal (Y). 
+        \label{fig:condsurv2d:piapacker}
+        \makenote{Add plot in real units}}
+\end{figure}
+
+Figure~\ref{fig:condsurv2d:piapacker} similarly presents a contour plot of the survival surface between 
+    PIA and Packer Avenue terminal. Given the proximity of the locations, we would expect a strong 
+    dependence.  That dependence is borne out, as in the contour plot of the survival surface we observe 
+    strong convexity.
 
 
+\makenote{Insert conditional survival curves given threshold under regression model.}
 
+\makenote{insert posterior clustering discussion and pairs plot of cluster assignments of $\bm{\theta}$'s.}
 
 % EOF

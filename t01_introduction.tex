@@ -103,16 +103,20 @@ This paper analyzes SLOSH simulations under an extreme value theory (EVT) framew
     extremes to such analysis, }
 
 The paper proceeds as follows:  Section~\ref{ref:review} details the background 
-    for the relevant modelling methods we will be using in this analysis.  In 
-    particular, Section~\ref{ref:evt} 
-    provides an overview of extreme value theory, to the justification for 
-    separating the magnitude of a multivariate extreme from its angular 
-    component; Section~\ref{ref:pg} describes the process of creating an angular 
-    distribution as well as introducing the model we use in our analysis; and 
-    Section~\ref{ref:varbayes} introduces variational Bayesian methods, which we 
-    can use to apply our model at large scale. \makenote{rewrite}
-    Section~\ref{ref:results} presents our analysis, first demonstrating the 
-    efficacy of variational methods on simulated data as compared to MCMC, then
+    for the relevant modeling methods and dataset we will be using in this analysis.  
+    In particular, Section~\ref{ref:evt} provides an overview of extreme value 
+    theory, to the justification for separating the magnitude of a multivariate 
+    extreme from its angular component; Section~\ref{ref:pg} describes the process 
+    of creating an angular distribution as well as introducing the model we use in 
+    our analysis; and Section~\ref{ref:varbayes} provides a brief review of variational
+    inference which we attempt to use to speed analysis.  Section~\ref{slosh} further
+    expands the discussion of the SLOSH dataset and how the analysis will proceed.
+    Section~\ref{sec:methodology} expounds on the metrics we will be considering in
+    our analysis as applications of the fitted angular model.  Further, 
+    Section~\ref{ref:regression} introduces a novel regression model with support
+    $\mathbb{S}_{p}^{d-1}$, the positive orthant of the $p$-norm unit sphere.
+    Section~\ref{ref:results} presents our analysis, first evaluating the efficacy of
+    variational methods on simulated data as compared to MCMC, then
     presenting some interesting results. Finally, Section~\ref{ref:conclusion} 
     concludes.
 

@@ -1,85 +1,32 @@
-\begin{comment}
-    \begin{itemize}
-        \item Description of joint maxima problem/application
-        \item Estimation of the extremal dependence structure
-        \begin{itemize}
-            \item Following the example of \cite{trubey:pg}, ...
-            \item Probability of extreme local inundation given current
-                inundation field.
-                \begin{equation*}
-                    \begin{aligned}
-                    P\left(Z_{s} \geq z_{s} \mid \bm{Z}_{\neg s} \geq \bm{z}_{\neg s}\right)
-                        &= P\left(RV_{s} \geq rv{s} \mid RV_{\neg s} \geq rv_{\neq s}\right)\\
-                        &= P\left(R\geq r\right)P\left(V_{s}\geq v_{s}\mid ...? \right)
-                    \end{aligned}
-                \end{equation*}
-        \end{itemize}
-        \item Multi-site return levels
-        \begin{itemize}
-            \item What is a multivariate return period/level?
-            \begin{itemize}
-                \item Conceptually it's not easy to define.  No two storms will present exactly
-                    the same in magnitude or resulting scaled field.
-                \item Marginally, \[T_p = \frac{\mu}{1 - F_x(X_p)}\] where $\mu$ is average inter-arrival 
-                    in series of events.  Conceptual problem occurs in definition of $F$, which is unclear
-                    in a multivariate setting.
-                \item \url{https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/wrcr.20204}
-                \item \url{https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2009WR009040}
-                \item \url{https://hess.copernicus.org/articles/17/1281/2013/}
-                \item \url{https://nhess.copernicus.org/articles/12/2699/2012/}
-                
-                \item need to make a statement harkening back to the fact this is a simulation of
-                    storm parameters sampled via latin hypercube, so the definition of 'return period'
-                    in this context is suspect.
-            \end{itemize}
-            \item Given shaky conception of multivariate return period, we might consider alternative 
-                definitions more relevant to an inundation field.
-            \begin{itemize}
-                \item Total Inundation field?  (some univariate transformation?)
-                \item number of locales under significant flooding?
-            \end{itemize}
-        \end{itemize}
-        \item Application results
-    \end{itemize}
-\end{comment}
-
 Following the example of \cite{trubey:pg}, we can use the dependence structure we infer
     by fitting the model in Equation~\eqref{eqn:pypg}.  Then, conditional on the fitted model,
     there are various inferences we can make.
 
-% The standard Pareto distribution exhibits a multiplicative memory-less property such that
-% \[
-% \text{P}(Z > st \mid Z > s) = P(Z > t)\text{ for }s,t \geq 1
-% \]
-
-\subsection{Multi-site Return Periods}\makenote{the subsection title might not be necessary, as there's 
-    currently no deliverable, and it leads into the next subsection.}
+\subsection{Multi-site Return Periods and Conditional Survival}
 Statistical inference of extreme values tends to focus on the \emph{return period} as a deliverable
     metric.  In a univariate case, this is easy to define: for event $z$, the return period
     is the average \emph{time} it would take to observe a new event $Z$ as extreme or more extreme than $z$.
     that is,
     \[
-    T(z) = \frac{\mu}{1 - F_z(z)}
+    T(z) = \frac{\mu}{1 - F_z(z)} = \frac{\mu}{S_z(z)}
     \]
-    where $\mu$ is the average inter-arrival time in a series of events. Conceptual problems begin to arise
-    in interpretation when we consider a multivariate $F$.  Consider an $s$-dimensional threshold $\bm{z}$:
-    do we consider 
-    \makenote{extreme analysis book makes succinct argument; quote.}
+    where $\mu$ is the average inter-arrival time in a series of events, and $S(\cdot)$ the survival function. 
+    Conceptual problems begin to arise in interpretation when we consider a multivariate $F$.  
     \cite{salvadori2010} considers a strict interpretation of the return period in a multivariate setting,
     defining the return period in terms of a copula---a redefinition of the joint CDF, as a distribution
     over marginal uniform densities, with the marginal CDF's for each site taking the place of the marginal 
     uniforms.  We say strict interpretation in interpretation of the CDF: 
     $F(\bm{z}) = \text{P}\left(\cap_{s \in S}Z_s\leq z_s\right)$, though it considers later a more general
     \emph{critical region}.
-    \cite{Salvadori2013} inverts this, defining the return period in terms of the joint distribution of the
-    marginal survival functions, $T(\bm{z}) = \frac{\mu}{S(\bm{z})}$, where 
-    $S(\bm{z}) = \text{P}\left(\cap{s\in S}Z_s > z_s\right)$.
+    \cite{Salvadori2013} inverts this, defining the return period in terms of the joint survival function, $T(\bm{z}) = \frac{\mu}{S(\bm{z})}$, where 
+    $S(\bm{z}) = \text{P}\left(\bigcap_{s\in S}Z_s > z_s\right)$.
     We observe there exists a vast difference in interpretation between these two extremes.  In generating a
     meaningful deliverable metric of a return period, for a given event at how many sites
     must the threshold be breached for us to interpret the event as over-topping the threshold?  For a CDF
     based metric, one; for a survival function based metric, all.  But as the number of locations under 
-    consideration increases, the value of such a metric decreases.
-    \cite{cho2023} avoids this issue of interpretation by estimating univariate return periods for each
+    consideration increases, the value of such a metric decreases, as the probability of the specified scenario
+    approaches one or zero respectively.
+    \cite{cho2023} sidesteps this issue of interpretation by estimating univariate return periods for each
     indexed location within a spatial field, along with low-dimensional multivariate extreme analysis 
     on different summary statistics, assessed over the aggregate spatial field: flood volume, 
     peak discharge, total rainfall depth, and maximum wind speed.  \cite{graler2013} also follows the latter 
@@ -93,10 +40,10 @@ Statistical inference of extreme values tends to focus on the \emph{return perio
     Beyond the conceptual issue of interpreting a multivariate $F$, there arises a practical issue in presenting
     complete results of a higher dimensional process.
     It is for these reasons that in practice, as a deliverable metric, the notion of a return period is
-    tailored to the application in question.
-       
-\subsection{Conditional Survival}
-One of the more compelling applications of modelling the dependence structure between locations in 
+    frequently tailored to the application in question.  In this paper, we tailor the survival function
+    thresholds to describe specific scenarios.
+
+One of the more compelling applications of modeling the dependence structure between locations in 
     storm surge lies in the reality that a storm surge occurs over a period of time, and the 
     maximum observed values in storm surge at different sites occur asynchronously.  A decision maker,
     interested in the storm surge at a smaller group of locations, can observe storm surge at other
@@ -114,27 +61,17 @@ One of the more compelling applications of modelling the dependence structure be
         }
     \end{equation}
     Letting Set $\alpha$ be a group of locations of interest, we establish the probability of
-    entering a failure region, conditional on the current state and potential future state of the 
-    inundation field.  Say, given current storm flooding near the mouth of the Delaware Bay, will the 
+    entering a failure region, conditional on the current state of the inundation field.  
+    Say, given current storm flooding near the mouth of the Delaware Bay, will the 
     Philadelphia International Airport, situated on the Delaware river, experience catastrophic flooding?  
     If one can describe the dependence structure of extremes in inundation analytically or via samples,
     Equation~\ref{eqn:condsurv} offers a practical, actionable metric.
-    
-    \makenote{Select a few locations of interest in each inference task; establish conditional survival 
-    probabilities for each given a few }
 
-    The framework of multivariate EVT does not allow for the concept of negative dependence.  In fact, 
-    a peaks-over-threshold approach using the projected gamma to model the dependence structure can not 
+    One point of concern: the framework of multivariate EVT does not allow for the concept of negative dependence.  
+    In fact, a peaks-over-threshold approach using the projected gamma to model the dependence structure can not
     encompass even complete independence: the closest we can represent is weak positive dependence.
-    As such, it is difficult to accurately model phenomena that 
-    Never the less, \makenote{making a statement about the probability of simultaneous 
-    flooding in new york and virginia.}
+    As such, it is difficult to accurately model phenomena that exhibit mutually exclusive extreme behavior.
 
     
-
-
-
-
-
 
 % EOF

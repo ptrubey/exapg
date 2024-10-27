@@ -1,13 +1,19 @@
 In order to account for the model flexibility required by the multivariate
-    peaks-over-threshold scenario, a Dirichlet process mixture model using
+    peaks-over-threshold scenario, a Pitman-Yor process mixture model using
     the projection of independent gamma random variables onto the unit 
-    hypersphere under the $\mathcal{L}_p$ norm was developed.  This very
-    quickly presents computational issues, as the computational burden for
-    MCMC inference scales superlinearly with sample size, and will scale
-    either linearly or exponentially depending on choice of centering 
-    distribution. We propose an alternate approach, developing a 
-    variational Bayes approach for model inference.  We apply this model
-    to a dataset of simulations of storm surge; comprised of 4 thousand
-    observations at more than 6 thousand locations.\makenote{Rework}
+    hypersphere under the $\mathcal{L}_p$ norm was developed.  This quickly
+    presents issues, as the computational burden for MCMC inference in a BNP
+    model scales linearly with sample size, and dimensionality.
+    An alternative approach based on mean-field variational inference was explored,
+    but it has become apparent that fidelity suffers under the mean-field model
+    in a high-dimensional setting.  Further exacerbating the problem is the
+    high-dimensional setting itself, which leads to a loss of fidelity even for
+    MCMC inference, setting aside the computational burden.  A regression model
+    is proposed, that in effect establishes a low-dimensional representation of the 
+    high-dimensional output space.  This works to ameliorate the lack of granularity
+    imposed under the full-dimensional model, but imposes an additional computational
+    burden.  We apply these models to a dataset of storm surge simulations 
+    derived from the \emph{Sea, Lake, and Overland Surges due to Hurricanes} 
+    (SLOSH) model.
     
 % EOF
