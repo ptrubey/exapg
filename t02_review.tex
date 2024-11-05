@@ -1,12 +1,12 @@
-Our analysis of the SLOSH data's extremal dependence requires some background.  
+\st{Our analysis of the SLOSH data's extremal dependence requires some background.  
     \makenote{more appropriate location?}  For 
     convenience, let's also take this opportunity to define some of the notation 
     that will be used throughout the paper.  Let $i = 1,\ldots,n$ iterate over 
     observations in data.  In this context, that refers to \emph{storms}.
     Let $s = 1,\ldots,S$  iterate over dimensions in data.  In this context, 
-    $s$ refers to \emph{sites}, or locations.
+    $s$ refers to \emph{sites}, or locations.}
 
-\subsection{Extreme Value Theory\label{ref:evt}}
+%\subsection{Extreme Value Theory\label{ref:evt}}
 \makenote{first paragraph basically copy-pasted from ndpg.  Rephrase more?}
 Extreme value theory uses the limited information available in a sample to
     characterize the tails of a distribution.  In the univariate case, asymptotic
@@ -53,14 +53,17 @@ The multivariate PoT model considered in this paper has been developed
     As $R$ and $\bm{V}$ are independent,  the distribution of $\bm{V}$ is 
     effectively the dependence structure of $\bm{W}$.
 
-Let the threshold $b_{qs} = \hat{F}_{s}^{-1}(1 - q)$, where $\hat{F}$ is
+\bruno{We consider observations $\bm{w}_{i} = (w_{i1}, \ldots , w_{iS})$, where $i =1 ,\ldots m ,n$. 
+For the case of the SLOSH simulations, $i$ indexes storms, and $s$ indexes the grid
+cell in the simulation output.}
+\st{Let} \bruno{Define as} the threshold $b_{qs} = \hat{F}_{s}^{-1}(1 - q)$, where $\hat{F}$ is
     the empirical cumulative distribution function for the $s$th component.
     Marginally, values exceeding the threshold $b_{qs}$ are assumed to follow
     a univariate generalized Pareto distribution, and are used to estimate the
     corresponding marginal scale and shape parameters $a_{s}$ and $\xi_{s}$
-    respectively.  Setting $\bm{b}$ and having inferred $\bm{a}$, and $\bm{\xi}$, 
+    respectively.  \st{Setting $\bm{b}$ and having inferred $\bm{a}$, and $\bm{\xi}$, 
     we transform $\bm{w}\mid \bm{w}\not\leq \bm{b}$ to a standard multivariate 
-    Pareto form via the transformation
+    Pareto form via the transformation} \bruno{Let}
     \begin{equation}
         \label{eqn:standardization}
         z_{is} = \left(1 + \xi_{s}\frac{w_{is} 
@@ -68,10 +71,13 @@ Let the threshold $b_{qs} = \hat{F}_{s}^{-1}(1 - q)$, where $\hat{F}$ is
     \end{equation}
     where $(\cdot)_+$ indicates the positive parts function.  Let 
     $r_i = \lVert \bm{z}_i\rVert$, and $\bm{v}_i = \bm{z}_i / r_i$.  Due to 
-    thresholding, $i$ ranges from 1 to $m\leq n$, and $r_i > 1$.  Recall that
+    thresholding, $i$ ranges from 1 to $m\leq n$, and $r_i > 1$.  \st{Recall that
     $R\in (1, \infty)$ will, by design, follow a standard Pareto distribution,
     the inferential task left to us is describing the distribution of the
-    angular component $\bm{V}\in\mathbb{S}_{\infty}^{d-1}$.  
+    angular component $\bm{V}\in\mathbb{S}_{\infty}^{d-1}$.  } \bruno{The core 
+    assumption of our model is the use of $\bm{v}_i$ to describe the 
+    angular component of the tail distribution that corresponds to the
+    observations.}
 
 \subsection{Projected Gamma\label{ref:pg}}
 A suitable distribution for $\bm{V}$ can be approximated by projecting a 
@@ -89,15 +95,15 @@ A suitable distribution for $\bm{V}$ can be approximated by projecting a
     where $y = (y_1,\ldots,y_{d-1}) \in \mathbb{S}_{p}^{d-1}$, $r > 0$, and 
     $y_d = (1 - \sum_{s = 1}^{d-1}y_{s}^p)^{\frac{1}{p}}$.
     By transforming $\bm{x}$ to $(r,\bm{y})$ and integrating out $r$, we
-    succeed in establishing a distribution for $\bm{y}$ on 
-    $\mathbb{S}_{\infty}^{d-1}$
+    \st{succeed in establishing} \bruno{obtain} a distribution for $\bm{y}$ on 
+    $\mathbb{S}_{p}^{d-1}$.
     The Jacobian of the transformation in Equation~\eqref{eqn:projection} is
     $r^{d-1}[Y_d + \sum_{s = 1}^{d-1}y_{s}^py_d^{1-p}]$.
     This Jacobian is well suited to a product of gammas density, where 
     $f(\bm{x}\mid\bm{\alpha},\bm{\beta}) = 
         \prod_{s = 1}^d\mathcal{G}(x_{s}\mid\alpha_{s},\beta_{s})$.
     Transforming $\bm{x}$ as described, $r$ can be integrated out in closed
-    form, leaving the \emph{projected gamma} density for arbitrary $p > 0$.
+    form, \st{leaving} \bruno{yielding} the \emph{projected gamma} density for arbitrary $p > 0$,
     \[
         f(\bm{y}\mid\bm{\alpha},\bm{\beta}) = \prod_{s = 1}^d\left[
             \frac{\beta_{s}^{\alpha_{s}}}{\Gamma(\alpha_{s})}
@@ -106,20 +112,20 @@ A suitable distribution for $\bm{V}$ can be approximated by projecting a
             \frac{\Gamma(\sum_{s = 1}^d \alpha_{s})}{\left(
                 \sum_{s = 1}^d\beta_{s}y_{s}
                 \right)^{\sum_{s = 1}^d \alpha_{s}}
-            }
+            }.
     \]
-    Of course, at $p=\infty$, the transformation is not differentiable, so a 
-    direct projection onto $\mathbb{S}_{\infty}^{d-1}$ is not possible. We
+    \st{Of course,} \bruno{Unfortunately,} at $p=\infty$, the transformation is not differentiable, so a 
+    direct projection onto $\mathbb{S}_{\infty}^{d-1}$ is not possible. \st{We
     instead desire a high but finite $p$.
-    Here we balance two issues: as $p\to\infty$, the space $\mathbb{S}_{p}^{d-1}$ 
-    will approach asymptotically towards $\mathbb{S}_{\infty}^{d-1}$.
-    Unfortunately, also as $p\to\infty$, the stability of the Jacobian of the
+    Here we balance two issues:} \bruno{Yet,} as $p\to\infty$, \st{the space} $\mathbb{S}_{p}^{d-1}$ 
+    will approach \st{asymptotically towards} $\mathbb{S}_{\infty}^{d-1}$.
+    Unfortunately, \st{also} as $p\to\infty$, the stability of the Jacobian of the
     transformation becomes increasingly dependent on the value, or choice, of 
     $y_d$.  If $y_d\to 0$, then the Jacobian diverges, and the distribution 
     becomes numerically unstable. We select $p = 10$ to balance these concerns.
 
-To more faithfully capture the structure of the data, we use the projected gamma density 
-    as a kernel density of an Bayesian non-parametric mixture model, based on 
+To more \st{aithfully} \bruno{flexibly} capture the structure of the data, we use the projected gamma density 
+    as a kernel density of a Bayesian non-parametric mixture model, based on 
     the Pitman-Yor process introduced in~\cite{perman1992}.  A Pitman-Yor process
     is a fully atomic measure specified by two parameters and a centering
     distribution.  Under a stick-breaking representation as described 
@@ -135,15 +141,18 @@ To more faithfully capture the structure of the data, we use the projected gamma
     $\bm{\alpha}_j$ are sampled independently from the centering distribution $G_0$.
     Under the Pitman-Yor process, $\chi_j \sim \text{Beta}(1 - d, \eta + jd)$
     where $d \in [0, 1)$ denotes the \emph{discount} parameter and $\eta > -d$
-    denotes the \emph{concentration} parameter.
+    denotes the \emph{concentration} parameter. \bruno{Notice that $J$ dennotes a
+    truncation for the number of mixture components and, thus, $j\in \lbrace 1,\ldots,J\rbrace$ 
+    denotes indexing over \emph{clusters}.}
 
-For the rest of this paper, let $i$ denote indexing over storm simulations (observations), 
+\st{For the rest of this paper, let $i$ denote indexing over storm simulations (observations), 
     specifically those which survived the thresholding necessitated by the assumption of 
-    Equation~\eqref{eqn:threshold}.  Let $s \in \lbrace 1, \ldots, S\rbrace$ denote indexing 
-    over locations t which the storm surge is simulated.  That is, $y_{is}$ is the maximum simulated
-    storm surge at location $s$ during storm $i$, after projection onto $\mathbb{S}_p^{d-1}$.
-    Let $j\in \lbrace 1,\ldots,J\rbrace$ denote indexing over \emph{clusters}, the aforementioned
-    mixture components up to truncation point $J$.  Then, the model can be specified as
+    .  Let $s \in \lbrace 1, \ldots, S\rbrace$ denote indexing 
+    over locations t which the storm surge is simulated.  That is,} \bruno{Let} $y_{is}$ \st{is the maximum 
+    simulated} \bruno{be the }
+    storm surge at location $s$ during storm $i$, after \bruno{thresholding  and }projection onto $\mathbb{S}_p^{d-1}$.
+    \st{Let $j\in \lbrace 1,\ldots,J\rbrace$ denote indexing over \emph{clusters}, the aforementioned
+    mixture components up to truncation point $J$.}  Then, the model can be specified as
     \begin{equation}
         \label{eqn:pypg}
         \begin{aligned}
@@ -186,16 +195,18 @@ For the rest of this paper, let $i$ denote indexing over storm simulations (obse
 
 Such a fitting scheme can work well for a moderately sized inference problem.  In \cite{trubey:pg},
     they report requiring approximately \num{20} minutes to run the sampler for \num{40000} iterations, 
-    on an inference task of \num{532} observations $\times$ \num{47} sites.  If we want to conduct
+    on \st{an inference task of} \bruno{a problem with} \num{532} observations $\times$ \num{47} sites.  If we want to conduct
     MCMC inference for more sites, and more observations, the sampler may need more iterations to
-    reach convergence, each iteration will require more cpu time, and the sampler require more 
-    memory resources to hold the sampling history.  We consider an alternative method of model fitting.
+    reach convergence, each iteration will require more CPU time, and the sampler \st{require more 
+    memory resources to hold the sampling history} \bruno{will have an increasing memory footprint. 
+    Thus, we consider, as an alternative, a variational inference approach.}
+    \st{We consider an alternative method of model fitting.}
 
 \subsection{Variational Inference - A Brief Overview\label{ref:varbayes}}
 Variational inference, or variational Bayesian statistics, is an alternative method of 
     model-fitting that proposes, if the target distribution is analytically intractable,
     to fit a tractable candidate distribution as \emph{close} to the target distribution
-    as possible.  That is, for data $\bm{x}$ and some distributional parameter set $\bm{\theta}$,
+    as possible. \bruno{\bf You need some references here.} That is, for data $\bm{x}$ and some distributional parameter set $\bm{\theta}$,
     where $f(\bm{\theta}\mid \bm{x})$ is not available in closed form, then we select
     \begin{equation}
         \label{eqn:optimalq}
@@ -312,6 +323,20 @@ That said, a path-based optimization approach will be dependent upon the startin
     dependent upon starting position, both in terms of model fidelity, and resulting 
     number of extant mixture components.  One potential solution would be to 
     consider a better starting position for the optimizer.
+    \bruno{\bf We need a lot more clarity here. I would start with \eqref{eqn:optimalq}, then
+    define the ELBO as
+    \[
+    \mathcal{L}(\bm{\theta}) = - \text{E}_q\left[
+                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})
+                \right]
+    \]
+    then say that
+    \[
+        q^*(\bm{\theta}) = \argmax_{q\in\mathcal{Q}} \mathcal{L}(\bm{\theta})
+    \]
+    with no justification and a reference. Then I would say that, in order to maximize the
+    ELBO, we follow XXX, and explain briefly and succintly what you do.
+    }
 
 % \subsubsection{Optimal starting position}
 
@@ -435,6 +460,9 @@ As the motivating example for our analysis of the extremal dependence structure,
     reduces the amount of information available by which we can estimate the 
     dependence structure.  We create several \emph{slices} of the SLOSH data,
     summarized in Table~\ref{tab:datasets}.
+    \bruno{\bf This paramgraph is VERY hard to understand. I suppose that you want to
+    say that you are focused on a limited number of locations in the grid of
+    outputs that correspond to key services of infrastructure. }
 
 \begin{figure}[ht]
     \centering
