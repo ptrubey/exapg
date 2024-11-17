@@ -1,4 +1,4 @@
-\subsection{SLOSH}
+%\subsection{SLOSH}
 \begin{figure}[ht]
     \caption{Locations of identified sites that experienced inundation in more than 
         $5$ percent of storms.  Specifically identified are two locations of 
@@ -16,12 +16,13 @@ The range of latitudes at which storms make landfall in the simulation cover a r
     for grid cells that experienced inundation in more than 5 percent of simulations, 
     with specified locations, we identify 65 locations of interest, at which we will conduct 
     our analysis.  Figure~\ref{map:delawarebay} gives the locations of sites we identified, along
-    with a classification of those sites.  Services includes emergency services, police, fire,
-    and medical services.  Land includes village centers, major intersections, and named
-    land features.  Transportation includes ferry landings, airports, heliports, and similar.
-    Within that set, we further identify two locations of particular interest, 
-    for which significant inundation can lead to catastrophic consequences:  
-    Dover Air Force Base (Dover AFB), and the Philadelphia International 
+    with a classification of those sites.  \bruno{Four categories were considered: ``Services'', that}
+    includes emergency services, police, fire, and medical services\bruno{;  ``Land'', that}
+    includes village centers, major intersections, and named land features\bruno{; ``Transportation, 
+    that}  includes ferry landings, airports, heliports, and similar.
+    Within \st{that set, we further} \bruno{transportation category we} identify two 
+    locations of particular interest,  for which significant inundation can lead to 
+    catastrophic consequences:   Dover Air Force Base (Dover AFB), and the Philadelphia International 
     Airport (PIA). Dover AFB is situated next to Delaware Bay, with a direct approach from the
     open ocean.  PIA, on the other hand, is further upstream, adjacent to the Delaware River, 
     in the city of Philadelphia.  To reach this location, storm surge would need to backflow 
@@ -45,14 +46,7 @@ We can subjectively assess recovery of marginal empirical CDF, using marginal
     \end{equation*}
     where $\bm{\xi}$, $\bm{a}$, and $\bm{b}$ were previously calculated.  
     For consistency with regard to the originating data, we truncate replicates 
-    from the posterior predictive distribution $W_{s}^* \geq 0$.  
-    \makenote{rest of paragraph potentially unnecessary}
-    It can occur that the chosen marginal GP parameters are sub-optimal, as the threshold
-    $b_{ts}$ may be ill-chosen.  This is an inherent weakness of choosing
-    the threshold via the empirical quantile function, which creates a 
-    tradeoff---to use some other method than the empirical quantile function would necessarily imply 
-    non-uniform marginal probabilities of threshold exceedence, upon the assumption of which some other 
-    aspects of our analysis are based. \makenote{[are they?]}
+    from the posterior predictive distribution $W_{s}^* \geq 0$.
 
 \begin{figure}[ht]
     \centering
@@ -71,26 +65,25 @@ We can subjectively assess recovery of marginal empirical CDF, using marginal
     make plot for packer terminal?}}
 \end{figure}
 
-In Figure~\ref{plot:marginal_doverafb}, we observe said marginal empirical and posterior-predictive
+In Figure~\ref{plot:marginal_doverafb}, we observe the marginal empirical and posterior-predictive
     CDF's for storm surge at Dover Air Force Base.  As previously mentioned, this location is adjacent
     to Delaware Bay, approximately 2 miles inland, with a direct line of sight out the mouth of the
     bay towards the open ocean.  Take note in particular, that the empirical CDF of $\bm{w}_s$ shows
     that storm surge does not reach Dover AFB in approximately \num{44} percent of storms, 
     post-thresholding.
-
 In Figure~\ref{plot:marginal_pia}, we see the same marginal CDF's, for the Philadelphia International
     Airport.  Recall, this airport is situated along the banks of the Delaware River; storm surge
     has much further to travel to reach this point, and yet it experiences inundation much more 
-    frequently, owing to that its elevation is only 4 feet above sea level, rather than the 9 feet
-    of Dover AFB \makenote{[confirm]}.
+    frequently, owing to the fact that its elevation is only 4 feet above sea level, 
+    rather than the 9 feet for Dover AFB \makenote{[confirm]}.
 
 \begin{table}[ht]
 \centering
-\input{./tables/cluster_concentration}
 \caption{Cluster concentration for identified models and fitting 
         methods, on the \emph{Restricted} Slice: columns specify quantiles 
         detailing the proportion of data contained within the table cells 
         indicated number of clusters.\label{tab:cluster_concentration}} 
+\input{./tables/cluster_concentration}
 \end{table}
 
 Looking at equivalent marginal plots for all locations, nearly all preserve the
@@ -113,14 +106,25 @@ Looking at equivalent marginal plots for all locations, nearly all preserve the
 \caption{Number of emergent clusters identified via posterior sampling.\label{tab:extant_clusters}}
 \end{table}
 
-We previously discussed Equation~\ref{eqn:condsurv}, which establishes the conditional probability of
-    exceeding a specified threshold for some set of dimensions given other dimensions exceed their specified 
+    \bruno{\bf Let me see if I understand what you are trying to say. The CDFs obtained from the models with a 
+    regression component are the ones that are closer to the empirical CDFs, right? And the variational Bayes 
+    are the ones that are the farther, right? Taking this as a measure of the
+    ability of the model to replicate the observed data (what you call
+    fidelity), this provides an indication of goodness of fit, right? Looking at
+    the number of clusters that are estimated from each of the different
+    approaches, it looks like the larger the number of clusters, the closer the estimated 
+    CDF is to the empirical one. That makes sense, as the empirical CDFhas not clusters, 
+    every data point is a cluster. Is this the story you want to tell? Can you try doing
+    that in a clearer way?}
+
+\subsection{Conditional Survival Curves}
+From Equation~\ref{eqn:condsurv}, we can obtain the conditional probability of
+    exceeding a specified threshold for some set of components, given that other dimensions exceed their specified 
     threshold. Using the \emph{Critical} slice with a model fitted via MCMC, we use this equation to establish 
-    conditional survival curves 
-    for three locations: Dover Air Force Base, Philadelphia International Airport, as well as the Packer Avenue
-    Marine Terminal, a major shipping hub.  Packer Avenue Terminal is only a few miles up the Delaware River from
-    PIA, so we may expect a strong association in extreme behavior between those two locations.
-    In keeping with our goal of a practical actionable metric, we 
+    conditional survival curves for three locations: Dover Air Force Base, Philadelphia International Airport, 
+    as well as the Packer Avenue Marine Terminal, a major shipping hub.  Packer Avenue Terminal is only a few 
+    miles up the Delaware River from PIA, so we may expect a strong association in extreme behavior between 
+    those two locations. In keeping with our goal of a practical actionable metric, we 
     consider three scenarios where we observe extreme behavior further out in the bay than the positions of
     interest.  In the \emph{Lower Bay} scenario, we observe extreme behavior at sites on the south side of the 
     bay towards the entrance of the bay.  That is, a scenario in which sites 1,2, and 7 (Beebe Hospital, 
@@ -131,7 +135,6 @@ We previously discussed Equation~\ref{eqn:condsurv}, which establishes the condi
     the mouth of the bay.  This includes sites 1, 2, 3, and 4 (Beebe Hospital, Henlopen Memorial Park, 
     Paramount Airport, and the Cape Regional Medical Center). 
 
-\subsection{Conditional Survival Curves}
 \begin{figure}[htb]
     \begin{subfigure}[t]{0.31\textwidth}
         \centering

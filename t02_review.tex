@@ -1,12 +1,3 @@
-\st{Our analysis of the SLOSH data's extremal dependence requires some background.  
-    \makenote{more appropriate location?}  For 
-    convenience, let's also take this opportunity to define some of the notation 
-    that will be used throughout the paper.  Let $i = 1,\ldots,n$ iterate over 
-    observations in data.  In this context, that refers to \emph{storms}.
-    Let $s = 1,\ldots,S$  iterate over dimensions in data.  In this context, 
-    $s$ refers to \emph{sites}, or locations.}
-
-%\subsection{Extreme Value Theory\label{ref:evt}}
 \makenote{first paragraph basically copy-pasted from ndpg.  Rephrase more?}
 Extreme value theory uses the limited information available in a sample to
     characterize the tails of a distribution.  In the univariate case, asymptotic
@@ -53,24 +44,22 @@ The multivariate PoT model considered in this paper has been developed
     As $R$ and $\bm{V}$ are independent,  the distribution of $\bm{V}$ is 
     effectively the dependence structure of $\bm{W}$.
 
-\bruno{We consider observations $\bm{w}_{i} = (w_{i1}, \ldots , w_{iS})$, where $i =1 ,\ldots m ,n$. 
-For the case of the SLOSH simulations, $i$ indexes storms, and $s$ indexes the grid
-cell in the simulation output.}
-\st{Let} \bruno{Define as} the threshold $b_{qs} = \hat{F}_{s}^{-1}(1 - q)$, where $\hat{F}$ is
+We consider observations $\bm{w}_{i} = (w_{i1}, \ldots , w_{iS})$, where 
+    $i =1 ,\ldots m ,n$. For the case of the SLOSH simulations, $i$ indexes 
+    storms, and $s$ indexes the grid cell in the simulation output.
+    Define as the threshold $b_{qs} = \hat{F}_{s}^{-1}(1 - q)$, where $\hat{F}$ is
     the empirical cumulative distribution function for the $s$th component.
     Marginally, values exceeding the threshold $b_{qs}$ are assumed to follow
     a univariate generalized Pareto distribution, and are used to estimate the
     corresponding marginal scale and shape parameters $a_{s}$ and $\xi_{s}$
-    respectively.  \st{Setting $\bm{b}$ and having inferred $\bm{a}$, and $\bm{\xi}$, 
-    we transform $\bm{w}\mid \bm{w}\not\leq \bm{b}$ to a standard multivariate 
-    Pareto form via the transformation} \bruno{Let}
+    respectively.  Let
     \begin{equation}
         \label{eqn:standardization}
         z_{is} = \left(1 + \xi_{s}\frac{w_{is} 
             - b_{s}}{a_{s}}\right)_{+}^{1 / \xi_{s}}
     \end{equation}
     where $(\cdot)_+$ indicates the positive parts function.  Let 
-    $r_i = \lVert \bm{z}_i\rVert$, and $\bm{v}_i = \bm{z}_i / r_i$.  Due to 
+    $r_i = \lVert \bm{z}_i\rVert_{\infty}$, and $\bm{v}_i = \bm{z}_i / r_i$.  Due to 
     thresholding, $i$ ranges from 1 to $m\leq n$, and $r_i > 1$.  \st{Recall that
     $R\in (1, \infty)$ will, by design, follow a standard Pareto distribution,
     the inferential task left to us is describing the distribution of the
@@ -95,15 +84,14 @@ A suitable distribution for $\bm{V}$ can be approximated by projecting a
     where $y = (y_1,\ldots,y_{d-1}) \in \mathbb{S}_{p}^{d-1}$, $r > 0$, and 
     $y_d = (1 - \sum_{s = 1}^{d-1}y_{s}^p)^{\frac{1}{p}}$.
     By transforming $\bm{x}$ to $(r,\bm{y})$ and integrating out $r$, we
-    \st{succeed in establishing} \bruno{obtain} a distribution for $\bm{y}$ on 
-    $\mathbb{S}_{p}^{d-1}$.
+    obtain a distribution for $\bm{y}$ on $\mathbb{S}_{p}^{d-1}$.
     The Jacobian of the transformation in Equation~\eqref{eqn:projection} is
     $r^{d-1}[Y_d + \sum_{s = 1}^{d-1}y_{s}^py_d^{1-p}]$.
     This Jacobian is well suited to a product of gammas density, where 
     $f(\bm{x}\mid\bm{\alpha},\bm{\beta}) = 
         \prod_{s = 1}^d\mathcal{G}(x_{s}\mid\alpha_{s},\beta_{s})$.
     Transforming $\bm{x}$ as described, $r$ can be integrated out in closed
-    form, \st{leaving} \bruno{yielding} the \emph{projected gamma} density for arbitrary $p > 0$,
+    form, yielding the \emph{projected gamma} density for arbitrary $p > 0$,
     \[
         f(\bm{y}\mid\bm{\alpha},\bm{\beta}) = \prod_{s = 1}^d\left[
             \frac{\beta_{s}^{\alpha_{s}}}{\Gamma(\alpha_{s})}
@@ -114,17 +102,15 @@ A suitable distribution for $\bm{V}$ can be approximated by projecting a
                 \right)^{\sum_{s = 1}^d \alpha_{s}}
             }.
     \]
-    \st{Of course,} \bruno{Unfortunately,} at $p=\infty$, the transformation is not differentiable, so a 
-    direct projection onto $\mathbb{S}_{\infty}^{d-1}$ is not possible. \st{We
-    instead desire a high but finite $p$.
-    Here we balance two issues:} \bruno{Yet,} as $p\to\infty$, \st{the space} $\mathbb{S}_{p}^{d-1}$ 
-    will approach \st{asymptotically towards} $\mathbb{S}_{\infty}^{d-1}$.
-    Unfortunately, \st{also} as $p\to\infty$, the stability of the Jacobian of the
-    transformation becomes increasingly dependent on the value, or choice, of 
-    $y_d$.  If $y_d\to 0$, then the Jacobian diverges, and the distribution 
-    becomes numerically unstable. We select $p = 10$ to balance these concerns.
+    Unfortunately, at $p=\infty$, the transformation is not differentiable, so a 
+    direct projection onto $\mathbb{S}_{\infty}^{d-1}$ is not possible. Yet,
+    as $p\to\infty$, $\mathbb{S}_{p}^{d-1}$  will approach $\mathbb{S}_{\infty}^{d-1}$.
+    Unfortunately, as $p\to\infty$, the stability of the Jacobian of the transformation 
+    becomes increasingly dependent on the value, or choice, of $y_d$.  If 
+    $y_d\to 0$, then the Jacobian diverges, and the distribution becomes numerically 
+    unstable. We select $p = 10$ to balance these concerns.
 
-To more \st{aithfully} \bruno{flexibly} capture the structure of the data, we use the projected gamma density 
+To more flexibly capture the structure of the data, we use the projected gamma density 
     as a kernel density of a Bayesian non-parametric mixture model, based on 
     the Pitman-Yor process introduced in~\cite{perman1992}.  A Pitman-Yor process
     is a fully atomic measure specified by two parameters and a centering
@@ -145,14 +131,8 @@ To more \st{aithfully} \bruno{flexibly} capture the structure of the data, we us
     truncation for the number of mixture components and, thus, $j\in \lbrace 1,\ldots,J\rbrace$ 
     denotes indexing over \emph{clusters}.}
 
-\st{For the rest of this paper, let $i$ denote indexing over storm simulations (observations), 
-    specifically those which survived the thresholding necessitated by the assumption of 
-    .  Let $s \in \lbrace 1, \ldots, S\rbrace$ denote indexing 
-    over locations t which the storm surge is simulated.  That is,} \bruno{Let} $y_{is}$ \st{is the maximum 
-    simulated} \bruno{be the }
-    storm surge at location $s$ during storm $i$, after \bruno{thresholding  and }projection onto $\mathbb{S}_p^{d-1}$.
-    \st{Let $j\in \lbrace 1,\ldots,J\rbrace$ denote indexing over \emph{clusters}, the aforementioned
-    mixture components up to truncation point $J$.}  Then, the model can be specified as
+Let $y_{is}$ be the storm surge at location $s$ during storm $i$, after thresholding and projection 
+    onto $\mathbb{S}_p^{d-1}$.  Then, the model can be specified as
     \begin{equation}
         \label{eqn:pypg}
         \begin{aligned}
@@ -178,15 +158,16 @@ To more \st{aithfully} \bruno{flexibly} capture the structure of the data, we us
     Then the full conditional distribution of $\delta_i$ is
     \begin{equation}
         \label{eqn:pdelta}
-        \text{P}\left(\delta_i = j\mid \bm{y},\bm{\alpha},\bm{\nu}\right) = 
+        \text{P}\left(\delta_i = j\mid \bm{y},\bm{\alpha},\bm{\chi}\right) = 
             \frac{p_j\mathcal{PY}(\bm{y}_i\mid\bm{\alpha}_j)}{
                 \sum_{k = 1}^J p_k\mathcal{PY}(\bm{y}_i\mid\bm{\alpha}_j)}
                 \;\hspace{0.5cm}\;
-            \nu_j\mid\bm{\delta} \sim \mathcal{B}\left(1 + n_j - d,\; 
+            \chi_j\mid\bm{\delta} \sim \mathcal{B}\left(1 + n_j - d,\; 
                             {\textstyle \sum}_{k = j+1}^J n_k + \eta + jd\right)
     \end{equation}
-    where $p_j = \nu_j\prod_{k=1}^{j-1}(1 - \nu_k)$,  as described in in 
+    where $p_j = \chi_j\prod_{k=1}^{j-1}(1 - \chi_k)$,  as described in in 
     Equation~\eqref{eqn:stickbreak}, and $n_j = \sum_{i = 1}^n\bm{1}_{\delta_i = j}$.
+    % \bruno{\bf I got lost here. What is $\bm{\nu}$?}
     We can further introduce a latent $r_i\mid \bm{y}, \delta_i,\bm{\alpha} \sim 
         \mathcal{G}\left(r\mid \sum_s \alpha{\delta_is},\sum_s y_{is}\right)$ such that the
     likelihood of $\bm{\alpha}_j$ becomes separable by dimension.  Posterior updates 
@@ -195,19 +176,18 @@ To more \st{aithfully} \bruno{flexibly} capture the structure of the data, we us
 
 Such a fitting scheme can work well for a moderately sized inference problem.  In \cite{trubey:pg},
     they report requiring approximately \num{20} minutes to run the sampler for \num{40000} iterations, 
-    on \st{an inference task of} \bruno{a problem with} \num{532} observations $\times$ \num{47} sites.  If we want to conduct
+    on a problem with \num{532} observations $\times$ \num{47} sites.  If we want to conduct
     MCMC inference for more sites, and more observations, the sampler may need more iterations to
-    reach convergence, each iteration will require more CPU time, and the sampler \st{require more 
-    memory resources to hold the sampling history} \bruno{will have an increasing memory footprint. 
-    Thus, we consider, as an alternative, a variational inference approach.}
-    \st{We consider an alternative method of model fitting.}
+    reach convergence, each iteration will require more CPU time, and the sampler will have an 
+    increasing memory footprint. Thus, we consider, as an alternative, a variational inference approach.
 
 \subsection{Variational Inference - A Brief Overview\label{ref:varbayes}}
 Variational inference, or variational Bayesian statistics, is an alternative method of 
     model-fitting that proposes, if the target distribution is analytically intractable,
     to fit a tractable candidate distribution as \emph{close} to the target distribution
-    as possible. \bruno{\bf You need some references here.} That is, for data $\bm{x}$ and some distributional parameter set $\bm{\theta}$,
-    where $f(\bm{\theta}\mid \bm{x})$ is not available in closed form, then we select
+    as possible. \bruno{\bf You need some references here.} That is, for data $\bm{x}$ and some 
+    distributional parameter set $\bm{\theta}$, where $f(\bm{\theta}\mid \bm{x})$ is not 
+    available in closed form, then we select
     \begin{equation}
         \label{eqn:optimalq}
         q^*(\bm{\theta}) = \argmin_{q\in\mathcal{Q}}\left\lbrace
@@ -350,6 +330,7 @@ As we are considering a mixture model where potentially there exists a label swi
     issue, if the initializing distribution of mixture component parameters provides
     \emph{decent} coverage of the distribution of optimal parameters, then the most 
     important part of the initialization is the distribution of mixture \emph{weights}.  
+    \bruno{\bf You mean $p_j$?}
     Here we consider three strategies.  First is random initialization, 
     \makenote{checking now if initialization at prior parameters will yield better result}.
     (\emph{VB Random}).  Second is uniform initialization---initializing the variational 
@@ -357,7 +338,7 @@ As we are considering a mixture model where potentially there exists a label swi
     of cluster assignment is uniform among all clusters up to the truncation point. That 
     is, for truncation point $J$,
     \[
-        \text{E}[\bm{\nu}] = \left(\frac{1}{J},\frac{1}{J-1},\ldots,\frac{1}{3},\frac{1}{2}\right)
+        \text{E}[\bm{\chi}] = \left(\frac{1}{J},\frac{1}{J-1},\ldots,\frac{1}{3},\frac{1}{2}\right)
     \]
     leading to $\text{E}[p_j] = \frac{1}{J}$ for all $j = 1,\ldots,J$.
     Finally, we consider two variations of \emph{pregaming} 
@@ -365,7 +346,7 @@ As we are considering a mixture model where potentially there exists a label swi
     the variational algorithm, by setting the starting position using the results of an 
     abridged MCMC sampler.  
     Recall Equation~\eqref{eqn:pdelta}. In the variational distribution $q$, we approximate the 
-    posterior distribution of $\nu$ using a $\text{Logit}\mathcal{N}(\mu,\sigma^2)$ density.  
+    posterior distribution of $\chi$ using a $\text{Logit}\mathcal{N}(\mu,\sigma^2)$ density.  
     Following \cite{aitchison1980}, the \emph{best} approximation to 
     $\mathcal{B}(\alpha_1,\alpha_2)$ as measured by minimum KL divergence is achieved by 
     letting $\mu = \psi(\alpha_1) - \psi(\alpha_2)$, and 
@@ -373,10 +354,11 @@ As we are considering a mixture model where potentially there exists a label swi
     $\psi(\cdot)$ and $\psi^{\prime}(\cdot)$ represent the digamma and trigamma functions 
     respectively.  We take these values $\bm{\mu}$, $\bm{\sigma^2}$ as the starting position for
     the variational approximation. In the first method, \emph{VB Pregamed 1}, 
-    we update $\bm{\nu}$, sampling new $\bm{\alpha}_j$'s using the initial setting
+    we update $\bm{\chi}$, sampling new $\bm{\alpha}_j$'s using the initial setting
     for the centering distribution.  In the second (\emph{VB Pregamed 2}), we update the
     the parameters for the centering distribution as well. 
     \makenote{I should probably remove the first approach?  It clutters results needlessly.}
+    \bruno{\bf I am having a hrad time following this.}
 
 \begin{figure}[htb]
     \caption{Rise in energy score over baseline by number of dimensions, on simulated data 
@@ -404,32 +386,30 @@ As the metric for our evaluation, we use the \emph{energy score} criterion \cite
     $\bm{X},\bm{X}^{\prime}$ are posterior predictive replicates of $\bm{x}$.
     When energy score is used with an appropriate negative definite kernel 
     metric, it forms a \emph{proper} scoring rule. The specific negative 
-    definite kernel we use is described in Prop.~3 of \cite{trubey:pg}.  Though 
-    geodesic distance on $\mathbb{S}_{\infty}^{d-1}$ is computationally inefficient,
-    for points on two different faces of $\mathbb{S}_{\infty}^{d-1}$,
-    they find a computationally efficient upper bound on geodesic distance by 
-    remembering that all faces are pairwise adjacent, and rotating one face into the
-    same hyperplane as the other.  Then the kernel metric is the Euclidean distance
-    between the first point, and the rotated second point.
+    definite kernel we use is described in Prop.~3 of \cite{trubey:pg}, 
+    and leverages the fact that all faces of $\mathbb{S}_{\infty}^{d-1}$
+    are pairwise adjacent.  By rotating the face of the second point into 
+    the same hyperplane as that of the first, the kernel metric is the Euclidean 
+    distance between the first point, and the rotated second point.
     
-Figure~\ref{fig:energyscore} displays the results of our foray looking into this 
-    notion of an optimal starting position, by examining the rise in energy score 
+Figure~\ref{fig:energyscore} displays the results of our simulation, using the rise in energy score 
     calculated from a posterior predictive sample from the fitted model against the target 
     sample, over a baseline energy score calculated using another random sample from the same 
-    generating distribution.  We interpret this value as the \emph{closer} the curve is to 0, 
-    the higher the fidelity with which the model recovers the generating distribution.  
-    We investigate this recovery under a variety of conditions increasing the number of dimensions,
-    as well as the number of mixture components in the generating distribution. With this simulation
-    study, we see that
+    generating distribution.  Thus, small values indicate high fidelity of the model in 
+    capturing the generating distribution. We investigate this recovery under a variety of 
+    conditions increasing the number of dimensions, as well as the number of mixture components 
+    in the generating distribution. With this simulation study, we see that
     a pure MCMC approach achieves the best model fidelity, but \emph{VB Pregamed 2}, using 
     the abridged MCMC sampler to set a starting value for both the centering distribution 
     and cluster weights, achieves a model fidelity in terms of energy score that is very
     nearly indistinguishable from the MCMC model, at least in the scale for which we can test.
-    Note, as the dimensionality of the problem grows, energy score becomes less able to assess 
+    Note that, as the dimensionality of the problem grows, energy scores become less able to assess 
     model fidelity, as the distance between each observation or replication will approach a 
     constant value.\makenote{(needs citation--this is a result from high-dimensional knn)}.
+    \bruno{\bf We need to indicate that the "MCMC-initialized VB" is better than the
+    MCMC because it is (I guess) faster}
 
-\subsection{Sea, Lake, and Overland Surge from Hurricanes (SLOSH)\label{ref:slosh}}
+\subsection{\bruno{Extreme value analysis of SLOSH output}}
 As the motivating example for our analysis of the extremal dependence structure, we 
     use the aforementioned SLOSH dataset, which simulates the storm surge resulting 
     from hurricanes over a wide grid.  Our interest is specifically in describing 
@@ -488,20 +468,31 @@ As the motivating example for our analysis of the extremal dependence structure,
     \includegraphics{plots/slosh_bounds}
 \end{figure}
 
-As previously stated, we require the marginal threshold for excesses to be above 0.  We choose
-    to implement this restriction at the 90th percentile, which defines the \emph{Threshold} slice.
-    \makenote{insert data descriptions}.  Figure~\ref{fig:slosh_bounds} shows the boundaries of 
-    storm approach angles in the SLOSH data---observe that this rather restricted region, 
+\st{As previously stated, we require the marginal threshold for excesses to be above 0.  We choose
+    to implement this restriction at the} \bruno{The validity of the proposed PoT model depends on
+    asymptotic results that consider observations above a very large threshold. To define a threshold
+    for each location in the simulation output we take the} 90th percentile \bruno{of the observations
+    per location.}\st{, which defines} \bruno{The resulting thresholded sample corresponds to} the 
+    \emph{Threshold} slice.
+    \makenote{insert data descriptions}.  \bruno{Additional reduction of the sample is produced by
+    considering the bounds of the storm approach angles, one of the SLOSH inputs. }
+    Figure~\ref{fig:slosh_bounds} shows \st{the} \bruno{those} boundaries \bruno{over a portion of 
+    the coastline. We}\st{of  storm approach angles in the SLOSH data---}observe that this 
+    \bruno{is a} rather restricted region, 
     in comparison to the extent of the data displayed in Figure~\ref{fig:slosh1run},
-    somewhat limits the applicability of our methods of analysis in regions outside
-    of Delaware bay and its surrounding area.  For this reason, we restrict our analysis
-    to this region, creating the \emph{Delaware Bay} slice.  Further refining analysis to locations 
-    of particular interest, we use the feature class codes of the locations to isolate location types
+    \st{somewhat} \bruno{and} limits the applicability of our methods \st{of analysis in regions outside
+    of} \bruno{to the} Delaware bay and its surrounding area. \bruno{This corresponds to} \st{For this 
+    reason, we restrict our analysis to this region, creating} the \emph{Delaware Bay} slice.  Further 
+    \st{refining analysis to locations} \bruno{refinement of the sample is performed by focusing on 
+    locations}  of particular interest, \st{we} \bruno{identify through the} use the feature class 
+    codes \st{of the locations to isolate} \bruno{that correspond to different} location types
     \makenote{remove the most common feature classes} of interest.  These form the \emph{Restricted} slice.
-    Finally, we isolate the data to a few locations of critical interest, as well as a selection of
-    locations around the bay to inform conditional analysis.  These form the \emph{Critical} slice.
-    The relative sizes of these inferential tasks is detailed in Table~\ref{tab:datasets}.  Having
-    a variety gives us the opportunity to discuss relative strengths of particular types of analysis.
+    Finally, we \st{isolate} \bruno{restrict} the data to a few locations of critical interest, 
+    as well as a selection of locations around the bay to inform conditional analysis.  These 
+    form the \emph{Critical} slice. The \st{relative} sizes of \st{these inferential tasks is detailed}
+    \bruno{the different subsamples of the original simulation output, considered in our analysis are
+    reported }in Table~\ref{tab:datasets}.  \st{Having
+    a variety gives us the opportunity to discuss relative strengths of particular types of analysis.}
 
 \begin{figure}[htb]
     \centering 
@@ -512,9 +503,9 @@ As previously stated, we require the marginal threshold for excesses to be above
     \includegraphics[width=0.9\linewidth]{plots/threshold_histogram}
 \end{figure}
 
-Figure~\ref{fig:thetahistogram} shows the marginal histograms of storm parameters, for 
+Figure~\ref{fig:thetahistogram} shows the marginal histograms of \st{storm} \bruno{SLOSH input} parameters, for 
     storms which exhibited extreme behavior in the \emph{Threshold} slice.  Storm parameters 
-    in the originating data were sampled via Latin hypercube, so would appear marginally
+    in the \st{originating data} \bruno{original simulation} were sampled via Latin hypercube, so would appear marginally
     uniform.  The difference between marginal uniform, and the observed densities provides
     some indication of what characteristics are necessary for a storm to exceed the threshold.
     Imprimis, for sea level rise it is readily apparent that a higher sea level will

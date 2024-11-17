@@ -1,20 +1,20 @@
 \subsection{Regression on the unit sphere\label{ref:regression}}
-To consider storm-relevant information in ascertaining probability of a significant storm surge event, 
-    we develop a novel regression model for angular data situated on $\mathbb{S}_p^{d-1}$.  Consider
+To consider storm-relevant information in the estimation of the probability of a significant 
+    storm surge event, we develop a novel regression model for angular data in $\mathbb{S}_p^{d-1}$.  
+    Consider
     \[
         \bm{y}_i \sim \mathcal{PG}(\bm{y}\mid g(\bm{x}_i^T\bm{\theta}), \bm{1})    
     \]
-    where $g(\cdot)$ is a linking function that maps $\mathbb{R}\to\mathbb{R}_+$ to maintain the
-    viability of inputs for the underlying gamma density.  For our purpose, we use the \emph{softplus}
-    function, $g(x) = \log[1 + \exp(x)]$.  This asymptotically approaches identity for $x > 0$, and 
+    where $g(\cdot)$ is a link function that maps $\mathbb{R}\to\mathbb{R}_+$ to maintain the
+    viability of inputs for the underlying gamma density.  For our purpose, we use the softplus
+    function, $g(x) = \log[1 + \exp(x)]$.  This asymptotically approaches the identity for $x > 0$, and 
     0 for $x < 0$. The major reason for this choice over the more commonly used $\exp(\cdot)$ is 
-    numerical: for softplus, small deviations in inputs produce small deviations in outputs.  By 
-    comparison, for $\exp(\cdot)$, small deviations in inputs can produce very large deviations in 
-    outputs.  Some discussion is necessary here as to the dimensionality of $\bm{x}_i$ and $\bm{\theta}$.  
+    numerical: for softplus, small deviations in inputs produce small deviations in outputs. Some 
+    discussion is necessary here as to the dimensionality of $\bm{x}_i$ and $\bm{\theta}$. 
     Consider a vector $\bm{x}_i$ of dimension $d$, where we might expect each element of $\bm{x}_i$ 
     to contribute to each dimension $s$ of $\bm{y}_i$.  We call a model \emph{fully specified} if, 
     for each dimension $s$, we have a vector $\bm{\theta}_{is}$, with the same dimensionality as 
-    $\bm{x}$.. With some abuse of notation, the fully specified model can be written as
+    $\bm{x}$. With some abuse of notation, the fully specified model can be written as
     \[
         \bm{y}_i \sim \int_0^{\infty}
             \prod_{s = 1}^S \mathcal{G}\left(r_iy_{is}\mid 
@@ -61,7 +61,8 @@ To consider storm-relevant information in ascertaining probability of a signific
     \centering
     \caption{Posterior predictive distribution under a \emph{fully specified} model, colored 
         by cluster.  Left is the regressors, $\bm{X}$.  Center is 
-        $g(\bm{x}_i^T\bm{\theta}_j + \bm{\epsilon}_i)$ projected onto $\mathbb{S}_1^2$.
+        $g(\bm{x}_i^T\bm{\theta}_j + \bm{\epsilon}_i)$ projected onto $\mathbb{S}_1^2$.  Right
+        is a sample of the posterior predictive distribution using the same regressors.
         \label{fig:simreg}}
     \includegraphics[width = \textwidth]{plots/simulated_reg}
 \end{figure}
@@ -76,7 +77,7 @@ The fully specified model is extremely inefficient. As $S$ increases, the dimens
     elevation above sea level, and $\bm{x}_{is,\text{int}}$, any interaction thereof.
     We include a single interaction term describing the distance between the location of the storm eye 
     at landfall, and that of location $s$, in hectomiles. This results in a $\bm{\theta}$ of dimension 
-    $5 + 3 + 1 = 9$.  Then we may add an additional fixed effect by location, $\varepsilon_s$.  Thus for 
+    $5 + 3 + 1 = 9$.  Then we may add an additional random effect by location, $\varepsilon_s$.  Thus for 
     analysis of the SLOSH data we formulate the regression model as
     \begin{equation}
         \label{eqn:regressionmodelredux}

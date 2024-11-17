@@ -1,38 +1,35 @@
 \subsection{Posterior clustering of storms}
-One potential application leveraging use of a Bayesian non-parametric prior is 
-    exploiting the clustering inherent to the method to identify emergent clusters of
-    data---observations that act similarly.  Recall $\delta_i$ is the 
-    cluster identifier for observation $i$.  Sampling of $\delta_i$ is made explicit in
-    the MCMC model, though it is integrated out in our variational model. In
-    posterior analysis, given $\bm{\alpha}$, and $\bm{\pi}$, where 
-    $\pi_j = \nu_j\prod_{k = 1}^{j-1}(1 - \nu_k)$, a conditional probability of cluster 
-    assignment can be calculated as
+One potential application leveraging the use of a Bayesian non-parametric prior is 
+    exploiting the clustering of observations with similar characteristics.  
+    Recall that $\delta_i$ is the cluster identifier for observation $i$. Within the 
+    MCMC considered in this work $\delta_i$ is explicitly sampled, though \st{it is integrated out}
+    in our variational \st{model} \bruno{approach}. \bruno{Notice that, given
+    samples of the posterior distribution of }\st{In posterior analysis, given} 
+    $\bm{\alpha}$, and $\bm{\pi}$, \st{where} \bruno{define} 
+    $\pi_j = \nu_j\prod_{k = 1}^{j-1}(1 - \nu_k)$. \bruno{Then,} the conditional 
+    probability of cluster  assignment can be calculated as
     \begin{equation}
         \label{eqn:clusterprob}
         \text{P}\left(\delta_i = j\mid\bm{\alpha},\bm{\pi},\bm{y}_i\right) 
             = \frac{\pi_j\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_j,\bm{1})}{
             \sum_{k = 1}^J \pi_j\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_k,\bm{1})}.
     \end{equation}
-    This approach relies on samples of $\bm{\alpha},\bm{\nu}$ from the fitted
-    model to generate \emph{loose} clusters for which there is no inherent 
-    labelling.  This can present a problem, as interpretation of clusters first 
-    requires \emph{labelling}, or a fixed assignment of observations to clusters.
-
-The variational implementation would avoid a label-switching issue that may be inherent 
-    to MCMC sampling.  A label-switch between clusters $a$ and $b$ has occurred when
-    the parameters of clusters $a$ and $b$ have nearly swapped, such that the
-    bulk of observations formerly in cluster $a$ are now in cluster $b$, and 
-    visa-versa.  This issue does not completely follow to a variational 
-    implementation, as post-fitting, the distributions of cluster parameters are 
-    fixed.  In practice, we find this concern may be overstated.  In the MCMC model,
+    This approach relies on samples of $\bm{\alpha},\bm{\nu}$ from a model fitted without 
+    cluster labelling. This can present a problem, as interpretation of clusters requires 
+    labelling, or a fixed assignment of observations to clusters, to avoid label switching.
+    A label-switch between clusters $a$ and $b$ occurs when the parameters of clusters 
+    $a$ and $b$ swap, causing the bulk of observations formerly in cluster $a$ to be 
+    classified in cluster $b$, and vice-versa. This issue is not present in a variational 
+    implementation, as, once the variational distribution is obtained, the distributions 
+    of cluster parameters are fixed.  In practice, we find that the label switching 
+    concern may be overstated.  For our example, in the MCMC approach,
     after the sampler reaches convergence, we find the posterior distribution of 
     cluster assignments and resulting cluster parameters to be relatively stable.
 
-With that being said, a means of ascertaining the emergent cluster label of a
-    given observation that is consistent between MCMC and variational approaches
-    might be to take samples of $\bm{\pi}$, $\bm{\alpha}$, and then sample
-    $\bm{\delta}_i$ as per Equation~\eqref{eqn:clusterprob}.  Via this method, we
-    we group observations by their sampled cluster identifier, and count the number
-    of emergent clusters in the data.
+With that being said, a means of estimating the cluster label of a given observation that 
+    is consistent between MCMC and variational approaches is to take samples of $\bm{\pi}$, 
+    and $\bm{\alpha}$, and then sample $\bm{\delta}_i$ following Equation~\eqref{eqn:clusterprob}.  
+    Using this approach, we group observations by their sampled cluster identifier, and count 
+    the number of emergent clusters in the data.
 
 % EOF
