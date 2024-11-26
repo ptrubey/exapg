@@ -1,33 +1,9 @@
 %\subsection{SLOSH}
-\makenote{a lot of this is fluff.}
-Storm surge \st{is localized flooding}, measured as water height above
-    ground level, \st{that arises} \bruno{can produce flooding} as a result of a storm pushing sea-water onto
-    land. Its effect can be catastrophic.  Setting aside potential 
-    for direct loss of life, 
-    flooding can impose costly damage to property: inundation of homes and 
-    businesses destroys possessions, and damages buildings through saturating 
-    walls and eroding foundations.  Corrosion resulting from high--salinity 
-    flooding can create more long--term damage.\makenote{expand}\needcite  
-    Flooding can damage vehicles, such that a single storm can force insurance 
-    companies to declare large quantities of vehicles as total losses. 
-    \makenote{expand}\needcite.  Flooding damages agriculture: beyond 
-    destruction of currently growing or stored crops, or the drowning of 
-    livestock, inundation by storm surge results in the ground absorbing salt
-    which affects the production capacity of the field, or requires expensive
-    abatement.  Flooding can
-    damage infrastructure: flooded roads can be washed out or have their 
-    foundation damaged, flooded sewers and sewage treatment plants can release 
-    their contents above ground imposing additional costs to the environment and
-    public health. Flooded power infrastructure, such as transformers can short 
-    out causing additional damage. \citep{hutchings2021}.  Flooding can impose 
-    additional burdens in the moment:  inundation negatively affects the quality 
-    of emergency services, such as a hospital being rendered unable to intake 
-    patients.  Sufficient flooding may even put an emergency services provider 
-    entirely out of commission.
-    \bruno{\bf This is too much. We all know that flooding is potentially very harmful.
-    Reduce to two sentences. Mention critical infrastructure}
-
-The Sea, Lake, and Overland Surges from Hurricanes (SLOSH)\citep{jelesnianski1992} is a 
+Storm surge, measured as water height above ground level, can produce flooding as a result
+    of a storm pushing sea-water onto land.  Its effects can be catastrophic, potentially
+    disrupting critical infrastructure such as emergency services, logistical services,
+    and military responsiveness.   The Sea, Lake, and Overland Surges from Hurricanes 
+    (SLOSH)\citep{jelesnianski1992} is a 
     computer model developed by the National Weather Service to simulate storm 
     surge, and its associated inundation caused by hurricanes.   Given storm 
     characteristics, the model takes into account local topology, bathymetry, 
@@ -67,68 +43,104 @@ The Sea, Lake, and Overland Surges from Hurricanes (SLOSH)\citep{jelesnianski199
     \caption{Exploration of SLOSH simulation data.\label{fig:sloshexplore}}
 \end{figure}
 
-This paper analyzes SLOSH simulations under an extreme value theory (EVT) framework, 
-    using a peaks-over-threshold model.  EVT is a branch of statistics
-    that focuses on the tails of the distribution---low density regimes where,
-    in this application, the \emph{worst} outcomes occur.  
-    We stress here a caveat. EVT assumes that the originating data are independent
-    and identically distributed; SLOSH simulations do not meet the second criterion.
-    They arise as a result of partially stochastic simulation given a set of input
-    parameters---the storm characteristics.  Those storm characteristics themselves
-    are sampled via Latin hypercube to fill the allowable parameter space.  That
+% This paper analyzes SLOSH simulations under an extreme value theory (EVT) framework, 
+%     using a peaks-over-threshold model.  EVT is a branch of statistics
+%     that focuses on the tails of the distribution---low density regimes where,
+%     in this application, the \emph{worst} outcomes occur.  
+%     We stress here a caveat. EVT assumes that the originating data are independent
+%     and identically distributed; SLOSH simulations do not meet the second criterion.
+%     They arise as a result of partially stochastic simulation given a set of input
+%     parameters---the storm characteristics.  Those storm characteristics themselves
+%     are sampled via Latin hypercube to fill the allowable parameter space.  That
+%     having been said, application of the EVT framework to SLOSH still provides us
+%     with a great deal of information.  It is with that caveat that we continue analysis.
+%     Figure~\ref{fig:sloshexplore} provides a visual depiction of the SLOSH 
+%     simulation data. Figure~\ref{fig:slosh1run} indicates the output of a single storm 
+%     surge simulation using the SLOSH model.  To the right of the map is a 
+%     histogram (with log-scale counts) displaying observed levels of inundation 
+%     in the storm, color-coded by the height of the surge at that location.  In this
+%     plot, there were 45 locations with surge greater than 9 feet above ground level,
+%     with the maximum value being approximately 19 feet above.  Such occurrences
+%     are highly localized, and are not visible at this scale, so we truncated surge values
+%     in this plot at 9 feet.  We should also 
+%     note here that a storm takes some time to occur, and thus values recorded at 
+%     two locations in a single storm are not necessarily simultaneous.
+%     In Figure~\ref{fig:sloshthreshold}, we have selected SLOSH grid 
+%     cells that are in the vicinity of physical features, or locations, of 
+%     interest.  Displayed are the 90th percentile 
+%     of inundation for SLOSH simulations at each of those physical features.
+%     We make clear now, that this analysis is primarily concerned with the
+%     inferring and applying the dependence structure between storm surge at these locations,
+%     for storm simulations
+%     that are in excess of this threshold in at least one identified location.
+%     Our goal is then a consistent and performant model for multivariate extremes, 
+%     such that we can learn the dependence structure of extremes in the inundation field.
+
+This paper analyzes SLOSH simulations under an extreme value theory (EVT) framework,
+    using a peaks-over-threshold model.  EVT is a branch of statistics that focuses
+    on the tails of the distribution---low density regimes where, in this application,
+    the \emph{worst} outcomes occur.  The primary tenet of EVT is the ability to infer,
+    from a limited sample, how likely it is that the generating process behind an outcome
+    will produce an outcome in excess of a specified value. Via application of univariate 
+    EVT, it would be easy to produce this quantity for a given cell, or location, but 
+    in doing so would ignore the wealth of information available pertaining to the complex 
+    dependency relationships between locations.  Multivariate EVT is an active 
+    field of research that seeks to model these dependencies, to produce more meaningful
+    and rich analyses.  With this, it seeks the joint probability that two or more locations
+    will exhibit extreme behavior.  This advancement, and products derived thereof,
+    are key information in the management of critical infrastructure.
+
+Storm parameters for the SLOSH model were sampled via Latin hypercube---a space-filling
+    technique, that attempts to evenly cover the sample space, and without an imposed.
+    samples thus appear marginally uniform, and lack any observable covariance structure.
+    Figure~\ref{fig:sloshexplore} provides a visual depiction of the SLOSH simulation 
+    output.  In particular, Figure~\ref{fig:slosh1run} indicates the output of a single 
+    simulated storm using the SLOSH model.  Observe there is data extending from the 
+    Chesapeake Bay inlet, to the Eastward tip of Long Island.  In this plot, observed 
+    surge was truncated to 9 feet.  There were 45 cells in excess of this, up to 19 feet.
+    Such phenomena are highly localized, and not visible at this scale.  We also mention
+    that cell values for a single simulation are not reported simultaneously.  Each cell 
+    reports its maximum simulated value over the course of the storm.  In 
+    Figure~\ref{fig:sloshthreshold}, we have selected SLOSH grid cells that are in the 
+    vicinity of physical features, or locations, of interest, and selected the storm
+    surge at the 90th percentile for each location.
+    Here We stress here a caveat. EVT assumes that the originating data are independent
+    and identically distributed.  SLOSH simulations do not meet strictly meet this 
+    second criterion.  They arise as a result of partially stochastic simulation 
+    given a set of input parameters---the storm characteristics. That
     having been said, application of the EVT framework to SLOSH still provides us
     with a great deal of information.  It is with that caveat that we continue analysis.
-    Figure~\ref{fig:sloshexplore} provides a visual depiction of the SLOSH 
-    simulation data.  Figure~\ref{fig:slosh1run} indicates the output of a single 
-    storm surge simulation using the SLOSH model. To the right of the map is a 
-    histogram (with log-scale counts) displaying observed levels of inundation 
-    in the storm, color-coded by the height of the surge at that location.  In this
-    plot, there were 45 locations with surge greater than 9 feet above ground level,
-    with the maximum value being approximately 19 feet above.  Such occurances
-    are highly localized, and are not visible at this scale, so we truncated surge values
-    in this plot at 9 feet.  We should also 
-    note here that a storm takes some time to occur, and thus values recorded at 
-    two locations in a single storm are not necessarily simultaneous.
-    In Figure~\ref{fig:sloshthreshold}, we have selected SLOSH grid 
-    cells that are in the vicinity of physical features, or locations, of 
-    interest.  Displayed are the 90th percentile 
-    of inundation for SLOSH simulations at each of those physical features.
-    We make clear now, that this analysis is primarily concerned with the
-    inferring and applying the dependence structure between storm surge at these locations,
-    for storm simulations
-    that are in excess of this threshold in at least one identified location.
-    Our goal is then a consistent and performant model for multivariate extremes, 
-    such that we can learn the dependence structure of extremes in the inundation field.
-    \bruno{\bf This paragraph contains the right idea, but it needs to rewritten. Start
-    by discussing the basic tenet of EVT is the ability to use a sample to infer how
-    likely it is that the process will be over a certain value. You can say that it is
-    straightforward to do this for each individual cell,  but complex dependencies 
-    between cells is lost. Indicate that these are important in order to obtain joint 
-    probabilities that two or more locations will have extreme behavior. A key information
-    for the management of critical infrastructure. Throw in some references. Leave the
-    issue of the sample not being really random to the end of the paragraph, yu don't
-    want to start by being apologetic.}
+    
+    % I broke it into 2 paragraphs--one detailing the use/need of multivariate EVT,
+    % and the other further expanding on the introduction of SLOSH.  I couldn't figure
+    % out where to put the references to the maps in the EVT paragraph, hence the break.
+    %
+    % \bruno{\bf This paragraph contains the right idea, but it needs to rewritten. Start
+    % by discussing the basic tenet of EVT is the ability to use a sample to infer how
+    % likely it is that the process will be over a certain value. You can say that it is
+    % straightforward to do this for each individual cell,  but complex dependencies 
+    % between cells is lost. Indicate that these are important in order to obtain joint 
+    % probabilities that two or more locations will have extreme behavior. A key information
+    % for the management of critical infrastructure. Throw in some references. Leave the
+    % issue of the sample not being really random to the end of the paragraph, yu don't
+    % want to start by being apologetic.}
 
-\makenote{I need to expound upon the necessity/applicability of extreme analysis
-    to inundation.  Mention: importance of tails of the distribution, relevance of
-    extremes to such analysis, }
-
-The paper proceeds as follows:  Section~\ref{ref:review} details the background 
+The paper proceeds as follows:  Section~\ref{sec:review} details the background 
     for the relevant modeling methods and dataset we will be using in this analysis.  
-    In particular, Section~\ref{ref:evt} provides an overview of extreme value 
+    In particular, it provides an overview of extreme value 
     theory, to the justification for separating the magnitude of a multivariate 
-    extreme from its angular component; Section~\ref{ref:pg} describes the process 
+    extreme from its angular component; Section~\ref{sec:pg} describes the process 
     of creating an angular distribution as well as introducing the model we use in 
-    our analysis; and Section~\ref{ref:varbayes} provides a brief review of variational
-    inference which we attempt to use to speed analysis.  Section~\ref{slosh} further
+    our analysis; and Section~\ref{sec:varbayes} provides a brief review of variational
+    inference which we attempt to use to speed analysis.  Section~\ref{sec:slosh} further
     expands the discussion of the SLOSH dataset and how the analysis will proceed.
     Section~\ref{sec:methodology} expounds on the metrics we will be considering in
     our analysis as applications of the fitted angular model.  Further, 
-    Section~\ref{ref:regression} introduces a novel regression model with support
+    Section~\ref{sec:regression} introduces a novel regression model with support
     $\mathbb{S}_{p}^{d-1}$, the positive orthant of the $p$-norm unit sphere.
-    Section~\ref{ref:results} presents our analysis, first evaluating the efficacy of
+    Section~\ref{sec:results} presents our analysis, first evaluating the efficacy of
     variational methods on simulated data as compared to MCMC, then
-    presenting some interesting results. Finally, Section~\ref{ref:conclusion} 
+    presenting some interesting results. Finally, Section~\ref{sec:conclusion} 
     concludes.
 
 % EOF 

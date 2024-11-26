@@ -68,7 +68,7 @@ We consider observations $\bm{w}_{i} = (w_{i1}, \ldots , w_{iS})$, where
     angular component of the tail distribution that corresponds to the
     observations.}
 
-\subsection{Projected Gamma\label{ref:pg}}
+\subsection{Projected Gamma\label{sec:pg}}
 A suitable distribution for $\bm{V}$ can be approximated by projecting a 
     distribution in $\mathbb{R}_+^d$ onto $\mathbb{S}_{p}^{d-1}$.  
     Recall the $\mathcal{L}_p$ norm 
@@ -127,9 +127,9 @@ To more flexibly capture the structure of the data, we use the projected gamma d
     $\bm{\alpha}_j$ are sampled independently from the centering distribution $G_0$.
     Under the Pitman-Yor process, $\chi_j \sim \text{Beta}(1 - d, \eta + jd)$
     where $d \in [0, 1)$ denotes the \emph{discount} parameter and $\eta > -d$
-    denotes the \emph{concentration} parameter. \bruno{Notice that $J$ dennotes a
+    denotes the \emph{concentration} parameter. Notice that $J$ denotes a
     truncation for the number of mixture components and, thus, $j\in \lbrace 1,\ldots,J\rbrace$ 
-    denotes indexing over \emph{clusters}.}
+    denotes indexing over \emph{clusters}.
 
 Let $y_{is}$ be the storm surge at location $s$ during storm $i$, after thresholding and projection 
     onto $\mathbb{S}_p^{d-1}$.  Then, the model can be specified as
@@ -181,13 +181,15 @@ Such a fitting scheme can work well for a moderately sized inference problem.  I
     reach convergence, each iteration will require more CPU time, and the sampler will have an 
     increasing memory footprint. Thus, we consider, as an alternative, a variational inference approach.
 
-\subsection{Variational Inference - A Brief Overview\label{ref:varbayes}}
+\subsection{Variational Inference - A Brief Overview\label{sec:varbayes}}
 Variational inference, or variational Bayesian statistics, is an alternative method of 
     model-fitting that proposes, if the target distribution is analytically intractable,
     to fit a tractable candidate distribution as \emph{close} to the target distribution
-    as possible. \bruno{\bf You need some references here.} That is, for data $\bm{x}$ and some 
+    as possible \citep{blei2017}. That is, for data $\bm{x}$ and some 
     distributional parameter set $\bm{\theta}$, where $f(\bm{\theta}\mid \bm{x})$ is not 
-    available in closed form, then we select
+    available in closed form, we select $q(\bm{\theta})$ from a family of tractable distributions
+    $\bm{Q}$.  Variational inference selects the \emph{optimal} variational distribution $q^*$
+    by minimizing the KL divergence.  Thus,
     \begin{equation}
         \label{eqn:optimalq}
         q^*(\bm{\theta}) = \argmin_{q\in\mathcal{Q}}\left\lbrace
@@ -205,134 +207,154 @@ Variational inference, or variational Bayesian statistics, is an alternative met
     holds each parameter's variational distribution as independent of that from all other 
     parameters in the model.  That is,
     \[
-        q_{\bm{\theta}} = \prod_{\ell \in L}q_{\theta_{\ell}}(\theta_{\ell}\mid
+        q_{\bm{\theta}} = \prod_{\ell \in L}q_{\theta_{\ell}}(\theta_{\ell}\mid\psi_{\ell})
     \]
     If we hold each $q_{\theta_{\ell}}$ to be an appropriate transformation of a normal
     distribution, then each $q_{\theta_{\ell}}$ can be specified by a mean and variance 
     parameter. Some \needcite more complicated flavors of variational Bayes will relax 
     this independence restriction.
 
-To expand, using KL divergence as an analogue to distance, variational inference attempting 
-    to find the \emph{closest} tractable surrogate posterior $q$ within the family 
-    $\mathcal{Q}$ to the true posterior.  
-    As has been explained however, we do not necessarily have 
-    $f(\bm{\theta}\mid\bm{y})$ directly.  Let 
-    $f(\bm{y},\bm{\theta}) = f(\bm{y}\mid\bm{\theta})f(\bm{\theta})$.
-    Then we reformulate the KL divergence into
-    \[
-        \begin{aligned}
-        \text{KL}\infdiv{q(\bm{\theta}\mid\bm{\psi})}{f(\bm{\theta}\mid\bm{x})}
-            &=\text{E}_{\bm{\psi}}\left[\log\left(
-                \frac{q(\bm{\theta}\mid\bm{\psi})}{f(\bm{\theta}\mid\bm{x})}
-                \right)\right] = \text{E}_{\bm{\psi}}\left[
-                \log\left(\frac{q(\bm{\theta}\mid\bm{\psi})f(\bm{x})}{f(\bm{y},\bm{\theta})}
-                \right)\right]\\
-            &= \text{E}_{\bm{\psi}}\left[
-                \log q(\bm{\theta}\mid\bm{\psi}) - \log f(\bm{x},\bm{\theta}) 
-                + \log f(\bm{x})
-                \right]\\
-            &= \text{E}_{q}\left[
-                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})\right] + 
-                   \log f(\bm{x}).
-        \end{aligned}
-    \]
-    Note that the second term, the \emph{evidence}, is constant with respect to 
-    $\bm{\theta}$.  With a bit of rearrangement,
-    \[
-        \begin{aligned}
-        \log f(\bm{x}) 
-            &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
-                - \text{E}_q\left[
-                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})
-                \right]\\
-            &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
-                + \mathcal{L}(\bm{\theta})
-        \end{aligned}
-    \]
-    Thus maximizing $\mathcal{L}(\bm{\theta})$ is equivalent to minimizing the 
-    KL divergence. In this form, as KL divergence is a positive quantity, it is
-    readily apparent that $\mathcal{L}(\bm{\theta})$ establishes a lower bound
-    on the evidence, and maximizing said lower bound is equivalent to minimizing
-    the KL divergence.  Thus the variational literature has christened it the
-    \emph{evidence lower bound}, often abbreviated to \emph{ELBO}.  As such,
-    we can rewrite Equation~\eqref{eqn:optimalq} to
-    \[
-        q^*(\bm{\theta}) = \argmax_{q\in\mathcal{Q}} \mathcal{L}(\bm{\theta})
-    \]
-    Note that we specify $q$ so as to depend on a set of variational parameters 
-    $\bm{\psi}$, such that choosing the optimal $\bm{q}$ means in effect choosing
-    the optimal $\bm{\psi}$.  
-
-Optimization of the ELBO with respect to $\bm{\psi}$ can be accomplished by
-    analytically computing the gradient,
+Through analytic manipulation we can separate the KL divergence into two quantities: the evidence
+    \makenote{insert evidence formula}, and the negative of the evidence lower bound, or \emph{ELBO},
+    \begin{equation}
+        \label{eqn:elbo}
+        \mathcal{L}(\bm{\theta}) = 
+            -\text{E}_q\left[\log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})\right].
+    \end{equation}
+    As the evidence is constant with respect to $q$, minimizing the KL divergence is equivalent to
+    maximizing the ELBO, so restating Equation~\eqref{eqn:optimalq}, we get
+    \begin{equation}
+        \label{eqn:optimalq2}
+        q^*(\bm{\theta}) = \argmax_{q\in\mathcal{Q}} \mathcal{L}(\bm{\theta}).
+    \end{equation}
+    In truth, for a given family $Q$, finding the optimal $q^*$ means finding the optimal parameter set 
+    $\bm{\psi}^*$ such that $q^*(\bm{\theta}) = q(\bm{\theta}\mid\bm{\psi}^*)$.
+    For continuous parameters, optimization of the ELBO with respect to $\bm{\psi}$ can be 
+    accomplished by analytically computing the gradient,
     \begin{equation}
         \label{eqn:gradient}
         \Delta_{\bm{\psi}} = \frac{\partial}{\partial \psi_{\ell}}
             \left\lbrace\text{E}_{q}\left[\log f(\bm{y}\mid\bm{\theta})\right] 
                 - H(\bm{\psi})\right\rbrace
-            \;\;\text{ for }\ell = 1,\ldots,d,
+            \;\;\text{ for }\ell = 1,\ldots,d, 
     \end{equation}
-    where $H(\bm{\psi})$ is the entropy of $q$, and, subject to some conditions \makenote{rephrase},
-    locating the optimal point where $\Delta_{\bm{psi}} = \bm{0}$.  However, when 
-    $\Delta \text{E}[\log f(\bm{x},\bm{\theta})]$ can not be analytically calculated, then
-    one approach we can consider is the so-called \emph{reparameterization trick}.
-    If $q$ is specified in such a way that samples of $\bm{\theta}$ can be generated
-    as an invertible function $T$ of $\bm{\psi}$ and some independent random variable 
-    $\epsilon$, then the differentiation in Equation~\ref{eqn:gradient} can be 
-    moved inside the expectation,
-    \begin{equation}
-        \label{eqn:reparameterization}
-        \Delta_{\bm{\psi}} = \text{E}\left[\frac{\partial}{\partial \psi_\ell}
-            \log f\left(\bm{y},T(\bm{\epsilon},\bm{\psi})\right) -
-            H(\bm{psi})\right] \;\;\text{ for }\ell = 1,\ldots,d,
-    \end{equation}
-    This expectation is evaluated numerically, yielding the gradient at the current
-    location. we can then iteratively move towards a better position---a more optimal 
-    $\bm{\psi}$.  The variational literature is emphatic that for each optimization step,
-    a single sample of $\bm{\epsilon}$ in Equation~\ref{eqn:reparameterization} is sufficient
-    to provide convergence towards optimality.\makenote{[Citation needed]}
-
-That said, a path-based optimization approach will be dependent upon the starting position,
+    then iteratively moving towards the optimal point, where $\Delta_{\bm{\psi}} = \bm{0}$.  
+    As the above expectation is not available in closed form for our model, we make implicit 
+    use of the reparametrization gradient \citep{kingma2022}, that takes samples of $\bm{\theta}$ 
+    as a function of $\bm{\psi}$ and an independent R.V. $\epsilon$.  This allows us to move
+    the differentiation inside the expectation. To do the optimization, 
+    we use the well-regarded \emph{Adam} optimizer \citep{kingma2017}, a combination of 
+    \emph{ADAGRAD} \citep{duchi2011} and \emph{RMSProp} \citep{tieleman2012}.  Adam is stated to be 
+    well-suited to noisy and high-dimensional problems, for which this problem likely fits the criteria.
+    That said, a path-based optimization approach will be dependent upon the starting position,
     and if multiple local optima exist, there is no guarantee of reaching the
-    true optimal value.  There are many approaches that seek to ameliorate this issue,
-    such as stochastic gradient descent, simulated annealing, \makenote{add additional algorithms}
-    In our analysis, we use the well-regarded \emph{Adam} optimizer \citep{kingma2017}, 
-    a combination of\emph{ADAGRAD} \citep{duchi2011} and \emph{RMSProp} \citep{tieleman2012}.
-    Adam is regarded to be well-suited to a noisy optimization surface, which a BNP
-    mixture model will surely provide.  However, in our analysis results remain highly 
-    dependent upon starting position, both in terms of model fidelity, and resulting 
-    number of extant mixture components.  One potential solution would be to 
-    consider a better starting position for the optimizer.
-    \bruno{\bf We need a lot more clarity here. I would start with \eqref{eqn:optimalq}, then
-    define the ELBO as
-    \[
-    \mathcal{L}(\bm{\theta}) = - \text{E}_q\left[
-                \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})
-                \right]
-    \]
-    then say that
-    \[
-        q^*(\bm{\theta}) = \argmax_{q\in\mathcal{Q}} \mathcal{L}(\bm{\theta})
-    \]
-    with no justification and a reference. Then I would say that, in order to maximize the
-    ELBO, we follow XXX, and explain briefly and succintly what you do.
-    }
+    true optimal value.  In our analysis results are highly dependent upon starting position, 
+    both in terms of model fidelity, and the resulting number of extant mixture components.  
+    One solution would be to consider a better starting position for the optimizer. 
+
+% To expand, using KL divergence as an analogue to distance, variational inference attempting 
+%     to find the \emph{closest} tractable surrogate posterior $q$ within the family 
+%     $\mathcal{Q}$ to the true posterior.  
+%     As has been explained however, we do not necessarily have 
+%     $f(\bm{\theta}\mid\bm{y})$ directly.  Let 
+%     $f(\bm{y},\bm{\theta}) = f(\bm{y}\mid\bm{\theta})f(\bm{\theta})$.
+%     Then we reformulate the KL divergence into
+%     \[
+%         \begin{aligned}
+%         \text{KL}\infdiv{q(\bm{\theta}\mid\bm{\psi})}{f(\bm{\theta}\mid\bm{x})}
+%             &=\text{E}_{\bm{\psi}}\left[\log\left(
+%                 \frac{q(\bm{\theta}\mid\bm{\psi})}{f(\bm{\theta}\mid\bm{x})}
+%                 \right)\right] = \text{E}_{\bm{\psi}}\left[
+%                 \log\left(\frac{q(\bm{\theta}\mid\bm{\psi})f(\bm{x})}{f(\bm{y},\bm{\theta})}
+%                 \right)\right]\\
+%             &= \text{E}_{\bm{\psi}}\left[
+%                 \log q(\bm{\theta}\mid\bm{\psi}) - \log f(\bm{x},\bm{\theta}) 
+%                 + \log f(\bm{x})
+%                 \right]\\
+%             &= \text{E}_{q}\left[
+%                 \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})\right] + 
+%                    \log f(\bm{x}).
+%         \end{aligned}
+%     \]
+%     Note that the second term, the \emph{evidence}, is constant with respect to 
+%     $\bm{\theta}$.  With a bit of rearrangement,
+%     \[
+%         \begin{aligned}
+%         \log f(\bm{x}) 
+%             &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
+%                 - \text{E}_q\left[
+%                 \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})
+%                 \right]\\
+%             &= \text{KL}\infdiv{q(\bm{\theta})}{f(\bm{\theta}\mid\bm{x})}
+%                 + \mathcal{L}(\bm{\theta})
+%         \end{aligned}
+%     \]
+%     Thus maximizing $\mathcal{L}(\bm{\theta})$ is equivalent to minimizing the 
+%     KL divergence. In this form, as KL divergence is a positive quantity, it is
+%     readily apparent that $\mathcal{L}(\bm{\theta})$ establishes a lower bound
+%     on the evidence, and maximizing said lower bound is equivalent to minimizing
+%     the KL divergence.  Thus the variational literature has christened it the
+%     \emph{evidence lower bound}, often abbreviated to \emph{ELBO}.  As such,
+%     we can rewrite Equation~\eqref{eqn:optimalq} to
+%     \[
+%         q^*(\bm{\theta}) = \argmax_{q\in\mathcal{Q}} \mathcal{L}(\bm{\theta})
+%     \]
+%     Note that we specify $q$ so as to depend on a set of variational parameters 
+%     $\bm{\psi}$, such that choosing the optimal $\bm{q}$ means in effect choosing
+%     the optimal $\bm{\psi}$.  
+
+% Optimization of the ELBO with respect to $\bm{\psi}$ can be accomplished by
+%     analytically computing the gradient,
+%     \begin{equation}
+%         \label{eqn:gradient}
+%         \Delta_{\bm{\psi}} = \frac{\partial}{\partial \psi_{\ell}}
+%             \left\lbrace\text{E}_{q}\left[\log f(\bm{y}\mid\bm{\theta})\right] 
+%                 - H(\bm{\psi})\right\rbrace
+%             \;\;\text{ for }\ell = 1,\ldots,d,
+%     \end{equation}
+%     where $H(\bm{\psi})$ is the entropy of $q$, and, subject to some conditions \makenote{rephrase},
+%     locating the optimal point where $\Delta_{\bm{psi}} = \bm{0}$.  However, when 
+%     $\Delta \text{E}[\log f(\bm{x},\bm{\theta})]$ can not be analytically calculated, then
+%     one approach we can consider is the so-called \emph{reparameterization trick}.
+%     If $q$ is specified in such a way that samples of $\bm{\theta}$ can be generated
+%     as an invertible function $T$ of $\bm{\psi}$ and some independent random variable 
+%     $\epsilon$, then the differentiation in Equation~\ref{eqn:gradient} can be 
+%     moved inside the expectation,
+%     \begin{equation}
+%         \label{eqn:reparameterization}
+%         \Delta_{\bm{\psi}} = \text{E}\left[\frac{\partial}{\partial \psi_\ell}
+%             \log f\left(\bm{y},T(\bm{\epsilon},\bm{\psi})\right) -
+%             H(\bm{psi})\right] \;\;\text{ for }\ell = 1,\ldots,d,
+%     \end{equation}
+%     This expectation is evaluated numerically, yielding the gradient at the current
+%     location. we can then iteratively move towards a better position---a more optimal 
+%     $\bm{\psi}$.  The variational literature is emphatic that for each optimization step,
+%     a single sample of $\bm{\epsilon}$ in Equation~\ref{eqn:reparameterization} is sufficient
+%     to provide convergence towards optimality.\makenote{[Citation needed]}
+
+% 
+%     \bruno{\bf We need a lot more clarity here. I would start with \eqref{eqn:optimalq}, then
+%     define the ELBO as
+%     \[
+%     \mathcal{L}(\bm{\theta}) = - \text{E}_q\left[
+%                 \log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})
+%                 \right]
+%     \]
+%     then say that
+%     \[
+%         q^*(\bm{\theta}) = \argmax_{q\in\mathcal{Q}} \mathcal{L}(\bm{\theta})
+%     \]
+%     with no justification and a reference. Then I would say that, in order to maximize the
+%     ELBO, we follow XXX, and explain briefly and succintly what you do.
+%     }
 
 % \subsubsection{Optimal starting position}
 
-\makenote{Having excised the overarching methodology section, I'm unsure of where to place this 
-    whole discussion. There's nothing really \emph{novel} in it; it only serves to inform the
-    particular method we use for \emph{how} we do the variational Bayes model.  That said, I 
-    don't know if it belongs in a "background and review" section.
-    }
-
 As we are considering a mixture model where potentially there exists a label switching
     issue, if the initializing distribution of mixture component parameters provides
-    \emph{decent} coverage of the distribution of optimal parameters, then the most 
-    important part of the initialization is the distribution of mixture \emph{weights}.  
-    \bruno{\bf You mean $p_j$?}
-    Here we consider three strategies.  First is random initialization, 
-    \makenote{checking now if initialization at prior parameters will yield better result}.
+    \emph{decent} coverage of the optimal distribution of mixture parameters, then the most 
+    important part of the initialization is the distribution of mixture weights, $p_j$.  
+    Here we consider three strategies.  First is random initialization,
     (\emph{VB Random}).  Second is uniform initialization---initializing the variational 
     parameters such that, after transformation via stick-breaking, the expected probability 
     of cluster assignment is uniform among all clusters up to the truncation point. That 
@@ -341,11 +363,14 @@ As we are considering a mixture model where potentially there exists a label swi
         \text{E}[\bm{\chi}] = \left(\frac{1}{J},\frac{1}{J-1},\ldots,\frac{1}{3},\frac{1}{2}\right)
     \]
     leading to $\text{E}[p_j] = \frac{1}{J}$ for all $j = 1,\ldots,J$.
-    Finally, we consider two variations of \emph{pregaming} 
-    \makenote{I \emph{really} need a better name for this} 
-    the variational algorithm, by setting the starting position using the results of an 
-    abridged MCMC sampler.  
-    Recall Equation~\eqref{eqn:pdelta}. In the variational distribution $q$, we approximate the 
+    Finally, we consider \emph{pregaming} the variational algorithm, by setting the starting 
+    position via an abridged MCMC sampler, which we describe thusly:
+    Given an initial sample $\bm{\alpha}_j$, $j = 1,\ldots,J$, we sample $\delta_i$ according
+    to Equation~\eqref{eqn:pdelta}
+
+
+    
+    Consider Equation~\eqref{eqn:pdelta}. In the variational distribution $q$, we approximate the 
     posterior distribution of $\chi$ using a $\text{Logit}\mathcal{N}(\mu,\sigma^2)$ density.  
     Following \cite{aitchison1980}, the \emph{best} approximation to 
     $\mathcal{B}(\alpha_1,\alpha_2)$ as measured by minimum KL divergence is achieved by 
@@ -409,7 +434,7 @@ Figure~\ref{fig:energyscore} displays the results of our simulation, using the r
     \bruno{\bf We need to indicate that the "MCMC-initialized VB" is better than the
     MCMC because it is (I guess) faster}
 
-\subsection{\bruno{Extreme value analysis of SLOSH output}}
+\subsection{Extreme value analysis of SLOSH output\label{sec:slosh}}
 As the motivating example for our analysis of the extremal dependence structure, we 
     use the aforementioned SLOSH dataset, which simulates the storm surge resulting 
     from hurricanes over a wide grid.  Our interest is specifically in describing 

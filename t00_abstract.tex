@@ -1,24 +1,40 @@
-In order to account for the model flexibility required by the multivariate
-    peaks-over-threshold scenario, a Pitman-Yor process mixture model using
-    the projection of independent gamma random variables onto the unit 
-    hypersphere under the $\mathcal{L}_p$ norm was developed.  This quickly
-    presents issues, as the computational burden for MCMC inference in a BNP
-    model scales linearly with sample size, and dimensionality.
-    An alternative approach based on mean-field variational inference was explored,
-    but it has become apparent that fidelity suffers under the mean-field model
-    in a high-dimensional setting.  Further exacerbating the problem is the
-    high-dimensional setting itself, which leads to a loss of fidelity even for
-    MCMC inference, setting aside the computational burden.  A regression model
-    is proposed, that in effect establishes a low-dimensional representation of the 
-    high-dimensional output space.  This works to ameliorate the lack of granularity
-    imposed under the full-dimensional model, but imposes an additional computational
-    burden.  We apply these models to a dataset of storm surge simulations 
-    derived from the \emph{Sea, Lake, and Overland Surges due to Hurricanes} 
-    (SLOSH) model.
-    \bruno{\bf This abstract needs a complete rewrite. The focus of the paper is to illustrate
-    how to perform multivariate PoT extreme value analysis for lagre dimensional problems.
-    The motivating illustration is the SLOSH. The abstract should contan a two sentence description 
-    of the PoT model, and then deal with the computational problem.}
+% In order to account for the model flexibility required by the multivariate
+%     peaks-over-threshold scenario, a Pitman-Yor process mixture model using
+%     the projection of independent gamma random variables onto the unit 
+%     hypersphere under the $\mathcal{L}_p$ norm was developed.  This quickly
+%     presents issues, as the computational burden for MCMC inference in a BNP
+%     model scales linearly with sample size, and dimensionality.
+%     An alternative approach based on mean-field variational inference was explored,
+%     but it has become apparent that fidelity suffers under the mean-field model
+%     in a high-dimensional setting.  Further exacerbating the problem is the
+%     high-dimensional setting itself, which leads to a loss of fidelity even for
+%     MCMC inference, setting aside the computational burden.  A regression model
+%     is proposed, that in effect establishes a low-dimensional representation of the 
+%     high-dimensional output space.  This works to ameliorate the lack of granularity
+%     imposed under the full-dimensional model, but imposes an additional computational
+%     burden.  We apply these models to a dataset of storm surge simulations 
+%     derived from the \emph{Sea, Lake, and Overland Surges due to Hurricanes} 
+%     (SLOSH) model.
+%     \bruno{\bf This abstract needs a complete rewrite. The focus of the paper is to illustrate
+%     how to perform multivariate PoT extreme value analysis for lagre dimensional problems.
+%     The motivating illustration is the SLOSH. The abstract should contan a two sentence description 
+%     of the PoT model, and then deal with the computational problem.}
     
-    
+To account for the model flexibility required by a multivariate peaks-over-threshold
+    scenario, a Pitman-Yor process mixture model using the projection of independent 
+    gamma random variables onto the unit hypersphere underthe $\mathcal{L}_p$ norm was 
+    developed.  In this paper, we explore the application of this model to a
+    high-dimensional setting, using storm surge at multiple locations as simulated 
+    under the \emph{Sea, Lake, and Overland Surges due to Hurricanes} (SLOSH) model.
+    As the computational burden for MCMC inference rises linearly with sample size 
+    and dimensionality, we consider a variational approach.  It becomes apparent that
+    model fidelity suffers under a mean-field model in a high-dimensional setting.
+    Further exacerbating this loss in model fidelity as dimensionality increases, is
+    the tendency even under MCMC of the fitted model to degenerate to a single extant 
+    cluster.  To ameliorate this loss of granularity, a regression model is proposed, 
+    that invokes a low-dimensional representation of the output space.  We use these
+    models to explore storm surge at sites of critical infrastructure in the Delaware 
+    Bay watershed.
+
+
 % EOF
