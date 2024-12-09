@@ -1,4 +1,38 @@
 %\subsection{SLOSH}
+
+\begin{table}[hb]
+    \centering 
+    \input{./tables/extant_clusters}
+    \caption{Number of emergent clusters identified via posterior sampling.\label{tab:extant_clusters}}
+\end{table}
+
+In Section~\ref{sec:slosh} we described our criteria for narrowing the focus of our analysis,
+    and specifically in Table~\ref{tab:datasets} we detailed the number of observations, and
+    number of storm simulations, for the resulting datasets at each stage of this narrowing
+    process.  In Table~\ref{tab:extant_clusters}, we detail the number of clusters that emerge
+    in fitting our model to these datasets.   Here we encounter a dilemma:  the model fitted 
+    via variational methods, and the model fitted via MCMC methods, are nominally the same model,
+    and should result in a similar number of emergent clusters. That there is such a
+    discrepancy in the number of emergent clusters is likely a weakness of the variational
+    fitting process.  In the variational Bayes fitting method, we see the number of extant
+    clusters fall significantly as the number of dimensions rises.  This behavior is predicted 
+    by \cite{chandra2023}, which argues that as dimensionality increases, a BNP mixture model 
+    will degenerate to one of two possible states: every observation falling into a single 
+    cluster, or every cluster a singleton. We do not quite see that happen in the MCMC approach,
+    where we see the number of extant clusters actually rise slightly between Delaware slice 
+    and the Threshold slice.  However, the dimensionality of the threshold slice is approximately
+    14.6 times that of the Delaware slice, and the number of simulations which meet the criteria
+    for inclusion in the Threshold slice is approximately 1.4 times that of the Delaware slice.
+    Taking into account the associated increase in data complexity between the two slices, we
+    should see \emph{significantly more} clusters.  That we only see marginally more appears to
+    indicate that the BNP mixture of projected gammas will degenerate towards a single cluster.
+
+\cite{chandra2023} suggests as an amelioration of this degeneration behavior to instead base the 
+    BNP process on a lower-dimensional representation of the output space---suggesting a factor
+    analysis.  The regression model we have developed works in a similar manner, representing
+    an $S$-dimensional space using a $d$-dimensional vector.  
+
+
 \begin{figure}[ht]
     \caption{Locations of identified sites that experienced inundation in more than 
         $5$ percent of storms.  Specifically identified are two locations of 
@@ -9,18 +43,16 @@
 \end{figure}
 
 \makenote{rewrite paragraph}
-The range of latitudes at which storms make landfall in the simulation cover a region of
-    coastline surrounding the entrance of Delaware Bay \makenote{rephrase more accurate given
-    data}.  Given that focus inherent in the original data, we focus our primary analysis there.
+Given the geographical focus inherent in the original data, we focus our primary analysis on Delaware Bay.
     Intersecting the original \emph{SLOSH} grid for the Delaware bay and surrounding watershed, 
     for grid cells that experienced inundation in more than 5 percent of simulations, 
     with specified locations, we identify 65 locations of interest, at which we will conduct 
     our analysis.  Figure~\ref{map:delawarebay} gives the locations of sites we identified, along
-    with a classification of those sites.  \bruno{Four categories were considered: ``Services'', that}
-    includes emergency services, police, fire, and medical services\bruno{;  ``Land'', that}
-    includes village centers, major intersections, and named land features\bruno{; ``Transportation, 
-    that}  includes ferry landings, airports, heliports, and similar.
-    Within \st{that set, we further} \bruno{transportation category we} identify two 
+    with a classification of those sites.  Four categories were considered: ``Services'', that
+    includes emergency services, police, fire, and medical services; ``Land'', that
+    includes village centers, major intersections, and named land features; ``Transportation, 
+    that includes ferry landings, airports, heliports, and similar.
+    Within the transportation category we identify two
     locations of particular interest,  for which significant inundation can lead to 
     catastrophic consequences:   Dover Air Force Base (Dover AFB), and the Philadelphia International 
     Airport (PIA). Dover AFB is situated next to Delaware Bay, with a direct approach from the
@@ -33,8 +65,8 @@ One difficulty with a high-dimensional model is evaluating its fidelity.  As we 
     dimensionality increases.  This is related to the curse of dimensionality in applications like
     $k$-nearest neighbor algorithms: as the number of dimensions increases, the ratio in average
     distance between the nearest replicate, and farthest replicate in a sample will tend to approach
-    1.  In this regard, distance, and metrics based on distance are fundamentally flawed in a 
-    high-dimensional setting.\makenote{[Citation needed!]}
+    unity.  In this regard, distance, and metrics based on distance are fundamentally flawed in a 
+    high-dimensional setting.
 
 We can subjectively assess recovery of marginal empirical CDF, using marginal
     posterior predictive CDF's under our various modelling approaches.
@@ -100,11 +132,7 @@ Looking at equivalent marginal plots for all locations, nearly all preserve the
     \makenote{table of average $\text{E}[\alpha_s]$ under each model, as well as 
     $\text{E}\left[\frac{\alpha_s}{\lVert\bm{\alpha}\rVert_{\infty}}\right]$}
 
-\begin{table}[ht]
-\centering 
-\input{./tables/extant_clusters}
-\caption{Number of emergent clusters identified via posterior sampling.\label{tab:extant_clusters}}
-\end{table}
+
 
     \bruno{\bf Let me see if I understand what you are trying to say. The CDFs obtained from the models with a 
     regression component are the ones that are closer to the empirical CDFs, right? And the variational Bayes 

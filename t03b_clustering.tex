@@ -2,12 +2,11 @@
 One potential application leveraging the use of a Bayesian non-parametric prior is 
     exploiting the clustering of observations with similar characteristics.  
     Recall that $\delta_i$ is the cluster identifier for observation $i$. Within the 
-    MCMC considered in this work $\delta_i$ is explicitly sampled, though \st{it is integrated out}
-    in our variational \st{model} \bruno{approach}. \bruno{Notice that, given
-    samples of the posterior distribution of }\st{In posterior analysis, given} 
-    $\bm{\alpha}$, and $\bm{\pi}$, \st{where} \bruno{define} 
-    $\pi_j = \nu_j\prod_{k = 1}^{j-1}(1 - \nu_k)$. \bruno{Then,} the conditional 
-    probability of cluster  assignment can be calculated as
+    MCMC considered in this work $\delta_i$ is explicitly sampled, though 
+    \st{it is integrated out} in our variational approach. Notice that, given
+    samples of the posterior distribution of $\bm{\alpha}$, and $\bm{\pi}$, 
+    define $\pi_j = \nu_j\prod_{k = 1}^{j-1}(1 - \nu_k)$. Then, the conditional 
+    probability of cluster assignment can be calculated as
     \begin{equation}
         \label{eqn:clusterprob}
         \text{P}\left(\delta_i = j\mid\bm{\alpha},\bm{\pi},\bm{y}_i\right) 

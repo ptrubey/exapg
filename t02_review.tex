@@ -1,4 +1,3 @@
-\makenote{first paragraph basically copy-pasted from ndpg.  Rephrase more?}
 Extreme value theory uses the limited information available in a sample to
     characterize the tails of a distribution.  In the univariate case, asymptotic
     results provide a unique parametric limiting family for the maximum observation
@@ -31,11 +30,11 @@ The multivariate PoT model considered in this paper has been developed
     provides a number of stochastic representations of $H$, and in particular,
     Remark~1 justifies the representation given in \cite{ferreira2014} where,
     in the limit, we factorize $\bm{W} = R\bm{V}$ with $R$ and $\bm{V}$ independent.
-    \makenote{I'm not very fond of this transition.  We standardize $\bm{W}$ to 
-    $\bm{Z}$, then factorize $\bm{Z} = R\bm{V}$.  Separability holds true in both
-    cases (i think), but in the former, $\bm{V}$ is still dependent on the marginal 
-    distributional parameters.  Standardization allows those to be ignored.  Or
-    sidelined.  We should mention standardization before factorization.}
+    % \makenote{I'm not very fond of this transition.  We standardize $\bm{W}$ to 
+    % $\bm{Z}$, then factorize $\bm{Z} = R\bm{V}$.  Separability holds true in both
+    % cases (i think), but in the former, $\bm{V}$ is still dependent on the marginal 
+    % distributional parameters.  Standardization allows those to be ignored.  Or
+    % sidelined.  We should mention standardization before factorization.}
     $R = \lVert \bm{W}\rVert_{\infty}$ is distributed as a standard Pareto random
     variable, and $\bm{V} = \bm{W} / \lVert \bm{W}\rVert_{\infty}$ is a random
     vector existing within $\mathbb{S}_{\infty}^{d-1}$, the positive orthant of
@@ -60,13 +59,10 @@ We consider observations $\bm{w}_{i} = (w_{i1}, \ldots , w_{iS})$, where
     \end{equation}
     where $(\cdot)_+$ indicates the positive parts function.  Let 
     $r_i = \lVert \bm{z}_i\rVert_{\infty}$, and $\bm{v}_i = \bm{z}_i / r_i$.  Due to 
-    thresholding, $i$ ranges from 1 to $m\leq n$, and $r_i > 1$.  \st{Recall that
-    $R\in (1, \infty)$ will, by design, follow a standard Pareto distribution,
-    the inferential task left to us is describing the distribution of the
-    angular component $\bm{V}\in\mathbb{S}_{\infty}^{d-1}$.  } \bruno{The core 
+    thresholding, $i$ ranges from 1 to $m\leq n$, and $r_i > 1$.  The core 
     assumption of our model is the use of $\bm{v}_i$ to describe the 
     angular component of the tail distribution that corresponds to the
-    observations.}
+    observations.
 
 \subsection{Projected Gamma\label{sec:pg}}
 A suitable distribution for $\bm{V}$ can be approximated by projecting a 
@@ -121,7 +117,7 @@ To more flexibly capture the structure of the data, we use the projected gamma d
         \text{Pr}(\bm{\alpha}\mid\ldots) 
             = \sum_{j = 1}^Jp_j\delta_{\bm{\alpha}_j};\;\;\;
             \sum_{j=1}^Jp_j = 1;\;\;\;
-            p_j := \chi_j\prod_{k = 1}^{j-1}(1 - \chi_k)
+            p_j \coloneqq\chi_j\prod_{k = 1}^{j-1}(1 - \chi_k)
     \end{equation}
     where $\delta_{\bm{\alpha}_j}$ indicates a point mass at $\bm{\alpha}_j$ and
     $\bm{\alpha}_j$ are sampled independently from the centering distribution $G_0$.
@@ -155,15 +151,18 @@ Let $y_{is}$ be the storm surge at location $s$ during storm $i$, after threshol
     $\text{P}\left(\delta_i = j\mid\bm{y},\bm{\alpha}\right) = 
         \text{P}\left(\bm{\alpha}_i = \bm{\alpha}_j\mid \bm{y},\bm{\alpha}\right)$ as described in 
         Equation~\eqref{eqn:stickbreak}.
-    Then the full conditional distribution of $\delta_i$ is
+    Then the full conditional distribution of $\delta_i$ conditional on $\bm{\chi}$ is
     \begin{equation}
         \label{eqn:pdelta}
         \text{P}\left(\delta_i = j\mid \bm{y},\bm{\alpha},\bm{\chi}\right) = 
-            \frac{p_j\mathcal{PY}(\bm{y}_i\mid\bm{\alpha}_j)}{
-                \sum_{k = 1}^J p_k\mathcal{PY}(\bm{y}_i\mid\bm{\alpha}_j)}
-                \;\hspace{0.5cm}\;
-            \chi_j\mid\bm{\delta} \sim \mathcal{B}\left(1 + n_j - d,\; 
-                            {\textstyle \sum}_{k = j+1}^J n_k + \eta + jd\right)
+            \frac{p_j\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_j)}{
+                \sum_{k = 1}^J p_k\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_j)}
+    \end{equation}
+    and the full conditional of $\chi_j$ conditional on $\bm{\delta}$ is
+    \begin{equation}
+        \label{eqn:pchi}
+            \chi_j\mid\bm{\delta} \sim \mathcal{B}\left(\zeta_{\chi_j 1} = 1 + n_j - d,\; 
+                            \zeta_{\chi_j 2} = {\textstyle \sum}_{k>j} n_k + \eta + jd\right)
     \end{equation}
     where $p_j = \chi_j\prod_{k=1}^{j-1}(1 - \chi_k)$,  as described in in 
     Equation~\eqref{eqn:stickbreak}, and $n_j = \sum_{i = 1}^n\bm{1}_{\delta_i = j}$.
@@ -211,23 +210,26 @@ Variational inference, or variational Bayesian statistics, is an alternative met
     \]
     If we hold each $q_{\theta_{\ell}}$ to be an appropriate transformation of a normal
     distribution, then each $q_{\theta_{\ell}}$ can be specified by a mean and variance 
-    parameter. Some \needcite more complicated flavors of variational Bayes will relax 
-    this independence restriction.
+    parameter. 
+    % Some \needcite more complicated flavors of variational Bayes will relax 
+    % this independence restriction.
 
-Through analytic manipulation we can separate the KL divergence into two quantities: the evidence
-    \makenote{insert evidence formula}, and the negative of the evidence lower bound, or \emph{ELBO},
+Through analytic manipulation we can separate the KL divergence into two quantities: the 
+    evidence $\log f(x)$, and the negative of the evidence lower bound, or \emph{ELBO},
     \begin{equation}
         \label{eqn:elbo}
         \mathcal{L}(\bm{\theta}) = 
-            -\text{E}_q\left[\log q(\bm{\theta}) - \log f(\bm{x},\bm{\theta})\right].
+            \text{E}_q\left[\log f(\bm{x},\bm{\theta}) - \log q(\bm{\theta})\right] 
+                = \text{E}_q[\log f(\bm{x},\bm{\theta})] - H,
     \end{equation}
-    As the evidence is constant with respect to $q$, minimizing the KL divergence is equivalent to
-    maximizing the ELBO, so restating Equation~\eqref{eqn:optimalq}, we get
+    where $H$ denotes the entropy of $q$.  As the evidence is constant with respect 
+    to $q$, minimizing the KL divergence is equivalent to maximizing the ELBO, so 
+    restating Equation~\eqref{eqn:optimalq}, we get
     \begin{equation}
         \label{eqn:optimalq2}
         q^*(\bm{\theta}) = \argmax_{q\in\mathcal{Q}} \mathcal{L}(\bm{\theta}).
     \end{equation}
-    In truth, for a given family $Q$, finding the optimal $q^*$ means finding the optimal parameter set 
+    For a given family $Q$, finding the optimal $q^*$ means finding the optimal parameter set 
     $\bm{\psi}^*$ such that $q^*(\bm{\theta}) = q(\bm{\theta}\mid\bm{\psi}^*)$.
     For continuous parameters, optimization of the ELBO with respect to $\bm{\psi}$ can be 
     accomplished by analytically computing the gradient,
@@ -242,13 +244,13 @@ Through analytic manipulation we can separate the KL divergence into two quantit
     As the above expectation is not available in closed form for our model, we make implicit 
     use of the reparametrization gradient \citep{kingma2022}, that takes samples of $\bm{\theta}$ 
     as a function of $\bm{\psi}$ and an independent R.V. $\epsilon$.  This allows us to move
-    the differentiation inside the expectation. To do the optimization, 
-    we use the well-regarded \emph{Adam} optimizer \citep{kingma2017}, a combination of 
+    the differentiation inside the expectation, and take the expectation numerically.  To do 
+    the optimization, we use the well-regarded \emph{Adam} optimizer \citep{kingma2017}, a combination of 
     \emph{ADAGRAD} \citep{duchi2011} and \emph{RMSProp} \citep{tieleman2012}.  Adam is stated to be 
-    well-suited to noisy and high-dimensional problems, for which this problem likely fits the criteria.
+    well-suited to noisy and high-dimensional problems, and this problem likely fits the criteria.
     That said, a path-based optimization approach will be dependent upon the starting position,
     and if multiple local optima exist, there is no guarantee of reaching the
-    true optimal value.  In our analysis results are highly dependent upon starting position, 
+    global optimum value.  In our analysis, results are highly dependent upon starting position, 
     both in terms of model fidelity, and the resulting number of extant mixture components.  
     One solution would be to consider a better starting position for the optimizer. 
 
@@ -360,30 +362,45 @@ As we are considering a mixture model where potentially there exists a label swi
     of cluster assignment is uniform among all clusters up to the truncation point. That 
     is, for truncation point $J$,
     \[
-        \text{E}[\bm{\chi}] = \left(\frac{1}{J},\frac{1}{J-1},\ldots,\frac{1}{3},\frac{1}{2}\right)
+        \text{E}[\bm{\chi}] = 
+            \left(\frac{1}{J},\frac{1}{J-1},\ldots,\frac{1}{3},\frac{1}{2}\right)
     \]
     leading to $\text{E}[p_j] = \frac{1}{J}$ for all $j = 1,\ldots,J$.
-    Finally, we consider \emph{pregaming} the variational algorithm, by setting the starting 
+    Finally, we consider \emph{pregaming} the variational algorithm by setting the starting 
     position via an abridged MCMC sampler, which we describe thusly:
-    Given an initial sample $\bm{\alpha}_j$, $j = 1,\ldots,J$, we sample $\delta_i$ according
-    to Equation~\eqref{eqn:pdelta}
-
-
-    
-    Consider Equation~\eqref{eqn:pdelta}. In the variational distribution $q$, we approximate the 
-    posterior distribution of $\chi$ using a $\text{Logit}\mathcal{N}(\mu,\sigma^2)$ density.  
-    Following \cite{aitchison1980}, the \emph{best} approximation to 
-    $\mathcal{B}(\alpha_1,\alpha_2)$ as measured by minimum KL divergence is achieved by 
-    letting $\mu = \psi(\alpha_1) - \psi(\alpha_2)$, and 
-    $\sigma^2 = \psi^{\prime}(\alpha_1) + \psi^{\prime}(\alpha_2)$, where 
-    $\psi(\cdot)$ and $\psi^{\prime}(\cdot)$ represent the digamma and trigamma functions 
-    respectively.  We take these values $\bm{\mu}$, $\bm{\sigma^2}$ as the starting position for
-    the variational approximation. In the first method, \emph{VB Pregamed 1}, 
-    we update $\bm{\chi}$, sampling new $\bm{\alpha}_j$'s using the initial setting
-    for the centering distribution.  In the second (\emph{VB Pregamed 2}), we update the
-    the parameters for the centering distribution as well. 
-    \makenote{I should probably remove the first approach?  It clutters results needlessly.}
-    \bruno{\bf I am having a hrad time following this.}
+    Sampling an initial position $\bm{\alpha_j} \sim 
+        \mathcal{LN}(\bm{\alpha}\mid\bm{\mu} = \bm{0}_s,\bm{\Sigma} = 3I_s)$ and an
+    initial random cluster assignment, we iteratively update $\chi_j$ for $j = 1,\ldots,J$
+    according to Equation~\ref{eqn:pchi}, $\delta_i$ for $i = 1,\ldots,m$ according to
+    Equation~\ref{eqn:pdelta}, and $\bm{\mu}$ via a normal-normal Bayesian update routine.
+    Every iteration, new $\bm{\alpha}_j$ for empty clusters are resampled from 
+    $\mathcal{LN}(\bm{\alpha}\mid\bm{\mu}, 3I_s)$.  
+    This abridged sampler runs for some small number of iterations; in
+    our testing we used 1000 iterations.  Then we set the starting position for the variational
+    algorithm using the last state of the abridged MCMC sampler as follows:
+    \begin{equation}
+        \begin{aligned}
+        q_{\alpha_{js}} &= 
+            \mathcal{LN}\left(\psi_{\alpha_{js\mu}} \coloneqq\log(\alpha_{js}) - 0.005,\; 
+                \psi_{\alpha_{js}\sigma} \coloneqq0.1\right)\\
+        q_{\chi_j} &= \text{Logit}\mathcal{N}\left(
+        \psi_{\chi_j\mu} \coloneqq\psi(\zeta_{\chi_j 1}) - \psi(\zeta_{\chi_j 2}), \;
+            \sigma_{\chi_j\mu}^2 \coloneqq\psi^{\prime}(\zeta_{\chi_j 1}) +
+                \psi^{\prime}(\zeta_{\chi_j 2}),
+            \right)
+        \end{aligned}    
+    \end{equation}
+    where $\psi(\cdot)$ and $\psi^{\prime}(\cdot)$ are the digamma and trigamma functions
+    respectively.  The distributional values for $q_{\alpha_{js}}$ are assigned via method
+    of moments, where the standard deviation has been fixed to $0.1$.  The distributional
+    values for $q_{\chi_j}$ have been assigned following \cite{aitchison1980} as the best
+    approximation of a logit-normal to a beta distribution as measured by minimum KL 
+    divergence.  There is a computational burden associated with establishing at least an
+    abridged MCMC sampler, but given the limited number of iterations, and lower number of
+    parameters being learned, that burden is relatively low compared to the full MCMC approach.
+    This approach does have the twin benefits of moving the variational optimizer into a 
+    potentially better optima, faster.
+    % \bruno{\bf I am having a hrad time following this.}
 
 \begin{figure}[htb]
     \caption{Rise in energy score over baseline by number of dimensions, on simulated data 
@@ -414,7 +431,7 @@ As the metric for our evaluation, we use the \emph{energy score} criterion \cite
     definite kernel we use is described in Prop.~3 of \cite{trubey:pg}, 
     and leverages the fact that all faces of $\mathbb{S}_{\infty}^{d-1}$
     are pairwise adjacent.  By rotating the face of the second point into 
-    the same hyperplane as that of the first, the kernel metric is the Euclidean 
+    the same hyperplane as that of the first, the kernel metric becomes the Euclidean 
     distance between the first point, and the rotated second point.
     
 Figure~\ref{fig:energyscore} displays the results of our simulation, using the rise in energy score 
@@ -424,50 +441,56 @@ Figure~\ref{fig:energyscore} displays the results of our simulation, using the r
     capturing the generating distribution. We investigate this recovery under a variety of 
     conditions increasing the number of dimensions, as well as the number of mixture components 
     in the generating distribution. With this simulation study, we see that
-    a pure MCMC approach achieves the best model fidelity, but \emph{VB Pregamed 2}, using 
-    the abridged MCMC sampler to set a starting value for both the centering distribution 
-    and cluster weights, achieves a model fidelity in terms of energy score that is very
-    nearly indistinguishable from the MCMC model, at least in the scale for which we can test.
-    Note that, as the dimensionality of the problem grows, energy scores become less able to assess 
-    model fidelity, as the distance between each observation or replication will approach a 
-    constant value.\makenote{(needs citation--this is a result from high-dimensional knn)}.
-    \bruno{\bf We need to indicate that the "MCMC-initialized VB" is better than the
-    MCMC because it is (I guess) faster}
+    a pure MCMC approach achieves the best model fidelity, but \emph{VB Pregamed}, using 
+    the abridged MCMC sampler to set a starting position for the variational algorithm, 
+    achieves a model fidelity that is very nearly indistinguishable from that of the 
+    MCMC model.  It also runs significantly faster.
+    Note that, as the dimensionality of the problem grows, energy scores become less able to 
+    assess model fidelity, as the distance between each observation or replication will approach 
+    a constant value \citep{bishop2006}.
+    
+    % \bruno{\bf We need to indicate that the "MCMC-initialized VB" is better than the
+    % MCMC because it is (I guess) faster}
 
 \subsection{Extreme value analysis of SLOSH output\label{sec:slosh}}
 As the motivating example for our analysis of the extremal dependence structure, we 
-    use the aforementioned SLOSH dataset, which simulates the storm surge resulting 
+    use the aforementioned SLOSH, which simulates the storm surge resulting 
     from hurricanes over a wide grid.  Our interest is specifically in describing 
     and exploiting the dependence structure of extremes between specific locations.  
     As such, rather than the entire grid, it makes sense to consider data pertaining
-    specifically to those locations. If one is performing contingency planning in 
-    preparation for the storm season, it would be helpful to know the probability of 
-    such services being rendered 
-    inoperable simultaneously, precisely when they are needed most.  If one is 
-    seeking sites for a new service provider, it would be helpful understand the 
-    likelihood of a proposed location being rendered inoperable in the same 
-    manner.  For these reasons we subset the data to grid cells in the 
-    vicinity of such locations of interest.  We gather these locations are from 
-    the 2023 US Census Bureau's \emph{TIGER} database \needcite and specifically 
-    the point and landmark file.  If a grid cell falls within 70 meters of a location,
-    then the grid cell is identified with the location.  If multiple grid cells
-    are within 70 meters, then the nearer one is identified with the location.
-    Additionally, we select locations, or grid cells, that have experienced at
-    at least some inundation in some $q$ proportion of storm simulations.  That is,
-    such that $b_{qs} > 0$, for all $s$ of interest.  This restriction arises
-    as a consequence of fitting the parameters for the marginal generalized Pareto
-    distributions: if the threshold for excesses $b$ is not set above the minimum observed
-    value in the dataset, MLE estimation of the other marginal GP parameters will suffer.
+    specifically to those locations. 
+    % If one is performing contingency planning in preparation for the storm season, 
+    % it would be helpful to know the probability of such services being rendered 
+    % inoperable simultaneously, precisely when they are needed most.  If one is 
+    % seeking sites for a new service provider, it would be helpful understand the 
+    % likelihood of a proposed location being rendered inoperable in the same 
+    % manner.  For these reasons 
+    Thus, we subset the data to grid cells which are in the vicinity of such locations 
+    of interest.  We gather these locations from the \emph{point and landmark} file 
+    of the US Census Bureau's 2023 \emph{TIGER} database \citep{tiger}.
+    We define vicinity as the nearest grid cell within 70 meters of a location---this 
+    value stemming from the grid existing on an approximately 110 meter resolution, a 
+    70 meter radius ensures no gaps in coverage.
+    Additionally, we select grid cells that have experienced at at least some inundation 
+    in $q$ proportion of storm simulations.  That is, such that $b_{qs} > 0$, for all 
+    $s$ of interest.  This restriction arises as a consequence of fitting the parameters 
+    for the marginal generalized Pareto distributions on threshold excesses.
+    The quality of MLE estimation of the other marginal GP parameters will suffer if the
+    threshold is not well chosen, so to ensure that excesses follow a generalized Pareto,
+    we limit analysis to cells that meet this criteria.
+    % : if the threshold for excesses $b$ is not set above the minimum observed
+    % value in the dataset, MLE estimation of the other marginal GP parameters will suffer.
     Here we suffer another tradeoff, the implications of which are explored in 
-    Figure~\ref{fig:thresholdselection}.  Setting a higher threshold allows more 
+    Figure~\ref{fig:thresholdselection}.  Setting a higher quantile threshold allows more 
     sites to be included in the analysis, but in turn reduces the number of storm 
-    simulations which exceed the threshold in at least one dimension, which in turn 
-    reduces the amount of information available by which we can estimate the 
-    dependence structure.  We create several \emph{slices} of the SLOSH data,
-    summarized in Table~\ref{tab:datasets}.
-    \bruno{\bf This paramgraph is VERY hard to understand. I suppose that you want to
-    say that you are focused on a limited number of locations in the grid of
-    outputs that correspond to key services of infrastructure. }
+    simulations which exceed the threshold, which in turn reduces the amount of 
+    information available by which we can estimate the dependence structure. Using a 
+    quantile of \num{0.95}, the resulting number of cells, and number of storm simulations
+    exceeding the threshold per slice are summarized in Table~\ref{tab:datasets}.
+    % \bruno{\bf This paramgraph is VERY hard to understand. I suppose that you want to
+    % say that you are focused on a limited number of locations in the grid of
+    % outputs that correspond to key services of infrastructure. }
+    % \comment{I have re-written to hopefully make the requirement more clear.}
 
 \begin{figure}[ht]
     \centering
@@ -489,35 +512,55 @@ As the motivating example for our analysis of the extremal dependence structure,
 
 \begin{figure}[htb]
     \centering
-    \caption{Bounds of storm approach angles.\label{fig:slosh_bounds}}
+    \caption{Bounds of storm approach angles.  The eyes of the storms at landing is evenly distributed 
+        in both direction and latitude between the red angles.\label{fig:slosh_bounds}}
     \includegraphics{plots/slosh_bounds}
 \end{figure}
 
-\st{As previously stated, we require the marginal threshold for excesses to be above 0.  We choose
-    to implement this restriction at the} \bruno{The validity of the proposed PoT model depends on
-    asymptotic results that consider observations above a very large threshold. To define a threshold
-    for each location in the simulation output we take the} 90th percentile \bruno{of the observations
-    per location.}\st{, which defines} \bruno{The resulting thresholded sample corresponds to} the 
-    \emph{Threshold} slice.
-    \makenote{insert data descriptions}.  \bruno{Additional reduction of the sample is produced by
-    considering the bounds of the storm approach angles, one of the SLOSH inputs. }
-    Figure~\ref{fig:slosh_bounds} shows \st{the} \bruno{those} boundaries \bruno{over a portion of 
-    the coastline. We}\st{of  storm approach angles in the SLOSH data---}observe that this 
-    \bruno{is a} rather restricted region, 
+% \st{As previously stated, we require the marginal threshold for excesses to be above 0.  We choose
+%     to implement this restriction at the} \bruno{The validity of the proposed PoT model depends on
+%     asymptotic results that consider observations above a very large threshold. To define a threshold
+%     for each location in the simulation output we take the} 90th percentile \bruno{of the observations
+%     per location.}\st{, which defines} \bruno{The resulting thresholded sample corresponds to} the 
+%     \emph{Threshold} slice.
+%     \makenote{insert data descriptions}.  \bruno{Additional reduction of the sample is produced by
+%     considering the bounds of the storm approach angles, one of the SLOSH inputs. }
+%     Figure~\ref{fig:slosh_bounds} shows \st{the} \bruno{those} boundaries \bruno{over a portion of 
+%     the coastline. We}\st{of  storm approach angles in the SLOSH data---}observe that this 
+%     \bruno{is a} rather restricted region, 
+%     in comparison to the extent of the data displayed in Figure~\ref{fig:slosh1run},
+%     \st{somewhat} \bruno{and} limits the applicability of our methods \st{of analysis in regions outside
+%     of} \bruno{to the} Delaware bay and its surrounding area. \bruno{This corresponds to} \st{For this 
+%     reason, we restrict our analysis to this region, creating} the \emph{Delaware Bay} slice.  Further 
+%     \st{refining analysis to locations} \bruno{refinement of the sample is performed by focusing on 
+%     locations}  of particular interest, \st{we} \bruno{identify through the} use the feature class 
+%     codes \st{of the locations to isolate} \bruno{that correspond to different} location types
+%     \makenote{remove the most common feature classes} of interest.  These form the \emph{Restricted} slice.
+%     Finally, we \st{isolate} \bruno{restrict} the data to a few locations of critical interest, 
+%     as well as a selection of locations around the bay to inform conditional analysis.  These 
+%     form the \emph{Critical} slice. The \st{relative} sizes of \st{these inferential tasks is detailed}
+%     \bruno{the different subsamples of the original simulation output, considered in our analysis are
+%     reported }in Table~\ref{tab:datasets}.  \st{Having
+%     a variety gives us the opportunity to discuss relative strengths of particular types of analysis.}
+The validity of the proposed PoT model depends on asymptotic results that consider 
+    observations above a very large threshold. To define a threshold
+    for each location in the simulation output we take the 90th percentile 
+    of the observations per location.  The resulting thresholded sample corresponds to
+    the \emph{Threshold} slice.  Additional reduction of the sample is produced by
+    considering the bounds of the storm approach angles, one of the SLOSH inputs. 
+    Figure~\ref{fig:slosh_bounds} shows those boundaries over a portion of 
+    the coastline. We observe that this is a rather restricted region, 
     in comparison to the extent of the data displayed in Figure~\ref{fig:slosh1run},
-    \st{somewhat} \bruno{and} limits the applicability of our methods \st{of analysis in regions outside
-    of} \bruno{to the} Delaware bay and its surrounding area. \bruno{This corresponds to} \st{For this 
-    reason, we restrict our analysis to this region, creating} the \emph{Delaware Bay} slice.  Further 
-    \st{refining analysis to locations} \bruno{refinement of the sample is performed by focusing on 
-    locations}  of particular interest, \st{we} \bruno{identify through the} use the feature class 
-    codes \st{of the locations to isolate} \bruno{that correspond to different} location types
-    \makenote{remove the most common feature classes} of interest.  These form the \emph{Restricted} slice.
-    Finally, we \st{isolate} \bruno{restrict} the data to a few locations of critical interest, 
-    as well as a selection of locations around the bay to inform conditional analysis.  These 
-    form the \emph{Critical} slice. The \st{relative} sizes of \st{these inferential tasks is detailed}
-    \bruno{the different subsamples of the original simulation output, considered in our analysis are
-    reported }in Table~\ref{tab:datasets}.  \st{Having
-    a variety gives us the opportunity to discuss relative strengths of particular types of analysis.}
+    and limits the applicability of our methods to the Delaware bay and its 
+    surrounding area. This corresponds to the \emph{Delaware Bay} slice.  Further 
+    refinement of the sample is performed by focusing on locations of particular 
+    interest, identified through the use the feature class codes that correspond 
+    to different location types of interest.  These form the \emph{Restricted} slice.
+    Finally, we restrict the data to a few locations of critical interest, 
+    as well as a selection of locations around the bay to inform conditional analysis.  
+    These form the \emph{Critical} slice. The \st{relative} sizes of the different 
+    subsamples of the original simulation output, considered in our analysis are
+    reported in Table~\ref{tab:datasets}.
 
 \begin{figure}[htb]
     \centering 
@@ -528,11 +571,12 @@ As the motivating example for our analysis of the extremal dependence structure,
     \includegraphics[width=0.9\linewidth]{plots/threshold_histogram}
 \end{figure}
 
-Figure~\ref{fig:thetahistogram} shows the marginal histograms of \st{storm} \bruno{SLOSH input} parameters, for 
-    storms which exhibited extreme behavior in the \emph{Threshold} slice.  Storm parameters 
-    in the \st{originating data} \bruno{original simulation} were sampled via Latin hypercube, so would appear marginally
-    uniform.  The difference between marginal uniform, and the observed densities provides
-    some indication of what characteristics are necessary for a storm to exceed the threshold.
+Figure~\ref{fig:thetahistogram} shows the marginal histograms of SLOSH input 
+    parameters, for storms which exhibited extreme behavior in the \emph{Threshold} 
+    slice.  Storm parameters in the original simulation were sampled via Latin 
+    hypercube, so would appear marginally uniform.  The difference between marginal 
+    uniform, and the observed densities provides some indication of what 
+    characteristics are necessary for a storm to exceed the threshold.
     Imprimis, for sea level rise it is readily apparent that a higher sea level will
     make it easier for a storm to inundate larger swaths of land, or inundate locations to a
     greater degree.  So we expect and, in fact, see a higher proportion of storms exceeding
