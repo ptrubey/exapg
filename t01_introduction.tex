@@ -21,26 +21,37 @@ Storm surge, measured as water height above ground level, can produce flooding a
     meters.   We have \num{4000} such simulations, produced from a sample of 
     storm characteristics. 
 
+% \begin{figure}[t!]
+%     \centering
+%     \begin{subfigure}[t]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=0.99\linewidth]{./plots/slosh1run_loghist.pdf}
+%         \caption{Grid output from one storm simulation in SLOSH, with a marginal
+%             histogram (with log-scale counts) of surge levels in that storm 
+%             (truncated at 9 feet).\label{fig:slosh1run}\makenote{add boundaries to indicate
+%             range of directions and latitudes at which storm makes landfall.}}
+%     \end{subfigure}%
+%     ~ 
+%     \begin{subfigure}[t]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=0.99\linewidth]{./plots/sloshthreshold_loghist.pdf}
+%         \caption{
+%             90th percentile of storm-surge simulations at \num{5283} selected 
+%             locations with marginal histogram (with log-scale counts).
+%             \label{fig:sloshthreshold}}
+%     \end{subfigure}
+%     \caption{Exploration of SLOSH simulation data.\label{fig:sloshexplore}}
+% \end{figure}
+
 \begin{figure}[t!]
     \centering
-    \begin{subfigure}[t]{0.48\textwidth}
-        \centering
-        \includegraphics[width=0.99\linewidth]{./plots/slosh1run_loghist.pdf}
-        \caption{Grid output from one storm simulation in SLOSH, with a marginal
-            histogram (with log-scale counts) of surge levels in that storm 
-            (truncated at 9 feet).\label{fig:slosh1run}\makenote{add boundaries to indicate
-            range of directions and latitudes at which storm makes landfall.}}
-    \end{subfigure}%
-    ~ 
-    \begin{subfigure}[t]{0.48\textwidth}
-        \centering
-        \includegraphics[width=0.99\linewidth]{./plots/sloshthreshold_loghist.pdf}
-        \caption{
-            90th percentile of storm-surge simulations at \num{5283} selected 
-            locations with marginal histogram (with log-scale counts).
-            \label{fig:sloshthreshold}}
-    \end{subfigure}
-    \caption{Exploration of SLOSH simulation data.\label{fig:sloshexplore}}
+    \includegraphics[width = 0.8\linewidth]{./plots/slosh_combined}
+    \caption{(Left) Grid output from one storm simulation in SLOSH, with values 
+    truncated at 9 feet.  The bars indicate the limits, in latitude, of the hurricane
+    eye at landfall.  The arrow indicates the direction of travel, and at the vertex, 
+    the location of the hurricane eye at landfall for this realization of the SLOSH 
+    output grid.  (Right) Marginal 90th percentiles of storm-surge at selected
+    locations within the grid.\label{figf:sloshexplore}}
 \end{figure}
 
 % This paper analyzes SLOSH simulations under an extreme value theory (EVT) framework, 
