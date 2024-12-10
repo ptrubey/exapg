@@ -19,7 +19,7 @@ Storm surge, measured as water height above ground level, can produce flooding a
     The simulation output describes the surge over a grid containing some \num{23119800} 
     elements, with a spatial resolution of \num{0.001} degrees, or approximately 90 
     meters.   We have \num{4000} such simulations, produced from a sample of 
-    storm characteristics. 
+    storm characteristics.
 
 % \begin{figure}[t!]
 %     \centering
@@ -47,11 +47,13 @@ Storm surge, measured as water height above ground level, can produce flooding a
     \centering
     \includegraphics[width = 0.8\linewidth]{./plots/slosh_combined}
     \caption{(Left) Grid output from one storm simulation in SLOSH, with values 
-    truncated at 9 feet.  The bars indicate the limits, in latitude, of the hurricane
-    eye at landfall.  The arrow indicates the direction of travel, and at the vertex, 
-    the location of the hurricane eye at landfall for this realization of the SLOSH 
-    output grid.  (Right) Marginal 90th percentiles of storm-surge at selected
-    locations within the grid.\label{figf:sloshexplore}}
+    truncated at 9 feet.  The bars (red) indicate the lower and upper limits on the 
+    location of the hurricane eye at landfall.  The arrow indicates the direction 
+    of travel, and at the vertex, the location of the hurricane eye at landfall 
+    for this realization of the SLOSH output grid.  (Right) Marginal 90th 
+    percentiles of simulated storm-surge at selected locations within the grid. 
+    \label{fig:sloshexplore}\makenote{Remove legend name, or rename to `Surge'.
+    Increase legend height to match that of maps.  Make thinner, if possible.}}
 \end{figure}
 
 % This paper analyzes SLOSH simulations under an extreme value theory (EVT) framework, 
@@ -87,41 +89,46 @@ Storm surge, measured as water height above ground level, can produce flooding a
 %     Our goal is then a consistent and performant model for multivariate extremes, 
 %     such that we can learn the dependence structure of extremes in the inundation field.
 
+Storm parameter inputs for the SLOSH model were sampled via Latin hypercube---a space-filling
+    technique---that attempts to evenly cover the sample space without an imposed grid.
+    samples thus appear marginally uniform, and lack any observable covariance structure.
+    Figure~\ref{fig:sloshexplore} provides a visual depiction of the SLOSH simulation 
+    output. On the left, we have the resulting maximum storm surge of a single
+    simulated storm using the SLOSH model.  Observe there is data extending from
+    Virginia, near the Chesapeake Bay inlet, to the Eastward tip of Long Island, New York.  
+    In this plot, the observed \makenote{it's simulated... call it observed?} 
+    surge was truncated to 9 feet.  There were 45 cells in excess of this, up to 19 feet.
+    Such phenomena are highly localized, and not visible at this scale.  We also mention
+    that cell values for a single simulation are not reported simultaneously.  Each cell 
+    reports its maximum simulated value over the course of the storm.
+    The bars bracketing Delaware Bay indicate the limits of the location of the simulated
+    hurricane eyes when they make landfall, indicating all simulated storms approach the
+    entrance of Delaware Bay.  The arrow indicates the direction, and location, of the
+    hurricane eye at landfall associated with this particular realization of the storm surge
+    grid.  On the right, we have selected SLOSH grid cells that are in the
+    vicinity of physical features, or locations, of interest, and selected the storm
+    surge at the 90th percentile for each location.
+
 This paper analyzes SLOSH simulations under an extreme value theory (EVT) framework,
     using a peaks-over-threshold model.  EVT is a branch of statistics that focuses
     on the tails of the distribution---low density regimes where, in this application,
     the \emph{worst} outcomes occur.  The primary tenet of EVT is the ability to infer,
     from a limited sample, how likely it is that the generating process behind an outcome
     will produce an outcome in excess of a specified value. Via application of univariate 
-    EVT, it would be easy to produce this quantity for a given cell, or location, but 
-    in doing so would ignore the wealth of information available pertaining to the complex 
+    EVT, it would be simple to produce this quantity for a given cell, or location, but 
+    doing so would ignore the wealth of information available pertaining to the complex 
     dependency relationships between locations.  Multivariate EVT is an active 
     field of research that seeks to model these dependencies, to produce more meaningful
     and rich analyses.  With this, it seeks the joint probability that two or more locations
     will exhibit extreme behavior.  This advancement, and products derived thereof,
     are key information in the management of critical infrastructure.
-
-Storm parameters for the SLOSH model were sampled via Latin hypercube---a space-filling
-    technique, that attempts to evenly cover the sample space, and without an imposed.
-    samples thus appear marginally uniform, and lack any observable covariance structure.
-    Figure~\ref{fig:sloshexplore} provides a visual depiction of the SLOSH simulation 
-    output.  In particular, Figure~\ref{fig:slosh1run} indicates the output of a single 
-    simulated storm using the SLOSH model.  Observe there is data extending from the 
-    Chesapeake Bay inlet, to the Eastward tip of Long Island.  In this plot, observed 
-    surge was truncated to 9 feet.  There were 45 cells in excess of this, up to 19 feet.
-    Such phenomena are highly localized, and not visible at this scale.  We also mention
-    that cell values for a single simulation are not reported simultaneously.  Each cell 
-    reports its maximum simulated value over the course of the storm.  In 
-    Figure~\ref{fig:sloshthreshold}, we have selected SLOSH grid cells that are in the 
-    vicinity of physical features, or locations, of interest, and selected the storm
-    surge at the 90th percentile for each location.
     Here We stress here a caveat. EVT assumes that the originating data are independent
     and identically distributed.  SLOSH simulations do not meet strictly meet this 
     second criterion.  They arise as a result of partially stochastic simulation 
     given a set of input parameters---the storm characteristics. That
     having been said, application of the EVT framework to SLOSH still provides us
     with a great deal of information.  It is with that caveat that we continue analysis.
-    
+
     % I broke it into 2 paragraphs--one detailing the use/need of multivariate EVT,
     % and the other further expanding on the introduction of SLOSH.  I couldn't figure
     % out where to put the references to the maps in the EVT paragraph, hence the break.
@@ -136,22 +143,22 @@ Storm parameters for the SLOSH model were sampled via Latin hypercube---a space-
     % issue of the sample not being really random to the end of the paragraph, yu don't
     % want to start by being apologetic.}
 
-The paper proceeds as follows:  Section~\ref{sec:review} details the background 
+The paper proceeds as follows:  Section~\ref{sec:review} details the theoretical background 
     for the relevant modeling methods and dataset we will be using in this analysis.  
-    In particular, it provides an overview of extreme value 
-    theory, to the justification for separating the magnitude of a multivariate 
-    extreme from its angular component; Section~\ref{sec:pg} describes the process 
-    of creating an angular distribution as well as introducing the model we use in 
+    In particular, it provides an overview of extreme value theory, to the justification 
+    for separating the magnitude of a multivariate extreme from its angular component; 
+    Section~\ref{sec:pg} describes the process of creating an angular distribution as 
+    well as introducing the model we use in 
     our analysis; and Section~\ref{sec:varbayes} provides a brief review of variational
     inference which we attempt to use to speed analysis.  Section~\ref{sec:slosh} further
-    expands the discussion of the SLOSH dataset and how the analysis will proceed.
-    Section~\ref{sec:methodology} expounds on the metrics we will be considering in
-    our analysis as applications of the fitted angular model.  Further, 
+    expands the discussion of SLOSH, as well as detailing how the analysis will proceed.
+    Section~\ref{sec:methodology} expounds on our methods of posterior analysis, including
+    a discussion on conditional survival probability and posterior clustering. Further,
     Section~\ref{sec:regression} introduces a novel regression model with support
     $\mathbb{S}_{p}^{d-1}$, the positive orthant of the $p$-norm unit sphere.
-    Section~\ref{sec:results} presents our analysis, first evaluating the efficacy of
-    variational methods on simulated data as compared to MCMC, then
-    presenting some interesting results. Finally, Section~\ref{sec:conclusion} 
-    concludes.
+    Section~\ref{sec:results} presents the results of our analysis, first evaluating 
+    the efficacy of variational methods on simulated data as compared to MCMC, 
+    then applying our methods to the SLOSH simulation data.  Finally, 
+    Section~\ref{sec:conclusion} concludes.
 
 % EOF 
