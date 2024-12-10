@@ -547,28 +547,48 @@ The validity of the proposed PoT model depends on asymptotic results that consid
     for each location in the simulation output we take the 90th percentile 
     of the observations per location.  The resulting thresholded sample corresponds to
     the \emph{Threshold} slice.  Additional reduction of the sample is produced by
-    considering the bounds of the storm approach angles, one of the SLOSH inputs. 
-    Figure~\ref{fig:slosh_bounds} shows those boundaries over a portion of 
-    the coastline. We observe that this is a rather restricted region, 
-    in comparison to the extent of the data displayed in Figure~\ref{fig:slosh1run},
-    and limits the applicability of our methods to the Delaware bay and its 
+    considering the bounds of the storm approach angles, one of the SLOSH inputs.
+    In Figure~\ref{fig:sloshexplore}, we see the boundaries of the storm approach
+    vectors, which we see is quite restricted in comparison to the the extent of the 
+    surge simulations.  This limit in latitudes at landfall in turn somewhat limits the
+    relevance of the storm surge simulation data to the region where hurricanes making
+    landfall within the bounds of our data would have the greatest effect.  We are
+    thus limited to Delaware Bay and the
+    % Figure~\ref{fig:sloshexplore} shows those boundaries over a portion of 
+    % the coastline. We observe that this is a rather restricted region, 
+    % in comparison to the extent of the data displayed in Figure~\ref{fig:slosh1run},
+    % and limits the applicability of our methods to the Delaware bay and its 
     surrounding area. This corresponds to the \emph{Delaware Bay} slice.  Further 
     refinement of the sample is performed by focusing on locations of particular 
     interest, identified through the use the feature class codes that correspond 
     to different location types of interest.  These form the \emph{Restricted} slice.
     Finally, we restrict the data to a few locations of critical interest, 
     as well as a selection of locations around the bay to inform conditional analysis.  
-    These form the \emph{Critical} slice. The \st{relative} sizes of the different 
-    subsamples of the original simulation output, considered in our analysis are
+    These form the \emph{Critical} slice. The resulting sizes of the different 
+    slices of the original simulation output considered in our analysis are
     reported in Table~\ref{tab:datasets}.
 
+% \begin{figure}[htb]
+%     \centering 
+%     \caption{Histograms of characteristics for simulations that survived thresholding in \emph{Threshold}.
+%         Sea level rise in mm, approach angle in degrees, approach speed in Kph, minimum pressure in mBar,
+%         latitude in decimal degrees. \makenote{Make this a pairs plot?}
+%         \label{fig:thetahistogram}}
+%     \includegraphics[width=0.9\linewidth]{plots/threshold_histogram}
+% \end{figure}
+
 \begin{figure}[htb]
-    \centering 
-    \caption{Histograms of characteristics for simulations that survived thresholding in \emph{Threshold}.
-        Sea level rise in mm, approach angle in degrees, approach speed in Kph, minimum pressure in mBar,
-        latitude in decimal degrees. \makenote{Make this a pairs plot?}
+    \centering
+    \includegraphics[width=0.8\textwidth]{plots/threshold_pairs}
+    \caption{Pairwise plot of SLOSH simulation inputs that survived thresholding in the 
+        \emph{Threshold} slice.  Sea level rise in mm, approach angle in degrees (360 is North),
+        approach speed in Kph, minimum pressure in mBar, latitude in decimal degrees.
+        \makenote{
+            need to make the diagonals into histograms.  density estimators aren't cutting it.
+            Also, plots might look better as contours.  kind of messy now.  And contour plots
+            could be made smaller and still readable.
+            }
         \label{fig:thetahistogram}}
-    \includegraphics[width=0.9\linewidth]{plots/threshold_histogram}
 \end{figure}
 
 Figure~\ref{fig:thetahistogram} shows the marginal histograms of SLOSH input 
@@ -578,7 +598,7 @@ Figure~\ref{fig:thetahistogram} shows the marginal histograms of SLOSH input
     uniform, and the observed densities provides some indication of what 
     characteristics are necessary for a storm to exceed the threshold.
     Imprimis, for sea level rise it is readily apparent that a higher sea level will
-    make it easier for a storm to inundate larger swaths of land, or inundate locations to a
+    make it easier for a storm to inundate larger swaths of land, and to a
     greater degree.  So we expect and, in fact, see a higher proportion of storms exceeding
     the threshold, for a higher sea level rise.  Similarly, a lower minimum pressure in the storm's
     eye corresponds to a more powerful storm.  This bears out, as a lower minimum pressure has
