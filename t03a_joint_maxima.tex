@@ -2,47 +2,54 @@ Following the example of \cite{trubey:pg}, we can use the dependence structure w
     by fitting the model in Equation~\eqref{eqn:pypg}.  Then, conditional on the fitted model,
     there are various inferences we can make.
 
-\subsection{Multi-site Return Periods and Conditional Survival}
-Statistical inference of extreme values tends to focus on the \emph{return period} as a deliverable
-    metric.  In a univariate case, this is easy to define: for event $z$, the return period
-    is the average \emph{time} it would take to observe a new event $Z$ as extreme or more extreme than $z$.
-    that is,
+\subsection{Multi-site Return Periods and Conditional Survival Probabilities}
+Statistical inference of extreme values tends to focus on the \emph{return period} as a 
+    deliverable metric.  In a univariate case, this is easy to define: for event $z$, 
+    the return period is the average \emph{time} it would take to observe a new event 
+    $Z$ as extreme or more extreme than $z$.  That is,
     \[
     T(z) = \frac{\mu}{1 - F_z(z)} = \frac{\mu}{S_z(z)}
     \]
-    where $\mu$ is the average inter-arrival time in a series of events, and $S(\cdot)$ the survival function. 
-    Conceptual problems begin to arise in interpretation when we consider a multivariate $F$.  
-    \cite{salvadori2010} considers a strict interpretation of the return period in a multivariate setting,
-    defining the return period in terms of a copula---a redefinition of the joint CDF, as a distribution
-    over marginal uniform densities, with the marginal CDF's for each site taking the place of the marginal 
+    where $\mu$ is the average inter-arrival time in a series of events, and $S(\cdot)$ 
+    the survival function.  Conceptual problems begin to arise in interpretation when 
+    we consider a multivariate $F$.  \cite{salvadori2010} considers a strict interpretation 
+    of the return period in a multivariate setting, defining the return period in terms of 
+    a copula---a redefinition of the joint CDF, as a distribution over marginal uniform 
+    densities, with the marginal CDF's for each site taking the place of the marginal 
     uniforms.  We say strict interpretation in interpretation of the CDF: 
-    $F(\bm{z}) = \text{P}\left(\cap_{s \in S}Z_s\leq z_s\right)$, though it considers later a more general
-    \emph{critical region}.
-    \cite{Salvadori2013} inverts this, defining the return period in terms of the joint survival function, $T(\bm{z}) = \frac{\mu}{S(\bm{z})}$, where 
+    $F(\bm{z}) = \text{P}\left(\cap_{s \in S}Z_s\leq z_s\right)$, though it considers 
+    later a more general \emph{critical region}.
+    \cite{Salvadori2013} inverts this, defining the return period in terms of the joint 
+    survival function, $T(\bm{z}) = \frac{\mu}{S(\bm{z})}$, where 
     $S(\bm{z}) = \text{P}\left(\bigcap_{s\in S}Z_s > z_s\right)$.
-    We observe there exists a vast difference in interpretation between these two extremes.  In generating a
-    meaningful deliverable metric of a return period, for a given event at how many sites
-    must the threshold be breached for us to interpret the event as over-topping the threshold?  For a CDF
-    based metric, one; for a survival function based metric, all.  But as the number of locations under 
-    consideration increases, the value of such a metric decreases, as the probability of the specified scenario
-    approaches one or zero respectively.
-    \cite{cho2023} sidesteps this issue of interpretation by estimating univariate return periods for each
-    indexed location within a spatial field, along with low-dimensional multivariate extreme analysis 
-    on different summary statistics, assessed over the aggregate spatial field: flood volume, 
-    peak discharge, total rainfall depth, and maximum wind speed.  \cite{graler2013} also follows the latter 
-    approach, establishing a multivariate return period using a copula over three dimensions of summary statistics.
+    We observe there exists a vast difference in interpretation between these two extremes.  
+    In generating a meaningful deliverable metric of a return period, for a given event at 
+    how many sites must the threshold be breached for us to interpret the event as over-topping 
+    the threshold?  For a CDF based metric, one; for a survival function based metric, all.  
+    But as the number of locations under consideration increases, the value of such a metric 
+    decreases, as the probability of the specified scenario approaches one or zero respectively.
+    \cite{cho2023} sidesteps this issue of interpretation by estimating univariate return periods 
+    for each indexed location within a spatial field, along with low-dimensional multivariate 
+    extreme analysis on different summary statistics, assessed over the aggregate spatial field: 
+    flood volume, peak discharge, total rainfall depth, and maximum wind speed.  
+    \cite{graler2013} also follows the latter approach, establishing a multivariate return 
+    period using a copula over three dimensions of summary statistics.
     \cite{salvadori2010} follows an approach closer to ours, in that they consider the dependence 
-    structure of extreme values of the same summary statistic between different points in space.  They
-    consider yearly maximum observed flow rates between 4 of the 17 available flow meters on the catchment 
-    of the river Spey, in Scotland. \makenote{As to why only 4 locations were considered, we suspect to be an issue of 
-    interpretation: the greater the number of sites considered, the greater the delta between a calculable 
-    result and the meaningfulness of the return period as a deliverable metric.} 
-    Beyond the conceptual issue of interpreting a multivariate $F$, there arises a practical issue in presenting
+    structure of extreme values of the same summary statistic between different points in space.  
+    They consider yearly maximum observed flow rates between 4 of the 17 available flow meters 
+    on the catchment of the river Spey, in Scotland. Beyond the conceptual issue of 
+    interpreting a multivariate $F$, there arises a practical issue in presenting
     complete results of a higher dimensional process.
-    It is for these reasons that in practice, as a deliverable metric, the notion of a return period is
-    frequently tailored to the application in question.  In this paper, we tailor the survival function
-    thresholds to describe specific scenarios. \bruno{\bf Do you actually use all this? I think you should just say 
-    what we do, which is to consider the conditional joint probabilities, and mention this in passing.}
+    It is for these reasons that in practice, as a deliverable metric, the notion of a 
+    return period is frequently tailored to the application in question.  In this paper, 
+    we tailor the survival function thresholds to describe specific scenarios. 
+    \bruno{\bf Do you actually use all this? I think you should just say what we do, which is to 
+        consider the conditional joint probabilities, and mention this in passing.}
+    \makenote{I'm trying to make the case as to \emph{why} what we're doing is difficult,
+        and seldom attempted in practice.  Maybe this paragraph would make more sense 
+        as a subsection in background?  But why we're citing \cite{salvadori2010}
+        as comparable to our problem (in lower scale) wouldn't make sense until SLOSH
+        is introduced.  Very much a bootstraps problem.}
 
 One of the more compelling applications of modeling the dependence structure between locations in 
     storm surge lies in the reality that a storm surge occurs over a period of time, and the 

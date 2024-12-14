@@ -2,32 +2,24 @@
 One potential application leveraging the use of a Bayesian non-parametric prior is 
     exploiting the clustering of observations with similar characteristics.  
     Recall that $\delta_i$ is the cluster identifier for observation $i$. Within the 
-    MCMC considered in this work $\delta_i$ is explicitly sampled, though 
-    \st{it is integrated out} in our variational approach. Notice that, given
-    samples of the posterior distribution of $\bm{\alpha}$, and $\bm{\pi}$, 
-    define $\pi_j = \nu_j\prod_{k = 1}^{j-1}(1 - \nu_k)$. Then, the conditional 
-    probability of cluster assignment can be calculated as
-    \begin{equation}
-        \label{eqn:clusterprob}
-        \text{P}\left(\delta_i = j\mid\bm{\alpha},\bm{\pi},\bm{y}_i\right) 
-            = \frac{\pi_j\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_j,\bm{1})}{
-            \sum_{k = 1}^J \pi_j\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_k,\bm{1})}.
-    \end{equation}
-    This approach relies on samples of $\bm{\alpha},\bm{\nu}$ from a model fitted without 
-    cluster labelling. This can present a problem, as interpretation of clusters requires 
-    labelling, or a fixed assignment of observations to clusters, to avoid label switching.
+    MCMC approach considered in this work, $\delta_i$ is explicitly sampled using
+    its full conditional in Equation~\eqref{eqn:pdelta}.  Given samples of $\bm{\alpha}$,
+    $\bm{\pi}$, from their posterior density, $\delta_i$ can be explicitly generated
+    using the same its full conditional.
+    This approach makes no assumption with regard to the stability of cluster labelling.
+    This can present a problem, as interpretation of clusters requires effective
+    labelling---a fixed assignment of observations to clusters---to avoid label switching.
     A label-switch between clusters $a$ and $b$ occurs when the parameters of clusters 
     $a$ and $b$ swap, causing the bulk of observations formerly in cluster $a$ to be 
     classified in cluster $b$, and vice-versa. This issue is not present in a variational 
     implementation, as, once the variational distribution is obtained, the distributions 
-    of cluster parameters are fixed.  In practice, we find that the label switching 
-    concern may be overstated.  For our example, in the MCMC approach,
+    of cluster parameters are fixed.  In our example, we find that the label switching 
+    concern may be overstated.  In the MCMC approach,
     after the sampler reaches convergence, we find the posterior distribution of 
     cluster assignments and resulting cluster parameters to be relatively stable.
-
-With that being said, a means of estimating the cluster label of a given observation that 
+    Thus, a means of estimating the cluster label of a given observation that 
     is consistent between MCMC and variational approaches is to take samples of $\bm{\pi}$, 
-    and $\bm{\alpha}$, and then sample $\bm{\delta}_i$ following Equation~\eqref{eqn:clusterprob}.  
+    and $\bm{\alpha}$, and then sample $\bm{\delta}_i$ following Equation~\eqref{eqn:pdelta}.  
     Using this approach, we group observations by their sampled cluster identifier, and count 
     the number of emergent clusters in the data.
 

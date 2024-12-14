@@ -115,20 +115,19 @@ To more flexibly capture the structure of the data, we use the projected gamma d
     \begin{equation}
         \label{eqn:stickbreak}
         \text{Pr}(\bm{\alpha}\mid\ldots) 
-            = \sum_{j = 1}^Jp_j\delta_{\bm{\alpha}_j};\;\;\;
-            \sum_{j=1}^Jp_j = 1;\;\;\;
-            p_j \coloneqq\chi_j\prod_{k = 1}^{j-1}(1 - \chi_k)
+            = \sum_{j = 1}^J\pi_j\delta_{\bm{\alpha}_j};\;\hspace{1cm}\;
+            \pi_j \coloneqq\rho_j\prod_{k < j}(1 - \rho_k)
     \end{equation}
     where $\delta_{\bm{\alpha}_j}$ indicates a point mass at $\bm{\alpha}_j$ and
     $\bm{\alpha}_j$ are sampled independently from the centering distribution $G_0$.
-    Under the Pitman-Yor process, $\chi_j \sim \text{Beta}(1 - d, \eta + jd)$
+    Under the Pitman-Yor process, $\rho_j \sim \text{Beta}(1 - d, \eta + jd)$
     where $d \in [0, 1)$ denotes the \emph{discount} parameter and $\eta > -d$
     denotes the \emph{concentration} parameter. Notice that $J$ denotes a
-    truncation for the number of mixture components and, thus, $j\in \lbrace 1,\ldots,J\rbrace$ 
-    denotes indexing over \emph{clusters}.
+    truncation for the number of mixture components and, thus, 
+    $j\in \lbrace 1,\ldots,J\rbrace$ denotes indexing over \emph{clusters}.
 
-Let $y_{is}$ be the storm surge at location $s$ during storm $i$, after thresholding and projection 
-    onto $\mathbb{S}_p^{d-1}$.  Then, the model can be specified as
+Let $y_{is}$ be the storm surge at location $s$ during storm $i$, after thresholding 
+    and projection onto $\mathbb{S}_p^{d-1}$.  Then, the model can be specified as
     \begin{equation}
         \label{eqn:pypg}
         \begin{aligned}
@@ -139,7 +138,8 @@ Let $y_{is}$ be the storm surge at location $s$ during storm $i$, after threshol
         \end{aligned}
         ~\hspace{1cm}
         \begin{aligned}
-            G_0 &= {\textstyle\prod}_{s = 1}^{S}\mathcal{G}(\alpha_{s}\mid \xi_{s},\tau_{s})\\
+            G_0 &= {\textstyle\prod}_{s = 1}^{S}
+                \mathcal{G}(\alpha_{s}\mid \xi_{s},\tau_{s})\\
             \xi_{s} &\sim \mathcal{G}(\xi\mid a, b)\\
             \tau_{s} &\sim \mathcal{G}(\tau\mid c, d)
         \end{aligned} 
@@ -149,36 +149,38 @@ Let $y_{is}$ be the storm surge at location $s$ during storm $i$, after threshol
     Monte Carlo methods. We can introduce a latent cluster assignment variable $\delta_i$ 
     such that 
     $\text{P}\left(\delta_i = j\mid\bm{y},\bm{\alpha}\right) = 
-        \text{P}\left(\bm{\alpha}_i = \bm{\alpha}_j\mid \bm{y},\bm{\alpha}\right)$ as described in 
-        Equation~\eqref{eqn:stickbreak}.
-    Then the full conditional distribution of $\delta_i$ conditional on $\bm{\chi}$ is
+        \text{P}\left(\bm{\alpha}_i = \bm{\alpha}_j\mid \bm{y},\bm{\alpha}\right)$ as 
+        described in Equation~\eqref{eqn:stickbreak}.
+    Then the full conditional distribution of $\delta_i$ conditional on $\bm{\rho}$ is
     \begin{equation}
         \label{eqn:pdelta}
-        \text{P}\left(\delta_i = j\mid \bm{y},\bm{\alpha},\bm{\chi}\right) = 
-            \frac{p_j\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_j)}{
-                \sum_{k = 1}^J p_k\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_j)}
+        \text{P}\left(\delta_i = j\mid \bm{y},\bm{\alpha},\bm{\rho}\right) = 
+            \frac{\pi_j\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_j)}{
+                \sum_{k = 1}^J \pi_k\mathcal{PG}(\bm{y}_i\mid\bm{\alpha}_j)}
     \end{equation}
-    and the full conditional of $\chi_j$ conditional on $\bm{\delta}$ is
+    with $\bm{\pi}$ as described in in Equation~\eqref{eqn:stickbreak},
+    and the full conditional of $\rho_j$ conditional on $\bm{\delta}$ is
     \begin{equation}
         \label{eqn:pchi}
-            \chi_j\mid\bm{\delta} \sim \mathcal{B}\left(\zeta_{\chi_j 1} = 1 + n_j - d,\; 
-                            \zeta_{\chi_j 2} = {\textstyle \sum}_{k>j} n_k + \eta + jd\right)
+            \rho_j\mid\bm{\delta} \sim \mathcal{B}\left(\zeta_{\rho_j 1} = 1 + n_j - d,\; 
+                    \zeta_{\rho_j 2} = {\textstyle \sum}_{k>j} n_k + \eta + jd\right),
     \end{equation}
-    where $p_j = \chi_j\prod_{k=1}^{j-1}(1 - \chi_k)$,  as described in in 
-    Equation~\eqref{eqn:stickbreak}, and $n_j = \sum_{i = 1}^n\bm{1}_{\delta_i = j}$.
-    % \bruno{\bf I got lost here. What is $\bm{\nu}$?}
+    where $n_j = \sum_{i = 1}^n\bm{1}_{\delta_i = j}$.
     We can further introduce a latent $r_i\mid \bm{y}, \delta_i,\bm{\alpha} \sim 
-        \mathcal{G}\left(r\mid \sum_s \alpha{\delta_is},\sum_s y_{is}\right)$ such that the
-    likelihood of $\bm{\alpha}_j$ becomes separable by dimension.  Posterior updates 
-    for $\bm{\alpha}$, and $\bm{\xi}$ can be accomplished via Metropolis-within-Gibbs steps,
-    and the full conditional of $\tau_s$ has a known form as a Gamma distribution.
+        \mathcal{G}\left(r\mid \sum_s \alpha{\delta_is},\sum_s y_{is}\right)$ such 
+    that the likelihood of $\bm{\alpha}_j$ becomes separable by dimension.  Posterior 
+    updates for $\bm{\alpha}$, and $\bm{\xi}$ can be accomplished via 
+    Metropolis-within-Gibbs steps, and the full conditional of $\tau_s$ has a known 
+    form as a Gamma distribution.
 
-Such a fitting scheme can work well for a moderately sized inference problem.  In \cite{trubey:pg},
-    they report requiring approximately \num{20} minutes to run the sampler for \num{40000} iterations, 
-    on a problem with \num{532} observations $\times$ \num{47} sites.  If we want to conduct
-    MCMC inference for more sites, and more observations, the sampler may need more iterations to
-    reach convergence, each iteration will require more CPU time, and the sampler will have an 
-    increasing memory footprint. Thus, we consider, as an alternative, a variational inference approach.
+Such a fitting scheme can work well for a moderately sized inference problem.  In 
+    \cite{trubey:pg}, they report requiring approximately \num{20} minutes to run 
+    the sampler for \num{40000} iterations, on a problem with \num{532} observations 
+    $\times$ \num{47} sites.  If we want to conduct MCMC inference for more sites, 
+    and more observations, the sampler may need more iterations to reach convergence; 
+    each iteration will require more CPU time, and the sampler will have an increasing 
+    memory footprint. Thus, we consider, as an alternative, a variational inference 
+    approach.
 
 \subsection{Variational Inference - A Brief Overview\label{sec:varbayes}}
 Variational inference, or variational Bayesian statistics, is an alternative method of 
@@ -362,7 +364,7 @@ As we are considering a mixture model where potentially there exists a label swi
     of cluster assignment is uniform among all clusters up to the truncation point. That 
     is, for truncation point $J$,
     \[
-        \text{E}[\bm{\chi}] = 
+        \text{E}[\bm{\rho}] = 
             \left(\frac{1}{J},\frac{1}{J-1},\ldots,\frac{1}{3},\frac{1}{2}\right)
     \]
     leading to $\text{E}[p_j] = \frac{1}{J}$ for all $j = 1,\ldots,J$.
@@ -370,37 +372,36 @@ As we are considering a mixture model where potentially there exists a label swi
     position via an abridged MCMC sampler, which we describe thusly:
     Sampling an initial position $\bm{\alpha_j} \sim 
         \mathcal{LN}(\bm{\alpha}\mid\bm{\mu} = \bm{0}_s,\bm{\Sigma} = 3I_s)$ and an
-    initial random cluster assignment, we iteratively update $\chi_j$ for $j = 1,\ldots,J$
+    initial random cluster assignment, we iteratively update $\rho_j$ for $j = 1,\ldots,J$
     according to Equation~\ref{eqn:pchi}, $\delta_i$ for $i = 1,\ldots,m$ according to
     Equation~\ref{eqn:pdelta}, and $\bm{\mu}$ via a normal-normal Bayesian update routine.
     Every iteration, new $\bm{\alpha}_j$ for empty clusters are resampled from 
     $\mathcal{LN}(\bm{\alpha}\mid\bm{\mu}, 3I_s)$.  
     This abridged sampler runs for some small number of iterations; in
-    our testing we used 1000 iterations.  Then we set the starting position for the variational
-    algorithm using the last state of the abridged MCMC sampler as follows:
+    our testing we used 1000 iterations.  Then we set the starting position for the 
+    variational algorithm using the last state of the abridged MCMC sampler as follows:
     \begin{equation}
         \begin{aligned}
         q_{\alpha_{js}} &= 
             \mathcal{LN}\left(\psi_{\alpha_{js\mu}} \coloneqq\log(\alpha_{js}) - 0.005,\; 
                 \psi_{\alpha_{js}\sigma} \coloneqq0.1\right)\\
-        q_{\chi_j} &= \text{Logit}\mathcal{N}\left(
-        \psi_{\chi_j\mu} \coloneqq\psi(\zeta_{\chi_j 1}) - \psi(\zeta_{\chi_j 2}), \;
-            \sigma_{\chi_j\mu}^2 \coloneqq\psi^{\prime}(\zeta_{\chi_j 1}) +
-                \psi^{\prime}(\zeta_{\chi_j 2}),
+        q_{\rho_j} &= \text{Logit}\mathcal{N}\left(
+        \psi_{\rho_j\mu} \coloneqq\psi(\zeta_{\rho_j 1}) - \psi(\zeta_{\rho_j 2}), \;
+            \sigma_{\rho_j\mu}^2 \coloneqq\psi^{\prime}(\zeta_{\rho_j 1}) +
+                \psi^{\prime}(\zeta_{\rho_j 2}),
             \right)
         \end{aligned}    
     \end{equation}
     where $\psi(\cdot)$ and $\psi^{\prime}(\cdot)$ are the digamma and trigamma functions
     respectively.  The distributional values for $q_{\alpha_{js}}$ are assigned via method
     of moments, where the standard deviation has been fixed to $0.1$.  The distributional
-    values for $q_{\chi_j}$ have been assigned following \cite{aitchison1980} as the best
+    values for $q_{\rho_j}$ have been assigned following \cite{aitchison1980} as the best
     approximation of a logit-normal to a beta distribution as measured by minimum KL 
     divergence.  There is a computational burden associated with establishing at least an
     abridged MCMC sampler, but given the limited number of iterations, and lower number of
-    parameters being learned, that burden is relatively low compared to the full MCMC approach.
-    This approach does have the twin benefits of moving the variational optimizer into a 
-    potentially better optima, faster.
-    % \bruno{\bf I am having a hrad time following this.}
+    parameters being learned, that burden is relatively low compared to the full MCMC 
+    approach. This approach does have the twin benefits of moving the variational 
+    optimizer into a potentially better optima, faster.
 
 \begin{figure}[htb]
     \caption{Rise in energy score over baseline by number of dimensions, on simulated data 
@@ -417,9 +418,10 @@ To validate the variational model, and investigate the effects of different clas
     parameters are generated, and then from for each parameter set, a training dataset and 
     testing dataset, each of \num{1000} replicates, are generated.
 
-As the metric for our evaluation, we use the \emph{energy score} criterion \citep{gneiting2007}
-    which is a generalization of the \emph{continuous ranked probability score} to a multivariate
-    setting.  This energy score takes the form
+As the metric for our evaluation, we use the \emph{energy score} criterion 
+    \citep{gneiting2007} which is a generalization of the 
+    \emph{continuous ranked probability score} to a multivariate setting.  This energy 
+    score takes the form
     \[
       S_{\text{ES}}(P, \bm{x}) = \text{E}_p\left[g(\bm{X},\bm{x})\right] - 
         \frac{1}{2}\text{E}_p\left[g(\bm{X},\bm{X}^{\prime})\right]
@@ -431,23 +433,24 @@ As the metric for our evaluation, we use the \emph{energy score} criterion \cite
     definite kernel we use is described in Prop.~3 of \cite{trubey:pg}, 
     and leverages the fact that all faces of $\mathbb{S}_{\infty}^{d-1}$
     are pairwise adjacent.  By rotating the face of the second point into 
-    the same hyperplane as that of the first, the kernel metric becomes the Euclidean 
-    distance between the first point, and the rotated second point.
+    the same hyperplane as that of the first, the kernel metric becomes the 
+    Euclidean distance between the first point, and the rotated second point.
     
-Figure~\ref{fig:energyscore} displays the results of our simulation, using the rise in energy score 
-    calculated from a posterior predictive sample from the fitted model against the target 
-    sample, over a baseline energy score calculated using another random sample from the same 
-    generating distribution.  Thus, small values indicate high fidelity of the model in 
-    capturing the generating distribution. We investigate this recovery under a variety of 
-    conditions increasing the number of dimensions, as well as the number of mixture components 
-    in the generating distribution. With this simulation study, we see that
-    a pure MCMC approach achieves the best model fidelity, but \emph{VB Pregamed}, using 
-    the abridged MCMC sampler to set a starting position for the variational algorithm, 
-    achieves a model fidelity that is very nearly indistinguishable from that of the 
-    MCMC model.  It also runs significantly faster.
-    Note that, as the dimensionality of the problem grows, energy scores become less able to 
-    assess model fidelity, as the distance between each observation or replication will approach 
-    a constant value \citep{bishop2006}.
+Figure~\ref{fig:energyscore} displays the results of our simulation, using the rise 
+    in energy score calculated from a posterior predictive sample from the fitted 
+    model against the target sample, over a baseline energy score calculated using 
+    another random sample from the same generating distribution.  Thus, small values 
+    indicate high fidelity of the model in capturing the generating distribution. We 
+    investigate this recovery under a variety of conditions increasing the number of 
+    dimensions, as well as the number of mixture components in the generating 
+    distribution. With this simulation study, we see that a pure MCMC approach 
+    achieves the best model fidelity, but \emph{VB Pregamed}, using the abridged 
+    MCMC sampler to set a starting position for the variational algorithm, achieves 
+    a model fidelity that is very nearly indistinguishable from that of the MCMC model.  
+    It also runs significantly faster. Note that, as the dimensionality of the problem 
+    grows, energy scores become less able to assess model fidelity, as the distance 
+    between each observation or replication will approach a constant value 
+    \citep{bishop2006}.
     
     % \bruno{\bf We need to indicate that the "MCMC-initialized VB" is better than the
     % MCMC because it is (I guess) faster}
@@ -459,12 +462,6 @@ As the motivating example for our analysis of the extremal dependence structure,
     and exploiting the dependence structure of extremes between specific locations.  
     As such, rather than the entire grid, it makes sense to consider data pertaining
     specifically to those locations. 
-    % If one is performing contingency planning in preparation for the storm season, 
-    % it would be helpful to know the probability of such services being rendered 
-    % inoperable simultaneously, precisely when they are needed most.  If one is 
-    % seeking sites for a new service provider, it would be helpful understand the 
-    % likelihood of a proposed location being rendered inoperable in the same 
-    % manner.  For these reasons 
     Thus, we subset the data to grid cells which are in the vicinity of such locations 
     of interest.  We gather these locations from the \emph{point and landmark} file 
     of the US Census Bureau's 2023 \emph{TIGER} database \citep{tiger}.
@@ -478,9 +475,7 @@ As the motivating example for our analysis of the extremal dependence structure,
     The quality of MLE estimation of the other marginal GP parameters will suffer if the
     threshold is not well chosen, so to ensure that excesses follow a generalized Pareto,
     we limit analysis to cells that meet this criteria.
-    % : if the threshold for excesses $b$ is not set above the minimum observed
-    % value in the dataset, MLE estimation of the other marginal GP parameters will suffer.
-    Here we suffer another tradeoff, the implications of which are explored in 
+    Here we suffer another trade-off, the implications of which are explored in 
     Figure~\ref{fig:thresholdselection}.  Setting a higher quantile threshold allows more 
     sites to be included in the analysis, but in turn reduces the number of storm 
     simulations which exceed the threshold, which in turn reduces the amount of 
@@ -492,16 +487,17 @@ As the motivating example for our analysis of the extremal dependence structure,
     % outputs that correspond to key services of infrastructure. }
     % \comment{I have re-written to hopefully make the requirement more clear.}
 
-\begin{figure}[ht]
+\begin{figure}[t]
     \centering
+    \includegraphics[width=0.7\linewidth]{plots/explore_threshold}
     \caption{Trade-offs in threshold specification:
     (Left) Proportion of sites with threshold $b_{qs} > 0$ versus $(1 - q)$; 
-    (Right) Proportion of storms surviving thresholding, $\text{P}(\bm{W}_i \not< \bm{b}_q)$ versus $(1 - q)$.
+    (Right) Proportion of storms surviving thresholding, 
+    $\text{P}(\bm{W}_i \not< \bm{b}_q)$ versus $(1 - q)$.
     \label{fig:thresholdselection}}
-    \includegraphics[width=0.7\linewidth]{plots/explore_threshold}
 \end{figure}
 
-\begin{table}[htb]
+\begin{table}[b]
     \centering
     \caption{Slices of SLOSH for analysis.  \emph{Storms} specifies the number of storms that survive 
     thresholding, of the total \num{4000} storms in the sample.  The probability gives that value 
@@ -554,10 +550,6 @@ The validity of the proposed PoT model depends on asymptotic results that consid
     relevance of the storm surge simulation data to the region where hurricanes making
     landfall within the bounds of our data would have the greatest effect.  We are
     thus limited to Delaware Bay and the
-    % Figure~\ref{fig:sloshexplore} shows those boundaries over a portion of 
-    % the coastline. We observe that this is a rather restricted region, 
-    % in comparison to the extent of the data displayed in Figure~\ref{fig:slosh1run},
-    % and limits the applicability of our methods to the Delaware bay and its 
     surrounding area. This corresponds to the \emph{Delaware Bay} slice.  Further 
     refinement of the sample is performed by focusing on locations of particular 
     interest, identified through the use the feature class codes that correspond 
@@ -577,12 +569,13 @@ The validity of the proposed PoT model depends on asymptotic results that consid
 %     \includegraphics[width=0.9\linewidth]{plots/threshold_histogram}
 % \end{figure}
 
-\begin{figure}[htb]
+\begin{figure}[tb]
     \centering
     \includegraphics[width=0.8\textwidth]{plots/threshold_pairs}
     \caption{Pairwise plot of SLOSH simulation inputs that survived thresholding in the 
-        \emph{Threshold} slice.  Sea level rise in mm, approach angle in degrees (360 is North),
-        approach speed in Kph, minimum pressure in mBar, latitude in decimal degrees.
+        \emph{Threshold} slice.  Sea level rise in \unit{\mm}, approach angle 
+        in degrees (360 is North), approach speed in \unit{\km\per\hour}, 
+        minimum pressure in \unit{\milli\bar}, latitude in decimal degrees.
         \makenote{
             need to make the diagonals into histograms.  density estimators aren't cutting it.
             Also, plots might look better as contours.  kind of messy now.  And contour plots
@@ -591,23 +584,27 @@ The validity of the proposed PoT model depends on asymptotic results that consid
         \label{fig:thetahistogram}}
 \end{figure}
 
-Figure~\ref{fig:thetahistogram} shows the marginal histograms of SLOSH input 
-    parameters, for storms which exhibited extreme behavior in the \emph{Threshold} 
-    slice.  Storm parameters in the original simulation were sampled via Latin 
-    hypercube, so would appear marginally uniform.  The difference between marginal 
-    uniform, and the observed densities provides some indication of what 
-    characteristics are necessary for a storm to exceed the threshold.
-    Imprimis, for sea level rise it is readily apparent that a higher sea level will
-    make it easier for a storm to inundate larger swaths of land, and to a
-    greater degree.  So we expect and, in fact, see a higher proportion of storms exceeding
-    the threshold, for a higher sea level rise.  Similarly, a lower minimum pressure in the storm's
-    eye corresponds to a more powerful storm.  This bears out, as a lower minimum pressure has
-    a higher probability of exceeding the threshold.  The relationship to approach speed is 
-    interesting in that it is nearly linear.  Perhaps, the mechanism there lies in that a higher
-    approach speed indicates more power behind the storm.  The spike in approach angle past 360
-    degrees is interesting as well. 360 degrees indicates due North, thus approach angles 
-    beyond 360 degrees indicate the storm is heading slightly northeast. As these approaches are
-    on the eastern seaboard, this means a shallower approach angle relative to the
-    land---perhaps offering a given storm more time to inundate larger swaths of land.
+On the diagonal, Figure~\ref{fig:thetahistogram} shows the marginal histograms \makenote{TODO} 
+    of SLOSH input parameters, for storms which exhibited extreme behavior in the \emph{Threshold} 
+    slice.  The off-diagonals are scatter-plots of the storm parameters, which reveal pairwise
+    relationships that contribute to a particular storm exceeding the threshold.  Recall,
+    Storm parameters in the original simulation were sampled via Latin hypercube, so would appear 
+    uniform, with no discernible pattern in the pairwise scatter-plots.  The difference between 
+    apparently independent uniform, and the observed densities provides some indication of what 
+    characteristics are necessary for a storm to exceed the threshold. Imprimis, for sea level 
+    rise it is readily apparent that a higher sea level will make it easier for a storm to 
+    inundate larger swaths of land, and to a greater degree.  So we expect and, in fact, 
+    see a higher proportion of storms exceeding the threshold, for a higher sea level rise.  
+    Similarly, a lower minimum pressure in the storm's eye corresponds to a more powerful 
+    storm.  This bears out, as a lower minimum pressure has a higher probability of exceeding 
+    the threshold. The relationship to approach speed is interesting in that it is nearly 
+    linear.  Perhaps, the mechanism there lies in that a higher
+    approach speed indicates more power behind the storm.  The spike in approach angle past 
+    360 degrees is interesting as well, especially considering the lull in approach angle 
+    between 270 and 350 degrees. 360 degrees indicates due North, thus approach angles
+    beyond 360 degrees indicate the storm is heading slightly northeast. As these approaches 
+    are on the eastern seaboard, this means a shallower approach angle relative to the
+    land---perhaps offering a given storm more time to inundate larger swaths of land.  The 
+    apparent lack of interaction between approach angle and latitude is most interesting.
 
 % EOF 

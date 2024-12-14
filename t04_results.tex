@@ -1,42 +1,50 @@
-%\subsection{SLOSH}
-
-\begin{table}[hb]
+\begin{table}[tb]
     \centering 
     \input{./tables/extant_clusters}
-    \caption{Number of emergent clusters identified via posterior sampling.\label{tab:extant_clusters}}
+    \caption{Counts of emergent clusters identified in data slices, as via posterior sampling.\label{tab:extant_clusters}}
 \end{table}
 
 In Section~\ref{sec:slosh} we described our criteria for narrowing the focus of our analysis,
     and specifically in Table~\ref{tab:datasets} we detailed the number of observations, and
     number of storm simulations, for the resulting datasets at each stage of this narrowing
     process.  In Table~\ref{tab:extant_clusters}, we detail the number of clusters that emerge
-    in fitting our model to these datasets.   Here we encounter a dilemma:  the model fitted 
-    via variational methods, and the model fitted via MCMC methods, are nominally the same model,
-    and should result in a similar number of emergent clusters. That there is such a
-    discrepancy in the number of emergent clusters is likely a weakness of the variational
+    in fitting our model to these datasets.  In all cases, for the Pitman-Yor process parameters,
+    we used a concentration parameter $\eta = 0.1$, along with a discount parameter also of $0.1$.
+    For any given model and dataset, the number of emergent clusters found was relatively robust 
+    to our choice of parameters, for concentration within a range from \num{0.01}--\num{20}, and
+    discount within a range \num{0.001}--\num{2}.  Higher values for both generally resulted in
+    slightly more emergent clusters, but did not change the total number by more than \num{10} percent.
+    Here we encounter an issue:  the model fitted via variational methods, and the model fitted 
+    via MCMC methods, are nominally the same model, and should result in a similar number of 
+    emergent clusters. That there is such a discrepancy is likely a weakness of the variational
     fitting process.  In the variational Bayes fitting method, we see the number of extant
     clusters fall significantly as the number of dimensions rises.  This behavior is predicted 
     by \cite{chandra2023}, which argues that as dimensionality increases, a BNP mixture model 
     will degenerate to one of two possible states: every observation falling into a single 
-    cluster, or every cluster a singleton. We do not quite see that happen in the MCMC approach,
+    cluster, or every cluster a singleton. We do not quite see that happen yet in the MCMC approach,
     where we see the number of extant clusters actually rise slightly between Delaware slice 
     and the Threshold slice.  However, the dimensionality of the threshold slice is approximately
     14.6 times that of the Delaware slice, and the number of simulations which meet the criteria
     for inclusion in the Threshold slice is approximately 1.4 times that of the Delaware slice.
     Taking into account the associated increase in data complexity between the two slices, we
     should see \emph{significantly more} clusters.  That we only see marginally more appears to
-    indicate that the BNP mixture of projected gammas will degenerate towards a single cluster.
-
-\cite{chandra2023} suggests as an amelioration of this degeneration behavior to instead base the 
-    BNP process on a lower-dimensional representation of the output space---suggesting a factor
-    analysis.  The regression model we have developed works in a similar manner, representing
-    an $S$-dimensional space using a $d$-dimensional vector.  
-
+    indicate that the BNP mixture of projected gammas will eventually degenerate towards a 
+    single cluster.
+    \cite{chandra2023} suggests an amelioration of this behavior: to instead base the 
+    BNP process on a lower-dimensional representation of the output space---suggesting 
+    a factor analysis.  The regression model we have developed works in a similar manner, 
+    representing an $S$-dimensional space using a $d$-dimensional vector.  In the regression
+    models, we see the opposite problem occuring: there are too many clusters.  The Pitman-Yor
+    process is accounting for the lack of information in $\bm{X}$, the regressors, by producing
+    more clusters.  We see evidence to this interpretation by the addition of the random 
+    effects.  By including random effects in the model specification, more information is 
+    contained within the regressors, and thus a single cluster is able to represent slightly 
+    more varied outcomes.  Thus, the number of emergent clusters is marginally reduced.
 
 \begin{figure}[ht]
-    \caption{Locations of identified sites that experienced inundation in more than 
-        $5$ percent of storms.  Specifically identified are two locations of 
-        interest. \makenote{Change Label to PIA, add packer terminal, make plot 
+    \caption{Locations of identified sites in the \emph{Restricted} Slice.
+    Specifically identified are two locations of interest.
+    \makenote{Change Label to PIA, add packer terminal, make plot 
         in-line to limit lost page space?} \label{map:delawarebay}}
     \centering
     \includegraphics[height=3in]{./plots/delaware}
