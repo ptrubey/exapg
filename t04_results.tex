@@ -130,60 +130,68 @@ In Figure~\ref{fig:marginalcdfs}, we observe the marginal empirical and posterio
     the airport is situated along the banks of the Delaware River.  Storm surge has much further to
     travel to reach this point, yet it experiences inundation much more frequently, owing to the fact
     it is only 4 feet above sea level, relative to the 9 feet for Dover AFB \makenote{[Confirm]}.  
-    Packer Avenue Terminal is similarly situated and experiences inundation in similar levels to PIA.
+    Packer Avenue Terminal is similarly situated along the Delaware River, further upstream than PIA,
+    but it experiences flooding significantly less than PIA.
 
-\begin{table}[ht]
-\centering
-\caption{Cluster concentration for identified models and fitting 
-        methods, on the \emph{Restricted} Slice: columns specify quantiles 
-        detailing the proportion of data contained within the table cells 
-        indicated number of clusters.\label{tab:cluster_concentration}} 
-\input{./tables/cluster_concentration}
-\end{table}
+% \begin{table}[ht]
+% \centering
+% \caption{Cluster concentration for identified models and fitting 
+%         methods, on the \emph{Restricted} Slice: columns specify quantiles 
+%         detailing the proportion of data contained within the table cells 
+%         indicated number of clusters.\label{tab:cluster_concentration}} 
+% \input{./tables/cluster_concentration}
+% \end{table}
 
-Looking at equivalent marginal plots for all locations, nearly all preserve the
-    same ordering, from top-left to bottom-right: first the Variational Bayes fit of PYPG, then the 
-    Monte Carlo fit of the same model, then the regression models---though the specific ordering of
-    the regression models changes.  The marginal empirical CDFs tends to bounce\makenote{[rephrase]}
-    between the MCMC model, and the regression models.  This means that the variational fit
-    tends to consistently predict lower values than is appropriate. This permits us some insight 
-    to comment what effect granularity, or the number of extant clusters, has in model fidelity.
-    In Table~\ref{tab:cluster_concentration}, we see detail the number of clusters, or Pitman-Yor
-    process mixture components, identified in the dataset under the specified model and fitting 
-    method.  Observe the large difference between the MCMC fitting method and the VB fitting
-    method. 
-    \makenote{table of average $\text{E}[\alpha_s]$ under each model, as well as 
-    $\text{E}\left[\frac{\alpha_s}{\lVert\bm{\alpha}\rVert_{\infty}}\right]$}
-
-
-
-    \bruno{\bf Let me see if I understand what you are trying to say. The CDFs obtained from the models with a 
-    regression component are the ones that are closer to the empirical CDFs, right? And the variational Bayes 
-    are the ones that are the farther, right? Taking this as a measure of the
-    ability of the model to replicate the observed data (what you call
-    fidelity), this provides an indication of goodness of fit, right? Looking at
-    the number of clusters that are estimated from each of the different
-    approaches, it looks like the larger the number of clusters, the closer the estimated 
-    CDF is to the empirical one. That makes sense, as the empirical CDFhas not clusters, 
-    every data point is a cluster. Is this the story you want to tell? Can you try doing
-    that in a clearer way?}
+Looking at equivalent marginal plots for all locations (including those not displayed), nearly 
+    all preserve the same ordering, from top-left to bottom-right: first the Variational Bayes 
+    fit of PYPG, then the Monte Carlo fit of the same model, then the regression models---though 
+    the specific ordering of the regression models changes.  The marginal empirical CDF for each 
+    location tend to favor the regression models or the MCMC fit model.
+    This means that the variational fit model 
+    tends to consistently under-predict, or predict lower values than is appropriate. This fact
+    permits us some insight to comment what effect granularity, or the number of extant clusters, 
+    has in model fidelity.  In Table~\ref{tab:extant_clusters}, we saw counts of extant clusters
+    for each model and fitting approach.  Variational methods found significantly fewer than MCMC, 
+    while the regression models found significantly more.  It is perhaps enlightening to realize
+    that the largest single cluster in the variational approaches for all datasets is a cluster
+    with all shape parameters tending towards 0.  This parameter set results in an extremely unstable
+    distribution, with its mass concentrated near the edges of the support; specifically edges
+    where only one component is large.  Replicates drawing an angular component from this cluster 
+    would tend to result in smaller replicates of $V_s^*$, perhaps explaining the under-prediction 
+    of the variational approach overall.  That the empirical CDF might favor the regression models
+    should perhaps come as little surprise; with the number of extant clusters large, individual 
+    variation is easier to account for.  However, in doing so, we are almost certainly over-fitting
+    the model to the data.
+    
+    % \bruno{\bf Let me see if I understand what you are trying to say. The CDFs obtained from the models with a 
+    % regression component are the ones that are closer to the empirical CDFs, right? And the variational Bayes 
+    % are the ones that are the farther, right? Taking this as a measure of the
+    % ability of the model to replicate the observed data (what you call
+    % fidelity), this provides an indication of goodness of fit, right? Looking at
+    % the number of clusters that are estimated from each of the different
+    % approaches, it looks like the larger the number of clusters, the closer the estimated 
+    % CDF is to the empirical one. That makes sense, as the empirical CDFhas not clusters, 
+    % every data point is a cluster. Is this the story you want to tell? Can you try doing
+    % that in a clearer way?}
 
 \subsection{Conditional Survival Curves}
 From Equation~\ref{eqn:condsurv}, we can obtain the conditional probability of
-    exceeding a specified threshold for some set of components, given that other dimensions exceed their specified 
-    threshold. Using the \emph{Critical} slice with a model fitted via MCMC, we use this equation to establish 
-    conditional survival curves for three locations: Dover Air Force Base, Philadelphia International Airport, 
-    as well as the Packer Avenue Marine Terminal, a major shipping hub.  Packer Avenue Terminal is only a few 
-    miles up the Delaware River from PIA, so we may expect a strong association in extreme behavior between 
-    those two locations. In keeping with our goal of a practical actionable metric, we 
-    consider three scenarios where we observe extreme behavior further out in the bay than the positions of
-    interest.  In the \emph{Lower Bay} scenario, we observe extreme behavior at sites on the south side of the 
-    bay towards the entrance of the bay.  That is, a scenario in which sites 1,2, and 7 (Beebe Hospital, 
-    Henlopen Memorial Park, and Smyrna Airport respectively) experienced storm surge at or above their
-    respective 90th percentiles.  In the \emph{Upper Bay} scenario, we observe extreme behavior at sites 6,
-    and 8 (Bay Island Fish and Wildlife Refuge, and Salem Airfield respectively), sites situated along the
-    northern edge of Delaware Bay.  In the \emph{Mouth} scenario, we observe extreme behavior at all sites near
-    the mouth of the bay.  This includes sites 1, 2, 3, and 4 (Beebe Hospital, Henlopen Memorial Park, 
+    exceeding a specified threshold for some set of components, given that other 
+    dimensions exceed their specified threshold. Using the \emph{Critical} slice with 
+    a model fitted via MCMC, we use this equation to establish conditional survival 
+    curves for three locations: Dover Air Force Base, Philadelphia International 
+    Airport, and Packer Avenue Marine Terminal.  In keeping with our goal of a 
+    practical actionable metric, we consider three scenarios where we observe extreme 
+    behavior further out in the bay than the positions of interest.  In the 
+    \emph{Lower Bay} scenario, we observe extreme behavior at sites on the south 
+    side of the bay towards the entrance of the bay.  That is, a scenario in which 
+    sites 1,2, and 7 (Beebe Hospital, Henlopen Memorial Park, and Smyrna Airport 
+    respectively) experienced storm surge at or above their respective 90th 
+    percentiles.  In the \emph{Upper Bay} scenario, we observe extreme behavior 
+    at sites 6, and 8 (Bay Island Fish and Wildlife Refuge, and Salem Airfield 
+    respectively), sites situated along the northern edge of Delaware Bay.  In 
+    the \emph{Mouth} scenario, we observe extreme behavior at all sites near the 
+    mouth of the bay.  This includes sites 1, 2, 3, and 4 (Beebe Hospital, Henlopen Memorial Park, 
     Paramount Airport, and the Cape Regional Medical Center). 
 
 \begin{figure}[htb]
