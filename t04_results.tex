@@ -95,24 +95,7 @@ As a partial amelioration of this issue, we can subjectively assess recovery of 
     where $\bm{\xi}$, $\bm{a}$, and $\bm{b}$ were previously calculated.  
     For consistency with regard to the originating data, we truncate replicates from the 
     posterior predictive distribution such that $W_{s}^* \geq 0$.
-
-% \begin{figure}[ht]
-%     \centering
-%     \begin{subfigure}{0.8\textwidth}
-%         \caption{Dover Air Force Base\label{plot:marginal_doverafb}}
-%         \includegraphics[width=\textwidth]{./plots/delaware_marginal_dover_afb.png}
-%     \end{subfigure}
-%     \\\vspace{1cm}~\\
-%     \begin{subfigure}{0.8\textwidth}
-%         \caption{Philadelphia International Airport\label{plot:marginal_pia}}
-%         \includegraphics[width=\textwidth]{./plots/delaware_marginal_phil_ia.png}    
-%     \end{subfigure}
-%     \caption{Empirical, and posterior predictive cumulative distribution functions for marginal 
-%     $v$, $V^*$ (Left) and $w$, $W^*$ (Right), at denoted locations, under various modeling
-%     considerations.\makenote{remove legend name, compress into single faceted plot per location. 
-%     make plot for packer terminal?}}
-% \end{figure}
-
+    
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.95\linewidth]{./plots/delaware_marginal_cdfs.png}
@@ -194,25 +177,12 @@ From Equation~\ref{eqn:condsurv}, we can obtain the conditional probability of
     mouth of the bay.  This includes sites 1, 2, 3, and 4 (Beebe Hospital, Henlopen Memorial Park, 
     Paramount Airport, and the Cape Regional Medical Center). 
 
-\begin{figure}[htb]
-    \begin{subfigure}[t]{0.31\textwidth}
-        \centering
-        \includegraphics[width=0.99\linewidth]{./plots/condsurv/doverafb}
-        \caption{Dover Air Force Base\label{fig:condsurv1d:doverafb}}
-    \end{subfigure}%
-    ~ 
-    \begin{subfigure}[t]{0.31\textwidth}
-        \centering
-        \includegraphics[width=0.99\linewidth]{./plots/condsurv/pia}
-        \caption{Philadelphia International Airport\label{fig:condsurv1d:pia}}
-    \end{subfigure}%
-    ~
-    \begin{subfigure}[t]{0.31\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{./plots/condsurv/packerave}
-        \caption{Packer Avenue Marine Terminal\label{fig:condsurv1d:packerave}}
-    \end{subfigure}
-    \caption{Conditional survival curves for the labelled locations, under three scenarios of the observed \label{fig:condsurv1d}}
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=0.95\linewidth]{./plots/condsurv/condsurv_1d_mcmc.png}
+    \caption{Conditional Survival Curves (standardized) for labelled locations, under three 
+        scenarios where particular \emph{downstream} locations have already experienced 
+        significant inundation.\label{fig:condsurv1d}\makenote{ Perhaps add a baseline?}}
 \end{figure}
 
 Figure~\ref{fig:condsurv1d} shows the one-dimensional survival curves for these three locations, under 
@@ -222,56 +192,39 @@ Figure~\ref{fig:condsurv1d} shows the one-dimensional survival curves for these 
     we see the survival curve for the Upper Bay scenario dip below that of both Lower Bay and Mouth scenarios.  
     What is interesting, however, is that that ordering is not uniform; we see the ordering change to that
     behavior around $z = 4$.  The Mouth scenario indicates a storm that has inundated both the lower and
-    upper portions of the Delaware Bay entrance, indicating an extremely powerful storm that is well positioned
+    upper portions of the Delaware Bay entrance, indicating a powerful storm that is well positioned
     to enter the Bay.  As such, it is no surprise that the survival curve associated with that scenario
     indicates the highest probability of extreme surge throughout the entire curve.  What is interesting is that
     we observe the same crossing behavior and the same ordering on all three curves, though their exact shape
     and the exact point at which that cross occurs differ.  It is apparent that relative to the other
     scenarios, extreme surge on the Upper Bay sites does not strongly indicate increased surge at the other 
-    sites.  It may be the case that a hurricane optimally aligned towards inundating the North bank is 
+    sites.  It appears to be the case that a hurricane optimally aligned towards inundating the North bank is 
     sub-optimally aligned towards inundating the rest of the bay.
 
-\begin{figure}[htb]
+\begin{figure}[tb]
     \centering
-    \includegraphics[width=0.3\linewidth]{./plots/condsurv/doverafb_pia}
-    \caption{Conditional Survival Curve (Contour Plot) of flooding at Dover AFB (X) vs Philadelphia International 
-        Airport (Y).\label{fig:condsurv2d:doverpia}
-        \makenote{Add plot in real units}}
+    \includegraphics[width=.95\linewidth]{plots/condsurv/condsurv_2d_mcmc.png}
+    \caption{Conditional 2$d$ survival curve (contour plot, standardized) of flooding, at selected 
+        pairs of locations. Note, (X axis) :: (Y axis).\label{fig:condsurv2d}}
 \end{figure}
 
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.3\linewidth]{./plots/condsurv/doverafb_packer}
-    \caption{Conditional Survival Curve (Contour Plot) of flooding at Dover AFB (X) vs Packer Avenue Terminal (Y).
-        \label{fig:condsurv2d:doverpacker}
-        \makenote{Add plot in real units}
-        }
-\end{figure}
-
-Figure~\ref{fig:condsurv2d:doverpia} provides a contour plot of a two-dimensional survival surface, between
-    flooding at Dover AFB and flooding at PIA, conditional on the listed scenarios.  Recalling that Dover AFB 
-    is on the south edge of the bay, while PIA is far up the Delaware River, we may not expect to see a strong
-    association between the two locations.  Indeed, on the contour plot we observe the survival surface is nearly 
-    flat on the transition between Dover AFB and PIA. \makenote{This phrasing is terrible.}  This shape indicates
-    an only moderate dependence between the locations, under these scenarios.  But we must call 
-    attention to the ordering of the contours of the survival surface.  Here, the Lower Bay scenario crosses 
-    even the Mouth scenario.  In contrast, in Figure~\ref{fig:condsurv2d:doverpacker}, we see that survival
-    surface is actually concave, which indicates an extremely weak dependence between the two 
-    locations.  This is understandable, as Packer Avenue Terminal is around 4 miles upstream of PIA,
-    even further away from Dover AFB.    
-    
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.3\linewidth]{./plots/condsurv/pia_packer}
-    \caption{Conditional Survival Curve (Contour Plot) of flooding at Dover AFB (X) vs Packer Avenue Terminal (Y). 
-        \label{fig:condsurv2d:piapacker}
-        \makenote{Add plot in real units}}
-\end{figure}
-
-Figure~\ref{fig:condsurv2d:piapacker} similarly presents a contour plot of the survival surface between 
-    PIA and Packer Avenue terminal. Given the proximity of the locations, we would expect a strong 
-    dependence.  That dependence is borne out, as in the contour plot of the survival surface we observe 
+Figure~\ref{fig:condsurv2d} provides contour plots of a two-dimensional survival surface, 
+    between flooding at pairs of locations in the \emph{Critical} slice, still conditioning 
+    on various scenarios of flooding in-process.  Considering Dover AFB :: PIA, recalling 
+    that Dover AFB is on the south edge of the bay, while PIA is far up the Delaware River, 
+    we may not expect to see a strong association between the two locations.  Indeed, on the 
+    contour plot we observe the survival surface is nearly linear on the transition between 
+    Dover AFB and PIA. \makenote{This phrasing is terrible.}  This shape indicates
+    only moderate dependence between the locations, under these scenarios.  But we must call 
+    attention to the ordering of the contours of the survival surface.  Here, the Lower Bay 
+    scenario crosses even the Mouth scenario.  In contrast, in Dover AFB :: Packer Ave., we 
+    see that survival surface is actually concave, which indicates an extremely weak 
+    dependence between the two locations.  This is understandable, as Packer Avenue Terminal 
+    is around 4 miles upstream of PIA, even further away from Dover AFB.  Given the proximity
+    between Packer Ave., and PIA, we would expect a rather strong dependence.  That relationship
+    is borne out, as in the contour plot of the survival surface in PIA :: Packer Ave we observe 
     strong convexity.
+
 
 
 \makenote{Insert conditional survival curves given threshold under regression model.}
