@@ -403,11 +403,12 @@ As we are considering a mixture model where potentially there exists a label swi
     approach. This approach does have the twin benefits of moving the variational 
     optimizer into a potentially better optima, faster.
 
-\begin{figure}[htb]
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=0.95\linewidth]{plots/energy_score}
     \caption{Rise in energy score over baseline by number of dimensions, on simulated data 
     for various model fitting strategies. Faceting denotes the number of mixture components 
-    in the generating distribution. \label{fig:energyscore}}
-    \includegraphics[width=\linewidth]{plots/energy_score}
+    in the generating distribution.\label{fig:energyscore}}
 \end{figure}
 
 To validate the variational model, and investigate the effects of different classes of 

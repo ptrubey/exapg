@@ -42,50 +42,59 @@ In Section~\ref{sec:slosh} we described our criteria for narrowing the focus of 
     more varied outcomes.  Thus, the number of emergent clusters is marginally reduced.
 
 \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.99\linewidth]{./plots/delaware}
     \caption{Locations of identified sites in the \emph{Delaware} (left), 
     \emph{Restricted} (center), and \emph{Critical} (right) Slices.  
     Three locations of interest in further analysis have been specifically identified.
     \label{map:delawarebay}}
-    \centering
-    \includegraphics[width=0.99\linewidth]{./plots/delaware}
 \end{figure}
 
-\makenote{rewrite paragraph}
-Given the geographical focus inherent in the original data, we focus our primary analysis on 
-    Delaware Bay.  Figure~\ref{map:delawarebay} gives the locations of sites we identified, 
-    along with a classification of those sites.  
-    
-    Four categories were considered: ``Services'', that
-    includes emergency services, police, fire, and medical services; ``Land'', that
-    includes village centers, major intersections, and named land features; ``Transportation, 
-    that includes ferry landings, airports, heliports, and similar.
-    Within the transportation category we identify two
-    locations of particular interest,  for which significant inundation can lead to 
-    catastrophic consequences:   Dover Air Force Base (Dover AFB), and the Philadelphia International 
-    Airport (PIA). Dover AFB is situated next to Delaware Bay, with a direct approach from the
-    open ocean.  PIA, on the other hand, is further upstream, adjacent to the Delaware River, 
-    in the city of Philadelphia.  To reach this location, storm surge would need to backflow 
-    the Delaware River a significant distance.
+Given the geographical focus inherent to the original data, we concentrate our primary
+    analysis on Delaware Bay.  Figure~\ref{map:delawarebay} gives the locations of sites
+    we identified, along with a classification of those sites.  The original feature class
+    codes in the TIGER location data were sorted into five categories:  ``Land'' includes
+    prominent land features, as well as some road features; ``Locality'' includes major road
+    intersections, communities, or populated places; ``Parks\&Rec'' includes state and local
+    parks, cemeteries, and places of worship; ``Services'' includes emergency services: police,
+    fire, and medical services, and ``Transportation'' includes airports, heliports, ferry
+    landings, and other major transportation infrastructure.  We identify within the data
+    three locations which are of particular interest, for which significant inundation can
+    can lead to catastrophic consequences.  Dover Air Force Base (Dover AFB) is a military
+    installation on the South shore of the Delaware Bay, with a direct line of approach from 
+    the ocean.  Philadelphia International Airport  (PIA) is a major airport, situated on the 
+    bank of the Delaware River, near Philadelphia.   PIA is much further upstream relative to
+    Dover AFB, and would require a storm to backflow the Delaware River a significant amount
+    to reach it.  Packer Avenue Terminal is a major shipping hub, connecting transport ships to
+    truck and rail transport services.  It is situated only slightly further upstream than PIA,
+    so we would expect outcomes for these two locations to be strongly dependent.
+    Inundation in any of these three locations could lead to significant negative consequences.
+    \makenote{describe those consequences?}
 
-One difficulty with a high-dimensional model is evaluating its fidelity.  As we saw in the simulation
-    study, the relative rise in energy score between a bad model and a good model shrinks as
-    dimensionality increases.  This is related to the curse of dimensionality in applications like
-    $k$-nearest neighbor algorithms: as the number of dimensions increases, the ratio in average
-    distance between the nearest replicate, and farthest replicate in a sample will tend to approach
-    unity.  In this regard, distance, and metrics based on distance are fundamentally flawed in a 
-    high-dimensional setting.
+\subsection{Assessing Model Fidelity\label{subsec:sloshfidelity}}
 
-We can subjectively assess recovery of marginal empirical CDF, using marginal
-    posterior predictive CDF's under our various modelling approaches.
-    Having sampled $\bm{V}^{*}$ from its posterior predictive density, we can get a sample of $W_s^*$
-    by inverting Equation~\eqref{eqn:standardization}.  Thus, for for $R^*\sim\text{Pareto}(1)$, 
-    $Z^* = R^*\bm{V}^*$,
+One difficulty with a high-dimensional model is evaluating its fidelity.  As we saw in 
+    the simulation study, the relative rise in energy score between a bad modeling approach 
+    and a good modelling approach shrinks as data complexity increases.  However, as we 
+    saw in Table~\ref{tab:extant_clusters}, MCMC and what appears to be a similarly good 
+    modelling approach yield very different outcomes.  This disconnect in assessment of 
+    model fidelity using energy score as a criterion is related to the curse of dimensionality 
+    in applications like $k$-nearest neighbor algorithms: as the number of dimensions 
+    increases, the ratio in average distance between the nearest replicate, and farthest 
+    replicate in a sample will tend to approach unity.  In this regard, distance, and metrics 
+    based on distance will be fundamentally flawed in a high-dimensional setting.
+
+As a partial amelioration of this issue, we can subjectively assess recovery of marginal 
+    empirical CDF, by observing the marginal posterior predictive CDF for various locations
+    under our modeling approaches. Having sampled $\bm{V}^{*}$ from its posterior predictive 
+    density, we can get a sample of $W_s^*$ by inverting Equation~\eqref{eqn:standardization}.  
+    Thus, for for $R^*\sim\text{Pareto}(1)$, $Z^* = R^*\bm{V}^*$,
     \begin{equation*}
         W_s^* = a_s\left(\frac{(Z_s^*)^{\xi_s} - 1}{\xi_s}\right) + b_s
     \end{equation*}
     where $\bm{\xi}$, $\bm{a}$, and $\bm{b}$ were previously calculated.  
-    For consistency with regard to the originating data, we truncate replicates 
-    from the posterior predictive distribution $W_{s}^* \geq 0$.
+    For consistency with regard to the originating data, we truncate replicates from the 
+    posterior predictive distribution such that $W_{s}^* \geq 0$.
 
 \begin{figure}[ht]
     \centering
