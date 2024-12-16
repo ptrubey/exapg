@@ -96,22 +96,27 @@ As a partial amelioration of this issue, we can subjectively assess recovery of 
     For consistency with regard to the originating data, we truncate replicates from the 
     posterior predictive distribution such that $W_{s}^* \geq 0$.
 
+% \begin{figure}[ht]
+%     \centering
+%     \begin{subfigure}{0.8\textwidth}
+%         \caption{Dover Air Force Base\label{plot:marginal_doverafb}}
+%         \includegraphics[width=\textwidth]{./plots/delaware_marginal_dover_afb.png}
+%     \end{subfigure}
+%     \\\vspace{1cm}~\\
+%     \begin{subfigure}{0.8\textwidth}
+%         \caption{Philadelphia International Airport\label{plot:marginal_pia}}
+%         \includegraphics[width=\textwidth]{./plots/delaware_marginal_phil_ia.png}    
+%     \end{subfigure}
+%     \caption{Empirical, and posterior predictive cumulative distribution functions for marginal 
+%     $v$, $V^*$ (Left) and $w$, $W^*$ (Right), at denoted locations, under various modeling
+%     considerations.\makenote{remove legend name, compress into single faceted plot per location. 
+%     make plot for packer terminal?}}
+% \end{figure}
+
 \begin{figure}[ht]
     \centering
-    \begin{subfigure}{0.8\textwidth}
-        \caption{Dover Air Force Base\label{plot:marginal_doverafb}}
-        \includegraphics[width=\textwidth]{./plots/delaware_marginal_dover_afb.png}
-    \end{subfigure}
-    \\\vspace{1cm}~\\
-    \begin{subfigure}{0.8\textwidth}
-        \caption{Philadelphia International Airport\label{plot:marginal_pia}}
-        \includegraphics[width=\textwidth]{./plots/delaware_marginal_phil_ia.png}    
-    \end{subfigure}
-    \caption{Empirical, and posterior predictive cumulative distribution functions for marginal 
-    $v$, $V^*$ (Left) and $w$, $W^*$ (Right), at denoted locations, under various modeling
-    considerations.\makenote{remove legend name, compress into single faceted plot per location. 
-    make plot for packer terminal?}}
-\end{figure}
+    \includegraphics[width=0.95\linewidth]{./plots/delaware_marginal_cdfs.png}
+
 
 In Figure~\ref{plot:marginal_doverafb}, we observe the marginal empirical and posterior-predictive
     CDF's for storm surge at Dover Air Force Base.  As previously mentioned, this location is adjacent
