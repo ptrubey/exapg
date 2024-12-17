@@ -1,7 +1,8 @@
 \begin{table}[tb]
     \centering 
     \input{./tables/extant_clusters}
-    \caption{Counts of emergent clusters identified in data slices, as via posterior sampling.\label{tab:extant_clusters}}
+    \caption{Counts of emergent clusters identified in data slices via posterior sampling.
+        \label{tab:extant_clusters}}
 \end{table}
 
 In Section~\ref{sec:slosh} we described our criteria for narrowing the focus of our analysis,
@@ -34,7 +35,7 @@ In Section~\ref{sec:slosh} we described our criteria for narrowing the focus of 
     BNP process on a lower-dimensional representation of the output space---suggesting 
     a factor analysis.  The regression model we have developed works in a similar manner, 
     representing an $S$-dimensional space using a $d$-dimensional vector.  In the regression
-    models, we see the opposite problem occuring: there are too many clusters.  The Pitman-Yor
+    models, we see the opposite problem occurring: there are too many clusters.  The Pitman-Yor
     process is accounting for the lack of information in $\bm{X}$, the regressors, by producing
     more clusters.  We see evidence to this interpretation by the addition of the random 
     effects.  By including random effects in the model specification, more information is 
@@ -75,9 +76,9 @@ Given the geographical focus inherent to the original data, we concentrate our p
 
 One difficulty with a high-dimensional model is evaluating its fidelity.  As we saw in 
     the simulation study, the relative rise in energy score between a bad modeling approach 
-    and a good modelling approach shrinks as data complexity increases.  However, as we 
+    and a good modeling approach shrinks as data complexity increases.  However, as we 
     saw in Table~\ref{tab:extant_clusters}, MCMC and what appears to be a similarly good 
-    modelling approach yield very different outcomes.  This disconnect in assessment of 
+    modeling approach yield very different outcomes.  This disconnect in assessment of 
     model fidelity using energy score as a criterion is related to the curse of dimensionality 
     in applications like $k$-nearest neighbor algorithms: as the number of dimensions 
     increases, the ratio in average distance between the nearest replicate, and farthest 
@@ -88,10 +89,11 @@ As a partial amelioration of this issue, we can subjectively assess recovery of 
     empirical CDF, by observing the marginal posterior predictive CDF for various locations
     under our modeling approaches. Having sampled $\bm{V}^{*}$ from its posterior predictive 
     density, we can get a sample of $W_s^*$ by inverting Equation~\eqref{eqn:standardization}.  
-    Thus, for for $R^*\sim\text{Pareto}(1)$, $Z^* = R^*\bm{V}^*$,
-    \begin{equation*}
+    Thus, for for $R^*\sim\text{Pareto}(1)$, $\bm{Z}^* = R^*\bm{V}^*$,
+    \begin{equation}
+        \label{eqn:invstandardization}
         W_s^* = a_s\left(\frac{(Z_s^*)^{\xi_s} - 1}{\xi_s}\right) + b_s
-    \end{equation*}
+    \end{equation}
     where $\bm{\xi}$, $\bm{a}$, and $\bm{b}$ were previously calculated.  
     For consistency with regard to the originating data, we truncate replicates from the 
     posterior predictive distribution such that $W_{s}^* \geq 0$.
@@ -101,20 +103,21 @@ As a partial amelioration of this issue, we can subjectively assess recovery of 
     \includegraphics[width=0.95\linewidth]{./plots/delaware_marginal_cdfs.png}
     \caption{Empirical, and posterior predictive cumulative distribution functions for
         marginal $v_s$, $V_s^*$ (top), and $w_s$, $W_s^*$ (bottom) at denoted locations, under
-        various modeling considerations.\label{plot:marginalcdfs}}
+        various modeling considerations.\label{fig:marginalcdfs}}
 \end{figure}
 
 In Figure~\ref{fig:marginalcdfs}, we observe the marginal empirical and posterior predictive
-    CDFs for storm surge at Dover AFB, Philadelphia International Airport, and Packer Avenue Terminal.
-    With respect to Dover AFB, this location is adjacent to Delaware Bay, approximately 2 miles inland
-    of the bay shoreline, with a direct line of sight to the mouth of the bay and open ocean.  Take
-    note in particular, that the empirical cdf of $w_s$ shows that the storm surge does not reach
-    Dover AFB in approximately \num{44} percent of storms, post-thresholding.  With respect to PIA,
-    the airport is situated along the banks of the Delaware River.  Storm surge has much further to
-    travel to reach this point, yet it experiences inundation much more frequently, owing to the fact
-    it is only 4 feet above sea level, relative to the 9 feet for Dover AFB \makenote{[Confirm]}.  
-    Packer Avenue Terminal is similarly situated along the Delaware River, further upstream than PIA,
-    but it experiences flooding significantly less than PIA.
+    CDFs for storm surge at Dover AFB, Philadelphia International Airport, and Packer Avenue 
+    Terminal.  With respect to Dover AFB, this location is adjacent to Delaware Bay, 
+    approximately 2 miles inland of the bay shoreline, with a direct line of sight to the 
+    mouth of the bay and open ocean.  Take note in particular, that the empirical cdf of $w_s$ 
+    shows that the storm surge does not reach Dover AFB in approximately \num{44} percent of 
+    storms, post-thresholding.  With respect to PIA, the airport is situated along the banks 
+    of the Delaware River.  Storm surge has much further to travel to reach this point, yet 
+    it experiences inundation much more frequently, owing to the fact it is only 4 feet above 
+    sea level, relative to the 9 feet for Dover AFB \makenote{[Confirm]}. Packer Avenue 
+    Terminal is similarly situated along the Delaware River, further upstream than PIA, but 
+    it experiences flooding significantly less than PIA.
 
 % \begin{table}[ht]
 % \centering
