@@ -1,11 +1,13 @@
 In this paper, we have continued work on the BNP mixture of projected gammas model for angular data 
-    to include a variational approximation.  We have developed means of clustering, or associating 
-    storm profiles, through their emergent cluster identification post-model fitting.  We have developed
-    a novel and flexible regression model with support on the unit $p$-norm sphere.  
-
-We explored application of said models to the angular distribution of multivariate extremes, at a much 
-    greater scale than has been previously attempted in our knowledge.  In doing so, we have some 
-    weaknesses of the model in its application at scale.  We discuss remedies here now.
+    to include a variational approximation.  That particular avenue of approximation that we chose
+    suffers from a loss of model fidelity, as the number of dimensions increases, to a much greater
+    degree than the equivalent MCMC-fit model. We have also developed a novel and flexible regression
+    model with support on the unit $p$-norm sphere, in part to ameliorate an expected loss of granularity
+    as dimensionality increases, and for the additional information gain offered by a directional
+    regression model.   We explored the application of said models to the angular distribution of 
+    multivariate extremes, at a much greater scale than has been previously attempted in our knowledge.  
+    In doing so, we have encountered some weaknesses of the model in its application at scale.  We 
+    discuss those issues and potential remedies here now.
 
 \subsection{Proposed solutions}
 It is clear that, for our intended purpose of multivariate extreme inference on a high-dimensionality
@@ -17,22 +19,23 @@ It is clear that, for our intended purpose of multivariate extreme inference on 
     Gibbs-sampling step.  Also by reintroducing the latent radii, the likelihood of $\bm{\alpha}$ becomes
     separable by dimension, meaning a mean-field variational approximation would not lose much information.
     With that said, an optimal variational approximation can only do as well as a well-tuned MCMC fitted
-    model.  As \cite{chandra2023} shows, and as we observed by the count of emergent clusters decreasing as 
-    dimensionality increases, model fidelity in recovering the generating distribution faces more challenges
-    than merely an inadequate model fitting method.  We should also consider other solutions.
+    model.  As \cite{chandra2023} shows, dimensionality increases, model fidelity in recovering the 
+    generating distribution will eventually face more challenges than merely an inadequate model fitting 
+    method.  We should also consider other solutions.
 
 One additional step we can consider is placing a restriction on the shape parameter in the projected
-    gamma model, such that $\max_s \alpha_s \geq 1$.  It is the case, when considering the data, that
-    nearly every observation falls close to an edge on some dimension.
+    gamma model, such that $\max_s \alpha_{js} \geq 1\;\;\forall\;j$.  It is the case, when considering 
+    the data, that nearly every observation falls close to an edge on some dimension.
     Recollecting the gamma distribution, if the shape 
     parameter is less than one, then we observe a spike in density approaching zero.  In a projected 
     gamma setting, that translates to high density towards the edges of a distribution 
     where the shape parameters are less than 1.  If all dimensions are so, then we arrive at a very 
     unstable distribution with all mass around the edges of the support, and little to no mass in the 
-    center.  For a very high dimensional problem, a single cluster with all shape parameters
-    approaching zero is the inevitable end result, and thus, in fitting the model, we learn nothing.
+    center.  For a \emph{very} high dimensional problem, a single cluster with all shape parameters
+    approaching zero is a likely inevitable end result, and thus, in fitting the model, we learn nothing.
     One means of removing that particular outcome as a possibility would be to enforce a restriction 
-    that at least one dimension have a shape parameter greater than 1. \makenote{Expand on effects.}
+    that at least one dimension have a shape parameter greater than 1.  For extreme data, which tends
+    to exist near an edge, this would at least create clusters for edges with high density.
     We might consider some dimensions as \emph{active} or \emph{inactive} for a given observation
     depending on whether that observation falls near that dimension's edge.  We can consider this
     restriction as requiring that at least one dimension is active.

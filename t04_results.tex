@@ -160,7 +160,7 @@ Looking at equivalent marginal plots for all locations (including those not disp
     % every data point is a cluster. Is this the story you want to tell? Can you try doing
     % that in a clearer way?}
 
-\subsection{Conditional Survival Curves}
+\subsection{Conditional Survival Curves\label{sec:condsurv}}
 From Equation~\ref{eqn:condsurv}, we can obtain the conditional probability of
     exceeding a specified threshold for some set of components, given that other 
     dimensions exceed their specified threshold. Using the \emph{Critical} slice with 
@@ -185,30 +185,35 @@ From Equation~\ref{eqn:condsurv}, we can obtain the conditional probability of
     \includegraphics[width=0.95\linewidth]{./plots/condsurv/condsurv_1d_mcmc.png}
     \caption{Conditional Survival Curves (standardized) for labelled locations, under three 
         scenarios where particular \emph{downstream} locations have already experienced 
-        significant inundation.\label{fig:condsurv1d}\makenote{ Perhaps add a baseline?}}
+        significant inundation. \label{fig:condsurv1d}
+        \makenote{ Perhaps add a baseline?  Should we put these in real units?}}
 \end{figure}
 
-Figure~\ref{fig:condsurv1d} shows the one-dimensional survival curves for these three locations, under 
-    these three scenarios.  Note, the survival curve indicates $P(Z_s > z_s)$ given the stated scenario.
-    Additionally, a $\bm{z}$ score greater than 1 indicates storm surge above the 90th percentile.
-    Perhaps unsurprisingly in interpreting these results, as Dover AFB is on the south side of the bay, 
-    we see the survival curve for the Upper Bay scenario dip below that of both Lower Bay and Mouth scenarios.  
-    What is interesting, however, is that that ordering is not uniform; we see the ordering change to that
-    behavior around $z = 4$.  The Mouth scenario indicates a storm that has inundated both the lower and
-    upper portions of the Delaware Bay entrance, indicating a powerful storm that is well positioned
-    to enter the Bay.  As such, it is no surprise that the survival curve associated with that scenario
-    indicates the highest probability of extreme surge throughout the entire curve.  What is interesting is that
-    we observe the same crossing behavior and the same ordering on all three curves, though their exact shape
-    and the exact point at which that cross occurs differ.  It is apparent that relative to the other
-    scenarios, extreme surge on the Upper Bay sites does not strongly indicate increased surge at the other 
-    sites.  It appears to be the case that a hurricane optimally aligned towards inundating the North bank is 
+Figure~\ref{fig:condsurv1d} shows the one-dimensional survival curves for these three locations, 
+    under these three scenarios.  Note that a survival curve indicates $P(Z_s > z_s)$.  That is, 
+    the probability of a surge event greater than the specified value, under the specific
+    scenarios outlined.  Additionally, a $\bm{z}$ score greater than 1 indicates storm surge 
+    above the 90th percentile.  Perhaps unsurprisingly in interpreting these results, as Dover 
+    AFB is on the south side of the bay, we see the survival curve for the Upper Bay scenario 
+    dip below that of both Lower Bay and Mouth scenarios.  What is interesting, however, is 
+    that that ordering is not uniform; we see the ordering change to that behavior around $z = 4$.  
+    The Mouth scenario indicates a storm that has inundated both the lower and upper portions 
+    of the Delaware Bay entrance, indicating a powerful storm that is well positioned to enter 
+    the Bay.  As such, it is no surprise that the survival curve associated with that scenario
+    indicates the highest probability of extreme surge throughout the entire curve.  What is 
+    interesting is that we observe the same crossing behavior and the same ordering on all 
+    three curves, though their exact shape and the exact point at which that cross occurs 
+    differ.  It is apparent that relative to the other scenarios, extreme surge on the Upper 
+    Bay sites does not strongly indicate increased surge at the other sites.  It appears to 
+    be the case that a hurricane optimally aligned towards inundating the North bank is 
     sub-optimally aligned towards inundating the rest of the bay.
 
 \begin{figure}[tb]
     \centering
     \includegraphics[width=.95\linewidth]{plots/condsurv/condsurv_2d_mcmc.png}
     \caption{Conditional 2$d$ survival curve (contour plot, standardized) of flooding, at selected 
-        pairs of locations. Note, (X axis) :: (Y axis).\label{fig:condsurv2d}}
+        pairs of locations. Note, (X axis) :: (Y axis). \label{fig:condsurv2d}
+        \makenote{Should we put these in real units?}}
 \end{figure}
 
 Figure~\ref{fig:condsurv2d} provides contour plots of a two-dimensional survival surface, 
@@ -224,14 +229,78 @@ Figure~\ref{fig:condsurv2d} provides contour plots of a two-dimensional survival
     see that survival surface is actually concave, which indicates an extremely weak 
     dependence between the two locations.  This is understandable, as Packer Avenue Terminal 
     is around 4 miles upstream of PIA, even further away from Dover AFB.  Given the proximity
-    between Packer Ave., and PIA, we would expect a rather strong dependence.  That relationship
-    is borne out, as in the contour plot of the survival surface in PIA :: Packer Ave we observe 
-    strong convexity.
+    between Packer Ave., and PIA, we would expect a rather strong dependence.  That 
+    relationship is borne out, as in the contour plot of the survival surface in PIA :: Packer 
+    Ave. we observe strong convexity.
 
+\subsection{Conditional survival under a regression model}
 
+Under the regression model, providing a particular set of storm characteristics $\bm{\theta}^*$ 
+    permits us to take samples of $\bm{V}^*\mid\bm{\theta}^*$, by doing posterior prediction of
+    $\bm{Y}^*\mid\bm{\theta}^*$ and projecting onto $\mathbb{S}_{\infty}^{d-1}$.  With this
+    sample of $\bm{V}^*$ following the same procedure used in Section~\ref{sec:condsurv},
+    we can estimate the conditional probability of survival---the conditional probability
+    of experiencing a surge event greater than or equal to the stated value, given both the
+    scenario \emph{and} the storm characteristics.  Keeping the extant flooding scenarios
+    outlined previously, we investigate the effects of storm characteristics on these scenarios.
+    A \emph{strong} storm indicates a storm with an approach speed approximately 1 standard
+    deviation higher than mean, and a minimum pressure approximately 1 standard deviation lower
+    than mean. Looking at Figure~\ref{fig:thetahistogram}, both of these parameters serve to
+    indicate a higher probability of the storm's surge exceeding the threshold, indicating a 
+    stronger storm.  A \emph{weak} storm indicates the opposite, on both counts.  \emph{landing}
+    + \emph{direction of approach} specifies the approach vector of the storm's eye: landing at 
+    the South end of the range, angled North, or landing at the North end of the range, angled 
+    South.
 
-\makenote{Insert conditional survival curves given threshold under regression model.}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\linewidth]{./plots/condsurv_reg/condsurv_reg_1d.pdf}
+    \caption{Conditional survival curves of flooding, at selected locations, under various 
+        scenarios of extant flooding and storm characteristics.  A \emph{strong} storm has
+        both a significantly higher than average approach speed, and significantly lower 
+        than average minimum pressure. Neutral sea-level-rise was assumed.  We further
+        separate by (landing latitude) + (direction of approach).\label{fig:condsurvreg1d}
+        \makenote{Should we put these in real units?}}
+\end{figure}
 
-\makenote{insert posterior clustering discussion and pairs plot of cluster assignments of $\bm{\theta}$'s.}
+In Figure~\ref{fig:condsurvreg1d}, we see the results of these storm profiles, under the
+    aforementioned scenarios, applied to the listed locations.   The \emph{baseline} is not
+    controlling for storm strength, storm landing latitude, or storm direction.  It 
+    \emph{should} be comparable to the curves displayed in Figure~\ref{fig:condsurv1d}.  
+    There are a few observations to make here.  One, it is evident that while a stronger 
+    storm generally has a greater potential of inundating any given site to a greater 
+    degree, we see odd behavior under the \emph{Upper Bay} scenario for Dover AFB: we see
+    under this scenario the weak storm has a slightly higher potential to inundate, and 
+    of particular interest is that all investigated storm profiles fall below the baseline.
+    Second, under the \emph{Mouth} scenario, the landing latitude and direction dramatically
+    affects the probability and degree of inundation.  This is most apparent at Dover AFB,
+    for which with a strong storm, the North landing latitude and South-southwest direction
+    produces almost uniformly higher probability of flooding at each site.
+    PIA and Packer Avenue fare similarly under each scenario and storm profile.  This is
+    somewhat to be expected, considering their proximity, and our previous analysis.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\linewidth]{./plots/condsurv_reg/condsurv_reg_2d.pdf}
+    \caption{Conditional survival surfaces (contour plot, standardized) of flooding, at 
+        selected pairs of locations, under various scenarios of extant flooding and storm
+        characteristics.  A \emph{strong} storm has
+        both a significantly higher than average approach speed, and significantly lower 
+        than average minimum pressure. Neutral sea-level-rise was assumed.  We further
+        separate by (landing latitude) + (direction of approach).\label{fig:condsurvreg2d}
+        \makenote{Should we put these in real units?}}
+\end{figure}
+
+In Figure~\ref{fig:condsurvreg2d}, we see the results of these storm profiles, under the
+    aforementioned scenarios, applied pairwise to the listed locations.  Again, baseline is
+    not controlling for storm profile or strength, and thus should be comparable to the
+    results displayed in Figure~\ref{fig:condsurv2d}.  Very quickly we see a
+    discrepancy: whereas previously, \emph{Dover AFB :: PIA} exhibited moderate dependence, and
+    \emph{Dover AFB :: Packer} exhibited extremely weak dependence, under this model they exhibit
+    slightly strong dependence.  We no longer see the concave survival surfaces we saw previously
+    under the MCMC-fit projected gamma model.  We do still see the highly convex survival surface
+    for \emph{PIA::Packer}.  
+
+% \makenote{insert posterior clustering discussion and pairs plot of cluster assignments of $\bm{\theta}$'s.}
 
 % EOF

@@ -481,7 +481,7 @@ As the motivating example for our analysis of the extremal dependence structure,
     sites to be included in the analysis, but in turn reduces the number of storm 
     simulations which exceed the threshold, which in turn reduces the amount of 
     information available by which we can estimate the dependence structure. Using a 
-    quantile of \num{0.95}, the resulting number of cells, and number of storm simulations
+    quantile of \num{0.90}, the resulting number of cells, and number of storm simulations
     exceeding the threshold per slice are summarized in Table~\ref{tab:datasets}.
     % \bruno{\bf This paramgraph is VERY hard to understand. I suppose that you want to
     % say that you are focused on a limited number of locations in the grid of
@@ -500,11 +500,11 @@ As the motivating example for our analysis of the extremal dependence structure,
 
 \begin{table}[b]
     \centering
+    \include{./tables/datadesc}
     \caption{Slices of SLOSH for analysis.  \emph{Storms} specifies the number of storms that survive 
     thresholding, of the total \num{4000} storms in the sample.  The probability gives that value 
     numerically. \emph{Sites} identifies the number of locations included in the slice. Each 
     subsequent slice is a subset of the preceding slice.\label{tab:datasets}}
-    \include{./tables/datadesc}
 \end{table}
 
 % \begin{figure}[htb]
